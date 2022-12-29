@@ -69,9 +69,13 @@ public class SplitButton extends JButton {
 	public static final int SEPARATOR_MODE_NEVER = 0;
 	public static final int SEPARATOR_MODE_ALWAYS = 1;
 	public static final int SEPARATOR_MODE_HOVER = 2;
-	
+	public static final int ARROW_MODE_NEVER = 0;
+	public static final int ARROW_MODE_ALWAYS = 1;
+	public static final int ARROW_MODE_HOVER = 2;
+
 	private int separatorSpacing = 4;
 	private int separatorMode = SEPARATOR_MODE_NEVER;
+	private int arrowMode = ARROW_MODE_ALWAYS;
 	private int arrowOffset = 0;
 	private int splitWidth = 14;
 	private int arrowSize = 8;
@@ -376,6 +380,14 @@ public class SplitButton extends JButton {
 		this.separatorMode = separatorMode;
 	}
 
+	public int getArrowMode() {
+		return arrowMode;
+	}
+
+	public void setArrowMode(int arrowMode) {
+		this.arrowMode = arrowMode;
+	}
+
 	public int getArrowOffset() {
 		return arrowOffset;
 	}
@@ -557,15 +569,20 @@ public class SplitButton extends JButton {
 		int mw = splitWidth / 2;
 		// g.drawImage(getImage(), mw - arrowSize / 2, mh + 2 - arrowSize / 2, null);
 
-		// TODO: This is a quick hack to improve painting of the arrow
-		g2d.setColor(Theme.isDark() ? new Color(150, 150, 150) : new Color(75, 75, 75));
-		mw += arrowOffset;
-		GeneralPath gp = new GeneralPath();
-		gp.moveTo(mw - 4, mh - 2);
-		gp.lineTo(mw + 4, mh - 2);
-		gp.lineTo(mw, mh + 2);
-		gp.closePath();
-		g2d.fill(gp);
+		if (arrowMode == ARROW_MODE_ALWAYS || (arrowMode == ARROW_MODE_HOVER && model.isRollover())) {
+
+			// TODO: This is a quick hack to improve painting of the arrow
+			g2d.setColor(Theme.isDark() ? new Color(150, 150, 150) : new Color(75, 75, 75));
+			mw += arrowOffset;
+			GeneralPath gp = new GeneralPath();
+			gp.moveTo(mw - 4, mh - 2);
+			gp.lineTo(mw + 4, mh - 2);
+			gp.lineTo(mw, mh + 2);
+			gp.closePath();
+			g2d.fill(gp);
+
+		}
+
 		/* TODO: Disabled for now..
 		if (!alwaysDropDown) {
 		    if (getModel().isRollover() || isFocusable()) {
