@@ -75,6 +75,7 @@ public class SplitButton extends JButton {
 
 	private int separatorSpacing = 4;
 	private int separatorMode = SEPARATOR_MODE_NEVER;
+	private int separatorOffset = 0;
 	private int arrowMode = ARROW_MODE_ALWAYS;
 	private int arrowOffset = 0;
 	private int splitWidth = 14;
@@ -380,6 +381,14 @@ public class SplitButton extends JButton {
 		this.separatorMode = separatorMode;
 	}
 
+	public int getSeparatorOffset() {
+		return separatorOffset;
+	}
+
+	public void setSeparatorOffset(int separatorOffset) {
+		this.separatorOffset = separatorOffset;
+	}
+
 	public int getArrowMode() {
 		return arrowMode;
 	}
@@ -564,9 +573,8 @@ public class SplitButton extends JButton {
 		// Graphics gClone = g.create();//EDIT: Hervé Guillaume
 		Color oldColor = g2d.getColor();
 		splitRectangle = new Rectangle(getWidth() - splitWidth, 0, splitWidth, getHeight());
-		g2d.translate(splitRectangle.x, splitRectangle.y);
 		int mh = getHeight() / 2;
-		int mw = splitWidth / 2;
+		int mw = splitRectangle.x + (splitWidth / 2);
 		// g.drawImage(getImage(), mw - arrowSize / 2, mh + 2 - arrowSize / 2, null);
 
 		if (arrowMode == ARROW_MODE_ALWAYS || (arrowMode == ARROW_MODE_HOVER && model.isRollover())) {
@@ -598,16 +606,18 @@ public class SplitButton extends JButton {
 			g2d.setColor(UIManager.getLookAndFeelDefaults().getColor("Button.shadow"));
 
 			double scale = g2d.getTransform().getScaleX();
+			int x = splitRectangle.x + separatorOffset;
 			int y1 = separatorSpacing + 2;
 			int y2 = getHeight() - separatorSpacing - 2;
 
 			if (scale >= 1.5) {
 				g2d.scale(0.5, 0.5);
+				x *= 2;
 				y1 *= 2;
 				y2 *= 2;
 			}
 
-			g2d.drawLine(0, y1, 0, y2);
+			g2d.drawLine(x, y1, x, y2);
 
 			if (scale >= 1.5) {
 				g2d.scale(2.0, 2.0);
@@ -657,7 +667,7 @@ public class SplitButton extends JButton {
 		@Override
 		public void mouseExited(MouseEvent e) {
 			onSplit = false;
-			repaint(splitRectangle);
+			repaint();
 		}
 
 		@Override
@@ -667,7 +677,7 @@ public class SplitButton extends JButton {
 			} else {
 				onSplit = false;
 			}
-			repaint(splitRectangle);
+			repaint();
 		}
 	}
 
