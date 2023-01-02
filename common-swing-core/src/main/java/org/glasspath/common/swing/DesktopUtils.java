@@ -86,8 +86,19 @@ public class DesktopUtils {
 	}
 
 	public static void browse(String url) {
-
 		if (Desktop.isDesktopSupported() && url != null) {
+			try {
+				browse(new URI(url));
+			} catch (Exception e) {
+				Common.LOGGER.error("Exception while launching browser", e); //$NON-NLS-1$
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void browse(URI uri) {
+
+		if (Desktop.isDesktopSupported() && uri != null) {
 
 			// TODO: https://bugs.openjdk.org/browse/JDK-8270269, occurs after using c++/cli/c# functions from UwpShareUtils, for now we just create a new thread
 			new Thread(new Runnable() {
@@ -96,7 +107,7 @@ public class DesktopUtils {
 				public void run() {
 
 					try {
-						Desktop.getDesktop().browse(new URI(url));
+						Desktop.getDesktop().browse(uri);
 					} catch (Exception e) {
 						Common.LOGGER.error("Exception while launching browser", e); //$NON-NLS-1$
 						e.printStackTrace();
