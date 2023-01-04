@@ -30,6 +30,7 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -52,6 +53,7 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.jdesktop.swingx.JXBusyLabel;
@@ -102,19 +104,31 @@ public class DialogUtils {
 
 				JDialog dialog = getDialog(panel);
 				if (dialog != null) {
-
-					dialog.invalidate();
-					dialog.validate();
-
-					dialog.pack();
-					dialog.setLocationRelativeTo(frame);
-
+					packDialog(dialog);
 				}
 
 			}
 		});
 
 		JOptionPane.showOptionDialog(frame, panel, title, JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] { "     Ok     " }, "     Ok     ");
+
+	}
+
+	public static void packDialog(JDialog dialog) {
+
+		Point location = dialog.getLocation();
+		Dimension size = dialog.getSize();
+		Dimension newSize = dialog.getPreferredSize();
+
+		if (newSize.width != size.width) {
+			location.x -= (newSize.width - size.width) / 2;
+		}
+		if (newSize.height != size.height) {
+			location.y -= (newSize.height - size.height) / 2;
+		}
+		dialog.setLocation(location);
+
+		dialog.pack();
 
 	}
 
