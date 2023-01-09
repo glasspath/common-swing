@@ -329,4 +329,8 @@ public class DefaultDialog extends JDialog {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
 	}
 
+	public static Dimension adjustSize(Dimension size, int adjustWidth, int adjustHeight) {
+		return new Dimension(size.width + adjustWidth, size.height + adjustHeight);
+	}
+
 }
