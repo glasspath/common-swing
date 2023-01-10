@@ -135,8 +135,12 @@ public class FrameUtils {
 		// UIManager.put("Table.intercellSpacing", new Dimension(1, 1));
 		// UIManager.put("Table.alternateRowColor", TableUI.EVEN_ROW_COLOR);
 
+		// TODO? This was added because we use glasspane's with a search field, pop-ups appeared below the search field.
+		// Linux and MacOS seem to use heavy-weight by default, so lets enable it for windows too
+		UIManager.put("Popup.forceHeavyWeight", true);
+
 		Common.LOGGER.info("defaultFont: " + UIManager.getFont("defaultFont"));
-		
+
 	}
 
 	public static void applyMenuBarStyle(JMenuBar menuBar) {
