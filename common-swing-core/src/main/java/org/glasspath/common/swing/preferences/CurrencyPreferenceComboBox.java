@@ -33,25 +33,25 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 
 import org.glasspath.common.locale.LocaleUtils;
-import org.glasspath.common.locale.LocaleUtils.LanguageTag;
+import org.glasspath.common.locale.LocaleUtils.CurrencyCode;
 import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
 import org.glasspath.common.swing.color.ColorUtils;
-import org.glasspath.common.swing.preferences.LanguagePreferenceComboBox.Entry;
+import org.glasspath.common.swing.preferences.CurrencyPreferenceComboBox.Entry;
 
-public class LanguagePreferenceComboBox extends JComboBox<Entry> {
+public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	private final PreferencesProvider provider;
 	private final String key;
 	private final String defaultValue;
 	private final Entry automaticEntry;
-	private final LanguageTag[] languageTags = LanguageTag.values();
+	private final CurrencyCode[] currencyCodes = CurrencyCode.values();
 
-	public LanguagePreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
+	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
 		this(provider, key, defaultValue, true);
 	}
 
-	public LanguagePreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange) {
+	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange) {
 
 		this.provider = provider;
 		this.key = key;
@@ -62,11 +62,11 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 		automaticEntry = new Entry("Automatic");
 		addItem(automaticEntry);
 
-		for (LanguageTag languageTag : languageTags) {
-			addItem(new Entry(languageTag.language + ", " + languageTag.country));
+		for (CurrencyCode currencyCode : currencyCodes) {
+			addItem(new Entry(currencyCode.code + ", " + currencyCode.symbol));
 		}
 
-		int index = getLanguageTagIndex(provider.getPreferences().get(key, defaultValue));
+		int index = getCurrencyCodeIndex(provider.getPreferences().get(key, defaultValue));
 		if (index >= 0) {
 			setSelectedIndex(index + 1);
 		}
@@ -87,7 +87,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 			@Override
 			public void preferencesChanged(Preferences preferences) {
-				int index = getLanguageTagIndex(provider.getPreferences().get(key, defaultValue));
+				int index = getCurrencyCodeIndex(provider.getPreferences().get(key, defaultValue));
 				if (index > 0) {
 					setSelectedIndex(index + 1);
 				}
@@ -105,10 +105,10 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	public void setAutomaticLocale(Locale locale) {
 
-		LanguageTag languageTag = LocaleUtils.getLanguageTagForLocale(locale);
-		if (languageTag != null) {
+		CurrencyCode currencyCode = LocaleUtils.getCurrencyCodeForLocale(locale);
+		if (currencyCode != null) {
 
-			automaticEntry.text = "Automatic (" + languageTag.language + ", " + languageTag.country + ")";
+			automaticEntry.text = "Automatic (" + currencyCode.code + ", " + currencyCode.symbol + ")";
 
 			invalidate();
 			validate();
@@ -118,12 +118,12 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	private int getLanguageTagIndex(String tag) {
+	private int getCurrencyCodeIndex(String code) {
 
-		if (tag != null) {
+		if (code != null) {
 
-			for (int i = 0; i < languageTags.length; i++) {
-				if (tag.equals(languageTags[i].tag)) {
+			for (int i = 0; i < currencyCodes.length; i++) {
+				if (code.equals(currencyCodes[i].code)) {
 					return i;
 				}
 			}
@@ -151,8 +151,8 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 			int index = getSelectedIndex();
 			if (index > 0) {
 				index--;
-				if (index < languageTags.length) {
-					value = languageTags[index].tag;
+				if (index < currencyCodes.length) {
+					value = currencyCodes[index].code;
 				}
 			}
 
@@ -170,23 +170,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	public LanguageTag getSelectedLanguageTag() {
-
-		LanguageTag languageTag = null;
-
-		int index = getSelectedIndex();
-		if (index > 0) {
-			index--;
-			if (index < languageTags.length) {
-				languageTag = languageTags[index];
-			}
-		}
-
-		return languageTag;
-
-	}
-
-	protected boolean isLanguageSupported(String languageTag) {
+	protected boolean isCurrencySupported(String currencyCode) {
 		return true;
 	}
 
@@ -219,8 +203,8 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 				setForeground(ColorUtils.TEXT_COLOR);
 
-				if (index - 1 >= 0 && index - 1 < languageTags.length) {
-					if (!isLanguageSupported(languageTags[index - 1].tag)) {
+				if (index - 1 >= 0 && index - 1 < currencyCodes.length) {
+					if (!isCurrencySupported(currencyCodes[index - 1].code)) {
 						setForeground(ColorUtils.SEMI_DISABLED_TEXT_COLOR);
 					}
 				}
