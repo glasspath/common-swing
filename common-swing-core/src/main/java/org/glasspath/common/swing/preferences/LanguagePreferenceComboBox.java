@@ -44,18 +44,19 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 	private final PreferencesProvider provider;
 	private final String key;
 	private final String defaultValue;
+	private final LanguageTag[] languageTags;
 	private final Entry automaticEntry;
-	private final LanguageTag[] languageTags = LanguageTag.values();
 
 	public LanguagePreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
-		this(provider, key, defaultValue, true);
+		this(provider, key, defaultValue, LanguageTag.values(), true);
 	}
 
-	public LanguagePreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange) {
+	public LanguagePreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, LanguageTag[] languageTags, boolean commitOnChange) {
 
 		this.provider = provider;
 		this.key = key;
 		this.defaultValue = defaultValue;
+		this.languageTags = languageTags;
 
 		setRenderer(new Renderer());
 
@@ -106,9 +107,9 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 	public void setAutomaticLocale(Locale locale) {
 
 		LanguageTag languageTag = LocaleUtils.getLanguageTagForLocale(locale);
-		if (languageTag != null) {
+		if (locale != null) {
 
-			automaticEntry.text = "Automatic (" + languageTag.language + ", " + languageTag.country + ")";
+			automaticEntry.text = "Automatic (" + locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale) + ")";
 
 			invalidate();
 			validate();
