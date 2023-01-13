@@ -34,25 +34,25 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 
 import org.glasspath.common.locale.LocaleUtils;
-import org.glasspath.common.locale.LocaleUtils.CurrencyCode;
+import org.glasspath.common.locale.LocaleUtils.SystemOfUnits;
 import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
 import org.glasspath.common.swing.color.ColorUtils;
-import org.glasspath.common.swing.preferences.CurrencyPreferenceComboBox.Entry;
+import org.glasspath.common.swing.preferences.UnitOfMeasurementPreferenceComboBox.Entry;
 
-public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
+public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 
 	private final PreferencesProvider provider;
 	private final String key;
 	private final String defaultValue;
 	private final Entry automaticEntry;
-	private final CurrencyCode[] currencyCodes = CurrencyCode.values();
+	private final SystemOfUnits[] systemOfUnitsList = SystemOfUnits.values();
 
-	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
+	public UnitOfMeasurementPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
 		this(provider, key, defaultValue, true);
 	}
 
-	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange) {
+	public UnitOfMeasurementPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange) {
 
 		this.provider = provider;
 		this.key = key;
@@ -63,11 +63,11 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 		automaticEntry = new Entry("");
 		addItem(automaticEntry);
 
-		for (CurrencyCode currencyCode : currencyCodes) {
-			addItem(new Entry(currencyCode.code + ", " + currencyCode.symbol));
+		for (SystemOfUnits systemOfUnits : systemOfUnitsList) {
+			addItem(new Entry(systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol));
 		}
 
-		int index = getCurrencyCodeIndex(provider.getPreferences().get(key, defaultValue));
+		int index = getSystemOfUnitsIndex(provider.getPreferences().get(key, defaultValue));
 		if (index >= 0) {
 			setSelectedIndex(index + 1);
 		}
@@ -88,7 +88,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 			@Override
 			public void preferencesChanged(Preferences preferences) {
-				int index = getCurrencyCodeIndex(provider.getPreferences().get(key, defaultValue));
+				int index = getSystemOfUnitsIndex(provider.getPreferences().get(key, defaultValue));
 				if (index > 0) {
 					setSelectedIndex(index + 1);
 				}
@@ -106,10 +106,10 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	public void setAutomaticLocale(Locale locale) {
 
-		CurrencyCode currencyCode = LocaleUtils.getCurrencyCodeForLocale(locale);
-		if (currencyCode != null) {
+		SystemOfUnits systemOfUnits = LocaleUtils.getSystemOfUnitsForLocale(locale);
+		if (systemOfUnits != null) {
 
-			automaticEntry.text = currencyCode.code + ", " + currencyCode.symbol;
+			automaticEntry.text = systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol;
 
 			invalidate();
 			validate();
@@ -121,12 +121,12 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	private int getCurrencyCodeIndex(String code) {
+	private int getSystemOfUnitsIndex(String code) {
 
 		if (code != null) {
 
-			for (int i = 0; i < currencyCodes.length; i++) {
-				if (code.equals(currencyCodes[i].code)) {
+			for (int i = 0; i < systemOfUnitsList.length; i++) {
+				if (code.equals(systemOfUnitsList[i].code)) {
 					return i;
 				}
 			}
@@ -154,8 +154,8 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 			int index = getSelectedIndex();
 			if (index > 0) {
 				index--;
-				if (index < currencyCodes.length) {
-					value = currencyCodes[index].code;
+				if (index < systemOfUnitsList.length) {
+					value = systemOfUnitsList[index].code;
 				}
 			}
 
@@ -173,7 +173,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	protected boolean isCurrencySupported(String currencyCode) {
+	protected boolean isSystemOfUnitsSupported(String systemOfUnitsCode) {
 		return true;
 	}
 
@@ -216,8 +216,8 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 				setForeground(ColorUtils.TEXT_COLOR);
 
-				if (index - 1 >= 0 && index - 1 < currencyCodes.length) {
-					if (!isCurrencySupported(currencyCodes[index - 1].code)) {
+				if (index - 1 >= 0 && index - 1 < systemOfUnitsList.length) {
+					if (!isSystemOfUnitsSupported(systemOfUnitsList[index - 1].code)) {
 						setForeground(ColorUtils.SEMI_DISABLED_TEXT_COLOR);
 					}
 				}

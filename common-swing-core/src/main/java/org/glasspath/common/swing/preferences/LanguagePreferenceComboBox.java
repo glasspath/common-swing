@@ -23,6 +23,7 @@
 package org.glasspath.common.swing.preferences;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
@@ -60,7 +61,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("Automatic");
+		automaticEntry = new Entry("");
 		addItem(automaticEntry);
 
 		for (LanguageTag languageTag : languageTags) {
@@ -106,15 +107,16 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	public void setAutomaticLocale(Locale locale) {
 
-		LanguageTag languageTag = LocaleUtils.getLanguageTagForLocale(locale);
 		if (locale != null) {
 
-			automaticEntry.text = "Automatic (" + locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale) + ")";
+			automaticEntry.text = locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale);
 
 			invalidate();
 			validate();
 			repaint();
 
+		} else {
+			automaticEntry.text = "";
 		}
 
 	}
@@ -208,13 +210,23 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	public class Renderer extends DefaultListCellRenderer {
 
-		public Renderer() {
+		private final Font defualtFont;
+		private final Font italicFont;
 
+		public Renderer() {
+			defualtFont = getFont();
+			italicFont = defualtFont.deriveFont(Font.ITALIC);
 		}
 
 		@Override
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+			if (index == 0) {
+				setFont(italicFont);
+			} else {
+				setFont(defualtFont);
+			}
 
 			if (!isSelected) {
 
