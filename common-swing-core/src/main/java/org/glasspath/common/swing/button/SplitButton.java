@@ -89,7 +89,7 @@ public class SplitButton extends JButton {
 	private MouseHandler mouseHandler;
 	private boolean toolBarButton;
 
-	private JPopupMenu jpopupMenu;
+	private JPopupMenu popupMenu;
 	private boolean popupRightAligned = false;
 
 	/**
@@ -209,7 +209,7 @@ public class SplitButton extends JButton {
 	}
 
 	public void setPopupMenu(JPopupMenu popup) {
-		jpopupMenu = popup;
+		popupMenu = popup;
 		initPopupMenu();
 		this.setComponentPopupMenu(popup);
 	}
@@ -220,24 +220,24 @@ public class SplitButton extends JButton {
 	 * @return
 	 */
 	public JPopupMenu getPopupMenu() {
-		if (jpopupMenu == null) {
-			jpopupMenu = new JPopupMenu();
+		if (popupMenu == null) {
+			popupMenu = new JPopupMenu();
 			initPopupMenu();
 		}
-		return jpopupMenu;
+		return popupMenu;
 	}
 	
 	private void initPopupMenu() {
 
 		if (popupRightAligned) {
 
-			jpopupMenu.addComponentListener(new ComponentAdapter() {
+			popupMenu.addComponentListener(new ComponentAdapter() {
 
 				@Override
 				public void componentResized(ComponentEvent e) {
 					Point p = getLocationOnScreen();
 					if (p != null) {
-						jpopupMenu.setLocation(p.x + getWidth() - jpopupMenu.getWidth(), p.y + getHeight());
+						popupMenu.setLocation(p.x + getWidth() - popupMenu.getWidth(), p.y + getHeight());
 					}
 				}
 			});
@@ -536,7 +536,7 @@ public class SplitButton extends JButton {
 			g = (Graphics2D) img.createGraphics();
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, img.getWidth(), img.getHeight());
-			g.setColor(jpopupMenu != null ? arrowColor : disabledArrowColor);
+			g.setColor(popupMenu != null ? arrowColor : disabledArrowColor);
 			// this creates a triangle facing right >
 			g.fillPolygon(new int[] { 0, 0, arrowSize / 2 }, new int[] { 0, arrowSize, arrowSize / 2 }, 3);
 			g.dispose();
