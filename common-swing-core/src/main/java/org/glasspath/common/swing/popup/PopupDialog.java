@@ -36,6 +36,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import org.glasspath.common.os.OsUtils;
+
 public class PopupDialog extends JPopupMenu {
 
 	private final JDialog dialog;
@@ -44,7 +46,7 @@ public class PopupDialog extends JPopupMenu {
 	private boolean popupVisible = false;
 
 	public PopupDialog() {
-		this(true);
+		this(OsUtils.PLATFORM_WINDOWS);
 	}
 
 	public PopupDialog(boolean invokeOnDialog) {
