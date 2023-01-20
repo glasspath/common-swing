@@ -23,10 +23,13 @@
 package org.glasspath.common.swing.popup;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JDialog;
 import javax.swing.JPopupMenu;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
@@ -35,11 +38,30 @@ import javax.swing.event.PopupMenuListener;
 
 public class PopupDialog extends JPopupMenu {
 
+	private final JDialog dialog;
 	private final PropertyChangeListener focusListener;
 
 	private boolean popupVisible = false;
 
 	public PopupDialog() {
+		this(true);
+	}
+
+	public PopupDialog(boolean invokeOnDialog) {
+
+		if (invokeOnDialog) {
+
+			// A JPopupMenu with focusable content causes the underlying
+			// window to flicker when the pop-up is shown, so we use a
+			// hidden dialog to invoke the pop-up
+			dialog = new JDialog();
+			dialog.setUndecorated(true);
+			dialog.setPreferredSize(new Dimension(1, 1));
+			dialog.pack();
+
+		} else {
+			dialog = null;
+		}
 
 		focusListener = new PropertyChangeListener() {
 
@@ -61,6 +83,7 @@ public class PopupDialog extends JPopupMenu {
 					@Override
 					public void run() {
 						MenuSelectionManager.defaultManager().clearSelectedPath();
+						popupDialogShown();
 					}
 				});
 
@@ -68,7 +91,13 @@ public class PopupDialog extends JPopupMenu {
 
 			@Override
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
 
+					@Override
+					public void run() {
+						popupDialogHidden();
+					}
+				});
 			}
 
 			@Override
@@ -92,6 +121,9 @@ public class PopupDialog extends JPopupMenu {
 		if (visible && !popupVisible) {
 			KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("permanentFocusOwner", focusListener); //$NON-NLS-1$
 		} else if (!visible && popupVisible) {
+			if (dialog != null) {
+				dialog.setVisible(false);
+			}
 			KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener("permanentFocusOwner", focusListener); //$NON-NLS-1$
 		}
 
@@ -99,9 +131,41 @@ public class PopupDialog extends JPopupMenu {
 
 	}
 
+	@Override
+	public void show(Component invoker, int x, int y) {
+
+		if (dialog != null) {
+
+			Point location = invoker.getLocationOnScreen();
+			location.x += x;
+			location.y += y;
+
+			dialog.setLocation(location);
+			dialog.setVisible(true);
+
+			super.show(dialog, 0, 0);
+
+		} else {
+			super.show(invoker, x, y);
+		}
+
+	}
+
+	public void popupDialogShown() {
+
+	}
+
+	public void popupDialogHidden() {
+
+	}
+
+	public boolean isCloseAllowed() {
+		return true;
+	}
+
 	private void focusChanged(Object focusOwner) {
 
-		if (popupVisible && focusOwner instanceof Component) {
+		if (popupVisible && isCloseAllowed() && focusOwner instanceof Component) {
 
 			Component parent = (Component) focusOwner;
 
