@@ -60,7 +60,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("");
+		automaticEntry = new Entry("Automatic");
 		addItem(automaticEntry);
 
 		for (CurrencyCode currencyCode : currencyCodes) {
@@ -104,19 +104,23 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	public void setAutomaticLocale(Locale locale) {
+	public void setAutomaticLocale(Locale locale, boolean showCurrencyDetails) {
 
 		CurrencyCode currencyCode = LocaleUtils.getCurrencyCodeForLocale(locale);
 		if (currencyCode != null) {
 
-			automaticEntry.text = currencyCode.code + ", " + currencyCode.symbol;
+			if (showCurrencyDetails) {
+				automaticEntry.text = currencyCode.code + ", " + currencyCode.symbol;
+			} else {
+				automaticEntry.text = "Automatic";
+			}
 
 			invalidate();
 			validate();
 			repaint();
 
 		} else {
-			automaticEntry.text = "";
+			automaticEntry.text = "Automatic";
 		}
 
 	}

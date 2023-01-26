@@ -60,7 +60,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("");
+		automaticEntry = new Entry("Automatic");
 		addItem(automaticEntry);
 
 		for (SystemOfUnits systemOfUnits : systemOfUnitsList) {
@@ -104,19 +104,23 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	public void setAutomaticLocale(Locale locale) {
+	public void setAutomaticLocale(Locale locale, boolean showSystemOfUnitsDetails) {
 
 		SystemOfUnits systemOfUnits = LocaleUtils.getSystemOfUnitsForLocale(locale);
 		if (systemOfUnits != null) {
 
-			automaticEntry.text = systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol;
+			if (showSystemOfUnitsDetails) {
+				automaticEntry.text = systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol;
+			} else {
+				automaticEntry.text = "Automatic";
+			}
 
 			invalidate();
 			validate();
 			repaint();
 
 		} else {
-			automaticEntry.text = "";
+			automaticEntry.text = "Automatic";
 		}
 
 	}

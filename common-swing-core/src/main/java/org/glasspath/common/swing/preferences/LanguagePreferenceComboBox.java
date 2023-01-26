@@ -33,7 +33,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 
-import org.glasspath.common.locale.LocaleUtils;
 import org.glasspath.common.locale.LocaleUtils.LanguageTag;
 import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
@@ -61,7 +60,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("");
+		automaticEntry = new Entry("Automatic");
 		addItem(automaticEntry);
 
 		for (LanguageTag languageTag : languageTags) {
@@ -105,18 +104,22 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	public void setAutomaticLocale(Locale locale) {
+	public void setAutomaticLocale(Locale locale, boolean showLocaleDetails) {
 
 		if (locale != null) {
 
-			automaticEntry.text = locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale);
+			if (showLocaleDetails) {
+				automaticEntry.text = locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale);
+			} else {
+				automaticEntry.text = "Automatic";
+			}
 
 			invalidate();
 			validate();
 			repaint();
 
 		} else {
-			automaticEntry.text = "";
+			automaticEntry.text = "Automatic";
 		}
 
 	}
