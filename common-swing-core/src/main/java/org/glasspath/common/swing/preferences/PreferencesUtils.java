@@ -46,6 +46,10 @@ public class PreferencesUtils {
 
 	}
 
+	public static JTextField createTextField(PreferencesProvider provider, Pref pref) {
+		return createTextField(provider, pref.getKey(), pref.getDefaultStringValue(), JTextField.LEFT);
+	}
+
 	public static JTextField createTextField(PreferencesProvider provider, Pref pref, int alignment) {
 		return createTextField(provider, pref.getKey(), pref.getDefaultStringValue(), alignment);
 	}
