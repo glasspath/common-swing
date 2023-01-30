@@ -173,7 +173,7 @@ public class PopupDialog extends JPopupMenu {
 
 			while (parent != null) {
 
-				if (parent == this) {
+				if (parent == this || (dialog != null && parent == dialog)) {
 					return;
 				}
 
