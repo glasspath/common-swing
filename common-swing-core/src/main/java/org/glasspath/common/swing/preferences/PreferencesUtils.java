@@ -202,7 +202,10 @@ public class PreferencesUtils {
 
 	public static void configureComboBox(JComboBox<?> comboBox, PreferencesProvider provider, String key, int defaultValue) {
 
-		comboBox.setSelectedIndex(provider.getPreferences().getInt(key, defaultValue));
+		int index = provider.getPreferences().getInt(key, defaultValue);
+		if (index >= 0 && index < comboBox.getItemCount()) {
+			comboBox.setSelectedIndex(index);
+		}
 
 		comboBox.addActionListener(new ActionListener() {
 
