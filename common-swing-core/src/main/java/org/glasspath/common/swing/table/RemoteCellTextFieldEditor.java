@@ -23,6 +23,7 @@
 package org.glasspath.common.swing.table;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -40,12 +41,13 @@ public class RemoteCellTextFieldEditor extends JTextField {
 	private final Color errorBackground = new Color(255, 150, 150);
 
 	private final Table table;
-	private int row;
 	private final int column;
 
+	private int preferredWidth = 150;
+
+	private int row = -1;
 	private boolean updatingText = false;
 	private boolean valueChanged = false;
-
 	private boolean error = false;
 
 	public RemoteCellTextFieldEditor(ApplicationContext context, Table table, int column) {
@@ -133,6 +135,14 @@ public class RemoteCellTextFieldEditor extends JTextField {
 
 	}
 
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferredWidth) {
+		this.preferredWidth = preferredWidth;
+	}
+
 	@Override
 	public void setText(String t) {
 		updatingText = true;
@@ -165,6 +175,15 @@ public class RemoteCellTextFieldEditor extends JTextField {
 		} else {
 			return super.getBackground();
 		}
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = super.getPreferredSize();
+		if (preferredWidth > 0) {
+			size.width = preferredWidth;
+		}
+		return size;
 	}
 
 }
