@@ -22,10 +22,10 @@
  */
 package org.glasspath.common.swing;
 
-public interface DataListener {
+public interface ContentListener {
 
-	public void newDataLoaded();
+	public void contentOpened();
 
-	public void finishEditing();
+	public void contentClosing();
 
 }

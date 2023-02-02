@@ -22,6 +22,7 @@
  */
 package org.glasspath.common.swing.table;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -32,9 +33,11 @@ import javax.swing.JComboBox;
 public class RemoteStringListCellEditor extends JComboBox<String> {
 
 	private final Table table;
-	private int row;
 	private final int column;
 
+	private int preferredWidth = 150;
+
+	private int row = -1;
 	private boolean updatingValue = false;
 	private boolean valueChanged = false;
 
@@ -72,6 +75,14 @@ public class RemoteStringListCellEditor extends JComboBox<String> {
 
 	}
 
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferredWidth) {
+		this.preferredWidth = preferredWidth;
+	}
+
 	public void setSelectedValue(int index) {
 		updatingValue = true;
 		setSelectedIndex(index);
@@ -85,11 +96,13 @@ public class RemoteStringListCellEditor extends JComboBox<String> {
 		}
 	}
 
-	private void cancel() {
-		if (row >= 0) {
-			valueChanged = false;
-			setSelectedIndex((Integer) table.getModel().getValueAt(row, column));
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = super.getPreferredSize();
+		if (preferredWidth > 0) {
+			size.width = preferredWidth;
 		}
+		return size;
 	}
 
 }

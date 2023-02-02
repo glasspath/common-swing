@@ -35,7 +35,7 @@ import javax.swing.undo.UndoableEdit;
 import org.glasspath.common.icons.Icons;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.ApplicationContext;
-import org.glasspath.common.swing.DataListener;
+import org.glasspath.common.swing.ContentListener;
 
 public class UndoManager extends DefaultUndoManager {
 
@@ -47,16 +47,16 @@ public class UndoManager extends DefaultUndoManager {
 
 		this.context = context;
 
-		context.addDataListener(new DataListener() {
+		context.addContentListener(new ContentListener() {
 
 			@Override
-			public void newDataLoaded() {
+			public void contentOpened() {
 				discardAllEdits();
 				updateActions();
 			}
 
 			@Override
-			public void finishEditing() {
+			public void contentClosing() {
 
 			}
 		});
@@ -125,7 +125,7 @@ public class UndoManager extends DefaultUndoManager {
 	public synchronized boolean addEdit(UndoableEdit anEdit) {
 		boolean result = super.addEdit(anEdit);
 		updateActions();
-		context.setSomethingChanged(true);
+		context.setContentChanged(true);
 		return result;
 	}
 
@@ -133,14 +133,14 @@ public class UndoManager extends DefaultUndoManager {
 	public synchronized void undo() throws CannotUndoException {
 		super.undo();
 		updateActions();
-		context.setSomethingChanged(true);
+		context.setContentChanged(true);
 	}
 
 	@Override
 	public synchronized void redo() throws CannotRedoException {
 		super.redo();
 		updateActions();
-		context.setSomethingChanged(true);
+		context.setContentChanged(true);
 	}
 
 }

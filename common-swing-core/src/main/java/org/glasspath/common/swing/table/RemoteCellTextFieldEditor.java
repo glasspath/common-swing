@@ -34,11 +34,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.glasspath.common.swing.ApplicationContext;
-import org.glasspath.common.swing.DataListener;
+import org.glasspath.common.swing.ContentListener;
+import org.glasspath.common.swing.color.ColorUtils;
 
 public class RemoteCellTextFieldEditor extends JTextField {
-
-	private final Color errorBackground = new Color(255, 150, 150);
 
 	private final Table table;
 	private final int column;
@@ -117,15 +116,15 @@ public class RemoteCellTextFieldEditor extends JTextField {
 			}
 		});
 
-		context.addDataListener(new DataListener() {
+		context.addContentListener(new ContentListener() {
 
 			@Override
-			public void newDataLoaded() {
+			public void contentOpened() {
 
 			}
 
 			@Override
-			public void finishEditing() {
+			public void contentClosing() {
 				submit();
 			}
 		});
@@ -171,7 +170,7 @@ public class RemoteCellTextFieldEditor extends JTextField {
 	@Override
 	public Color getBackground() {
 		if (error) {
-			return errorBackground;
+			return ColorUtils.INVALID_INPUT_BACKGROUND;
 		} else {
 			return super.getBackground();
 		}

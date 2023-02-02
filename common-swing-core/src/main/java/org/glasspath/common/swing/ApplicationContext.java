@@ -32,9 +32,11 @@ public interface ApplicationContext extends FrameContext {
 
 	public UndoManager getUndoManager();
 
-	public void addDataListener(DataListener listener);
+	public void addContentListener(ContentListener listener);
 
-	public void removeDataListener(DataListener listener);
+	public void removeContentListener(ContentListener listener);
+
+	public void setContentChanged(boolean changed);
 
 	public void undoPerformed();
 

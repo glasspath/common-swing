@@ -23,6 +23,7 @@
 package org.glasspath.common.swing.table;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -42,9 +43,11 @@ import org.jdesktop.swingx.JXMonthView;
 public class RemoteCellDatePicker extends JXDatePicker {
 
 	private final Table table;
-	private int row;
 	private final int column;
 
+	private int preferredWidth = 150;
+
+	private int row = -1;
 	private boolean updatingValue = false;
 	private boolean valueChanged = false;
 
@@ -112,14 +115,6 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			}
 		});
 
-		/*
-		 * getEditor().addFocusListener(new FocusListener() {
-		 * 
-		 * @Override public void focusLost(FocusEvent event) { try { commitEdit(); } catch (ParseException e) { e.printStackTrace(); } submit(); }
-		 * 
-		 * @Override public void focusGained(FocusEvent event) { table.stopEditing(); } });
-		 */
-
 		addActionListener(new ActionListener() {
 
 			@Override
@@ -134,6 +129,14 @@ public class RemoteCellDatePicker extends JXDatePicker {
 
 		// setLinkPanel(null);
 
+	}
+
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferredWidth) {
+		this.preferredWidth = preferredWidth;
 	}
 
 	public void setValue(Date date) {
@@ -153,7 +156,6 @@ public class RemoteCellDatePicker extends JXDatePicker {
 	private void submit() {
 		if (valueChanged && row >= 0) {
 			valueChanged = false;
-			// DateUtils.printGmtCalendar(getDate().getTime());
 			table.getModel().setValueAt(getDate(), row, column);
 		}
 	}
@@ -163,6 +165,15 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			valueChanged = false;
 			setDate((Date) table.getModel().getValueAt(row, column));
 		}
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = super.getPreferredSize();
+		if (preferredWidth > 0) {
+			size.width = preferredWidth;
+		}
+		return size;
 	}
 
 }

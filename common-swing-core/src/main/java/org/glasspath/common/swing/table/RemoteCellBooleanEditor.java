@@ -22,6 +22,7 @@
  */
 package org.glasspath.common.swing.table;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,9 +31,11 @@ import javax.swing.JCheckBox;
 public class RemoteCellBooleanEditor extends JCheckBox {
 
 	private final Table table;
-	private int row;
 	private final int column;
 
+	private int preferredWidth = 150;
+
+	private int row = -1;
 	private boolean updatingValue = false;
 
 	public RemoteCellBooleanEditor(Table table, int column) {
@@ -53,6 +56,14 @@ public class RemoteCellBooleanEditor extends JCheckBox {
 
 	}
 
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferredWidth) {
+		this.preferredWidth = preferredWidth;
+	}
+
 	public void setValue(boolean value) {
 		updatingValue = true;
 		setSelected(value);
@@ -63,6 +74,15 @@ public class RemoteCellBooleanEditor extends JCheckBox {
 		if (row >= 0) {
 			table.getModel().setValueAt(isSelected(), row, column);
 		}
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = super.getPreferredSize();
+		if (preferredWidth > 0) {
+			size.width = preferredWidth;
+		}
+		return size;
 	}
 
 }

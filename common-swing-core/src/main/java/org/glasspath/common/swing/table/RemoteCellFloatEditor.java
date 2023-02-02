@@ -22,6 +22,7 @@
  */
 package org.glasspath.common.swing.table;
 
+import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -38,14 +39,16 @@ import javax.swing.text.NumberFormatter;
 
 import org.glasspath.common.format.FormatUtils;
 import org.glasspath.common.swing.ApplicationContext;
-import org.glasspath.common.swing.DataListener;
+import org.glasspath.common.swing.ContentListener;
 
 public class RemoteCellFloatEditor extends JFormattedTextField {
 
 	private final Table table;
-	private int row;
 	private final int column;
 
+	private int preferredWidth = 150;
+
+	private int row = -1;
 	private boolean updatingValue = false;
 	private boolean valueChanged = false;
 
@@ -124,19 +127,27 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			}
 		});
 
-		context.addDataListener(new DataListener() {
+		context.addContentListener(new ContentListener() {
 
 			@Override
-			public void newDataLoaded() {
+			public void contentOpened() {
 
 			}
 
 			@Override
-			public void finishEditing() {
+			public void contentClosing() {
 				submit();
 			}
 		});
 
+	}
+
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferredWidth) {
+		this.preferredWidth = preferredWidth;
 	}
 
 	public void setValue(double value) {
@@ -170,6 +181,15 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			valueChanged = false;
 			setValue(table.getModel().getValueAt(row, column));
 		}
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = super.getPreferredSize();
+		if (preferredWidth > 0) {
+			size.width = preferredWidth;
+		}
+		return size;
 	}
 
 }

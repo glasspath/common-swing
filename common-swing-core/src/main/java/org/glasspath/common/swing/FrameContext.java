@@ -28,6 +28,6 @@ public interface FrameContext {
 
 	public JFrame getFrame();
 
-	public void setSomethingChanged(boolean somethingChanged);
+	public void setContentChanged(boolean changed);
 
 }

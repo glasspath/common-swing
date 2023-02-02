@@ -23,6 +23,7 @@
 package org.glasspath.common.swing.table;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -33,16 +34,18 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.glasspath.common.swing.ApplicationContext;
-import org.glasspath.common.swing.DataListener;
+import org.glasspath.common.swing.ContentListener;
 
 public class RemoteCellIntegerEditor extends JTextField {
 
 	private final Color errorBackground = new Color(255, 150, 150);
 
 	private final Table table;
-	private int row;
 	private final int column;
 
+	private int preferredWidth = 150;
+
+	private int row = -1;
 	private boolean updatingText = false;
 	private boolean valueChanged = false;
 
@@ -117,15 +120,15 @@ public class RemoteCellIntegerEditor extends JTextField {
 			}
 		});
 
-		context.addDataListener(new DataListener() {
+		context.addContentListener(new ContentListener() {
 
 			@Override
-			public void newDataLoaded() {
+			public void contentOpened() {
 
 			}
 
 			@Override
-			public void finishEditing() {
+			public void contentClosing() {
 				submit();
 			}
 		});
@@ -133,6 +136,14 @@ public class RemoteCellIntegerEditor extends JTextField {
 		// See https://bugs.openjdk.org/browse/JDK-8298017
 		setAutoscrolls(false);
 
+	}
+
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferredWidth) {
+		this.preferredWidth = preferredWidth;
 	}
 
 	@Override
@@ -172,6 +183,15 @@ public class RemoteCellIntegerEditor extends JTextField {
 		} else {
 			return super.getBackground();
 		}
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = super.getPreferredSize();
+		if (preferredWidth > 0) {
+			size.width = preferredWidth;
+		}
+		return size;
 	}
 
 }

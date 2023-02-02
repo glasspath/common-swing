@@ -30,6 +30,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -64,10 +66,9 @@ public class DefaultDialog extends JDialog {
 	public static final Dimension DIALOG_SIZE_LARGE_WIDE_REDUCED = new Dimension(1100, 500);
 	public static final Dimension DIALOG_SIZE_LARGE_WIDE_TALL = new Dimension(1150, 700);
 
-	private static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
 	protected final FrameContext context;
-	private final DefaultDialogHeader header = new DefaultDialogHeader();
+	private final KeyEventDispatcher keyEventDispatcher;
+	private final DefaultDialogHeader header;
 	private final Separator headerSeparator;
 	private final JPanel contentPanel;
 	private final Separator footerSeparator;
@@ -75,22 +76,30 @@ public class DefaultDialog extends JDialog {
 	private final JButton helpButton;
 	private final JButton okButton;
 	private final JButton cancelButton;
-	protected boolean submitted = false;
 
 	private JComponent focusComponent = null;
 	private boolean focusComponentBlocksKeyEvents = false;
-
-	private final KeyEventDispatcher keyEventDispatcher;
 	private boolean keyListenerEnabled = true;
-
 	private String helpPage = "index"; //$NON-NLS-1$
 
-	public DefaultDialog(FrameContext context) {
+	protected boolean submitted = false;
 
-		super(context.getFrame());
+	public DefaultDialog() {
+		this(null);
+	}
+
+	public DefaultDialog(FrameContext context) {
+		super(context != null ? context.getFrame() : null);
+
 		this.context = context;
 
-		this.keyEventDispatcher = new KeyEventDispatcher() {
+		getRootPane().setBackground(ColorUtils.TITLE_BAR_COLOR);
+		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+		setPreferredSize(DIALOG_SIZE_DEFAULT);
+
+		keyEventDispatcher = new KeyEventDispatcher() {
 
 			@Override
 			public boolean dispatchKeyEvent(KeyEvent e) {
@@ -133,22 +142,22 @@ public class DefaultDialog extends JDialog {
 			}
 		};
 
-		getRootPane().setBackground(ColorUtils.TITLE_BAR_COLOR);
-		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
-		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
-		setPreferredSize(DIALOG_SIZE_DEFAULT);
-
-		addWindowListener(new WindowAdapter() {
+		addComponentListener(new ComponentAdapter() {
 
 			@Override
-			public void windowOpened(WindowEvent e) {
+			public void componentShown(ComponentEvent e) {
 
 				installKeyboardListener();
 
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				if (getSize().width > screenSize.width || getSize().height > screenSize.height) {
+
 					setSize(screenSize);
-					setLocationRelativeTo(context.getFrame());
+
+					if (context != null) {
+						setLocationRelativeTo(context.getFrame());
+					}
+
 				}
 
 				SwingUtilities.invokeLater(new Runnable() {
@@ -160,6 +169,9 @@ public class DefaultDialog extends JDialog {
 				});
 
 			}
+		});
+
+		addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -167,6 +179,7 @@ public class DefaultDialog extends JDialog {
 			}
 		});
 
+		header = new DefaultDialogHeader();
 		getContentPane().add(header);
 
 		headerSeparator = new Separator();
@@ -197,7 +210,7 @@ public class DefaultDialog extends JDialog {
 				HelpUtils.showHelp(helpPage);
 			}
 		});
-		helpButton.setVisible(false); // TODO
+		helpButton.setVisible(false); // TODO?
 
 		footer.add(Box.createHorizontalGlue());
 
@@ -226,7 +239,10 @@ public class DefaultDialog extends JDialog {
 		getContentPane().add(footer);
 
 		pack();
-		setLocationRelativeTo(context.getFrame());
+
+		if (context != null) {
+			setLocationRelativeTo(context.getFrame());
+		}
 
 	}
 
@@ -300,9 +316,15 @@ public class DefaultDialog extends JDialog {
 	}
 
 	protected void submit() {
-		context.setSomethingChanged(true);
+		setContentChanged();
 		submitted = true;
 		closeDialog();
+	}
+
+	protected void setContentChanged() {
+		if (context != null) {
+			context.setContentChanged(true);
+		}
 	}
 
 	protected void cancel() {
@@ -310,9 +332,14 @@ public class DefaultDialog extends JDialog {
 	}
 
 	protected void closeDialog() {
+
 		uninstallKeyboardListener();
 		setVisible(false);
+
+		// TODO: This is used by sub-classes to remove installed listeners,
+		// we should probably do this differently..
 		dispose();
+
 	}
 
 	public void setKeyListenerEnabled(boolean keyListenerEnabled) {
