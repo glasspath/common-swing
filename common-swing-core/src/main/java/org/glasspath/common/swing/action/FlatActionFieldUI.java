@@ -44,6 +44,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
@@ -136,7 +137,15 @@ public class FlatActionFieldUI extends ComponentUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// actionField.field.requestFocusInWindow(); // TODO?
-				actionField.fireActionPerformed(e);
+
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						actionField.fireActionPerformed(e);
+					}
+				});
+
 			}
 		});
 
