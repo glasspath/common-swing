@@ -133,7 +133,7 @@ public class FlatActionFieldUI extends ComponentUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionField.field.requestFocusInWindow();
+				// actionField.field.requestFocusInWindow(); // TODO?
 				actionField.fireActionPerformed(e);
 			}
 		});
