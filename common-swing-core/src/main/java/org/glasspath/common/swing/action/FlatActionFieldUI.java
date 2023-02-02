@@ -95,7 +95,7 @@ public class FlatActionFieldUI extends ComponentUI {
 		buttonDisabledArrowColor = UIManager.getColor("ComboBox.buttonDisabledArrowColor");
 		buttonHoverArrowColor = UIManager.getColor("ComboBox.buttonHoverArrowColor");
 		buttonPressedArrowColor = UIManager.getColor("ComboBox.buttonPressedArrowColor");
-		buttonPressedBackground = UIManager.getColor("TabbedPane.buttonPressedBackground"); // TODO?
+		buttonPressedBackground = UIManager.getColor("Button.pressedBackground"); // TODO?
 
 		LookAndFeel.installColors(actionField, "ComboBox.background", "ComboBox.foreground");
 
