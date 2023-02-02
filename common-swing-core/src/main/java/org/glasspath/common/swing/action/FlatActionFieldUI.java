@@ -67,6 +67,7 @@ public class FlatActionFieldUI extends ComponentUI {
 	protected Color buttonDisabledArrowColor;
 	protected Color buttonHoverArrowColor;
 	protected Color buttonPressedArrowColor;
+	protected Color buttonPressedBackground;
 	protected FocusListener focusListener;
 	protected JButton button;
 
@@ -94,6 +95,7 @@ public class FlatActionFieldUI extends ComponentUI {
 		buttonDisabledArrowColor = UIManager.getColor("ComboBox.buttonDisabledArrowColor");
 		buttonHoverArrowColor = UIManager.getColor("ComboBox.buttonHoverArrowColor");
 		buttonPressedArrowColor = UIManager.getColor("ComboBox.buttonPressedArrowColor");
+		buttonPressedBackground = UIManager.getColor("TabbedPane.buttonPressedBackground"); // TODO?
 
 		LookAndFeel.installColors(actionField, "ComboBox.background", "ComboBox.foreground");
 
@@ -108,7 +110,7 @@ public class FlatActionFieldUI extends ComponentUI {
 		actionField.field.setBorder(BorderFactory.createEmptyBorder());
 		actionField.field.setOpaque(false);
 
-		button = new FlatArrowButton(SwingConstants.SOUTH, arrowType, buttonArrowColor, buttonDisabledArrowColor, buttonHoverArrowColor, null, buttonPressedArrowColor, null) {
+		button = new FlatArrowButton(SwingConstants.SOUTH, arrowType, buttonArrowColor, buttonDisabledArrowColor, buttonHoverArrowColor, null, buttonPressedArrowColor, buttonPressedBackground) {
 
 			@Override
 			protected void paintArrow(Graphics2D g) {
@@ -160,6 +162,7 @@ public class FlatActionFieldUI extends ComponentUI {
 		buttonDisabledArrowColor = null;
 		buttonHoverArrowColor = null;
 		buttonPressedArrowColor = null;
+		buttonPressedBackground = null;
 
 		if (actionField.getBorder() instanceof UIResource) {
 			actionField.setBorder(null);
