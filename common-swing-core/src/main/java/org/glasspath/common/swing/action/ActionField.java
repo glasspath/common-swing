@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.plaf.ComponentUI;
@@ -12,6 +13,7 @@ import javax.swing.plaf.ComponentUI;
 public class ActionField extends JComponent {
 
 	protected final JComponent field;
+	protected final AbstractAction action;
 
 	protected final List<ActionListener> actionListeners = new ArrayList<>();
 
@@ -20,8 +22,14 @@ public class ActionField extends JComponent {
 	}
 
 	public ActionField(JComponent field) {
+		this(field, null);
+	}
+
+	public ActionField(JComponent field, AbstractAction action) {
 
 		this.field = field;
+		this.action = action;
+
 		add(field);
 
 		setFocusable(true);
@@ -38,6 +46,10 @@ public class ActionField extends JComponent {
 
 	public JComponent getField() {
 		return field;
+	}
+
+	public AbstractAction getAction() {
+		return action;
 	}
 
 	// TODO?

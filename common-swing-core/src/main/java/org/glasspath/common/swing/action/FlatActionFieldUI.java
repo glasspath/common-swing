@@ -48,6 +48,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
+import javax.swing.text.JTextComponent;
 
 import com.formdev.flatlaf.ui.FlatArrowButton;
 import com.formdev.flatlaf.ui.FlatUIUtils;
@@ -63,6 +64,7 @@ public class FlatActionFieldUI extends ComponentUI {
 	protected Color borderColor;
 	protected Color disabledBorderColor;
 	protected Color disabledBackground;
+	protected Color inactiveBackground;
 	protected Color buttonBackground;
 	protected Color buttonArrowColor;
 	protected Color buttonDisabledArrowColor;
@@ -90,6 +92,7 @@ public class FlatActionFieldUI extends ComponentUI {
 		disabledBorderColor = UIManager.getColor("Component.disabledBorderColor");
 
 		disabledBackground = UIManager.getColor("ComboBox.disabledBackground");
+		inactiveBackground = UIManager.getColor("TextField.inactiveBackground"); // TODO?
 
 		buttonBackground = UIManager.getColor("ComboBox.buttonBackground");
 		buttonArrowColor = UIManager.getColor("ComboBox.buttonArrowColor");
@@ -131,6 +134,9 @@ public class FlatActionFieldUI extends ComponentUI {
 			}
 		};
 		button.setName("actionButton");
+		if (actionField.action != null) {
+			button.setAction(actionField.action);
+		}
 		actionField.add(button);
 		button.addActionListener(new ActionListener() {
 
@@ -260,11 +266,22 @@ public class FlatActionFieldUI extends ComponentUI {
 		float arc = FlatUIUtils.getBorderArc(c);
 		int arrowX = button.getX();
 		int arrowWidth = button.getWidth();
+
 		boolean enabled = c.isEnabled();
 		boolean isLeftToRight = c.getComponentOrientation().isLeftToRight();
+		boolean active = true;
+		if (actionField.field instanceof JTextComponent && !((JTextComponent) actionField.field).isEditable()) {
+			active = false;
+		}
 
 		// paint background
-		g2d.setColor(enabled ? c.getBackground() : disabledBackground);
+		if (!enabled) {
+			g2d.setColor(disabledBackground);
+		} else if (!active) {
+			g2d.setColor(inactiveBackground);
+		} else {
+			g2d.setColor(c.getBackground());
+		}
 		FlatUIUtils.paintComponentBackground(g2d, 0, 0, width, height, focusWidth, arc);
 
 		// paint arrow button background
