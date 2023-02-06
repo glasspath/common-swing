@@ -42,7 +42,6 @@ public class Fonts {
 		BASIC_FONT_FAMILIES.add("Times New Roman");
 		BASIC_FONT_FAMILIES.add("Verdana");
 	}
-	public static final String DEFAULT_BASIC_FONT_FAMILY = "Verdana";
 
 	private Fonts() {
 
