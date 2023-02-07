@@ -44,6 +44,7 @@ public class SvgIcon extends FlatSVGIcon {
 	public static final ColorFilter PURPLE = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(184, 119, 217));
 	public static final ColorFilter GREEN = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(151, 191, 105));
 	public static final ColorFilter RED = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(242, 73, 92));
+	public static final ColorFilter ORANGE = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(237, 162, 0));
 	public static final ColorFilter YELLOW = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(250, 222, 42));
 	static {
 		ColorFilter.getInstance().add(FlatSVGIcon.currentColor, Theme.isDark() ? new Color(175, 175, 175) : new Color(125, 125, 125));

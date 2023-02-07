@@ -46,6 +46,8 @@ public class Icons {
 	public static final ImageIcon null_16x16 = new ImageIcon(CLASS_LOADER.getResource("org/glasspath/common/icons/16x16/null_16x16.png"));
 
 	// SVG
+	public static final SvgIcon alert = new SvgIcon(getSvg("alert.svg"));
+	public static final SvgIcon alertLarge = new SvgIcon(22, 0, getSvg("alert.svg"));
 	public static final SvgIcon close = new SvgIcon(getSvg("close.svg"));
 	public static final SvgIcon closeRed = new SvgIcon(getSvg("close.svg"));
 	public static final SvgIcon cogBlue = new SvgIcon(getSvg("cog.svg"));
@@ -66,6 +68,8 @@ public class Icons {
 	public static final SvgIcon undo = new SvgIcon(getSvg("undo.svg"));
 
 	static {
+		alert.setColorFilter(SvgIcon.ORANGE);
+		alertLarge.setColorFilter(SvgIcon.ORANGE);
 		closeRed.setColorFilter(SvgIcon.RED);
 		cogBlue.setColorFilter(SvgIcon.BLUE);
 		cogBlueMask.setColorFilter(SvgIcon.BLUE);
