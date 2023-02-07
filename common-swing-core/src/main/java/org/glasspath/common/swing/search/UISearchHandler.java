@@ -29,9 +29,11 @@ import java.awt.Container;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.JTextComponent;
 
+@SuppressWarnings("nls")
 public class UISearchHandler {
 
 	public static final Color HIGHLIGHT_COLOR = new Color(84, 136, 217);
@@ -109,8 +111,24 @@ public class UISearchHandler {
 			if (component instanceof JTextComponent) {
 
 				JTextComponent textComponent = (JTextComponent) component;
+				Document document = textComponent.getDocument();
 
-				String text = textComponent.getText().toLowerCase();
+				// TODO: text.indexOf(searchText) returns wrong index, why?
+				// For now we retrieve the text from the document
+				// String text = textComponent.getText().toLowerCase();
+
+				String text = "";
+
+				if (document.getLength() > 0) {
+					try {
+						text = document.getText(0, document.getLength());
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+						text = textComponent.getText();
+					}
+				}
+
+				text = text.toLowerCase();
 
 				int index = text.indexOf(searchText);
 
