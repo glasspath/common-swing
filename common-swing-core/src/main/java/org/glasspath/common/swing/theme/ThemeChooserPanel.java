@@ -30,6 +30,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.ButtonGroup;
@@ -42,6 +44,9 @@ import org.glasspath.common.swing.graphics.NinePatch;
 
 public class ThemeChooserPanel extends JPanel {
 
+	private final JRadioButton lightRadioButton;
+	private final JRadioButton darkRadioButton;
+
 	public ThemeChooserPanel() {
 
 		GridBagLayout layout = new GridBagLayout();
@@ -53,15 +58,26 @@ public class ThemeChooserPanel extends JPanel {
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 
-		JRadioButton lightRadioButton = new JRadioButton("Light");
+		lightRadioButton = new JRadioButton("Light");
 		buttonGroup.add(lightRadioButton);
 		add(lightRadioButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-		JRadioButton darkRadioButton = new JRadioButton("Dark");
+		darkRadioButton = new JRadioButton("Dark");
 		buttonGroup.add(darkRadioButton);
 		add(darkRadioButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 		lightRadioButton.setSelected(true);
+
+		ActionListener actionListener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectionChanged(isDarkThemeSelected());
+			}
+		};
+
+		lightRadioButton.addActionListener(actionListener);
+		darkRadioButton.addActionListener(actionListener);
 
 		JLabel themeLabel = new JLabel("Choose your theme");
 		themeLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -69,6 +85,14 @@ public class ThemeChooserPanel extends JPanel {
 
 		add(new ThemePreviewPanel(false), new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		add(new ThemePreviewPanel(true), new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+	}
+
+	public boolean isDarkThemeSelected() {
+		return darkRadioButton.isSelected();
+	}
+
+	public void selectionChanged(boolean darkThemeSelected) {
 
 	}
 
