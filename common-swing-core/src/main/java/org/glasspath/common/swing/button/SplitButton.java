@@ -626,7 +626,6 @@ public class SplitButton extends JButton {
 		}
 
 		g2d.setColor(oldColor);
-		g2d.translate(-splitRectangle.x, -splitRectangle.y);
 
 	}
 
