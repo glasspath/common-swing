@@ -339,6 +339,13 @@ public abstract class FileManagerDialog extends DefaultDialog {
 				refreshOptionPanels();
 			}
 		};
+		filesTablePanel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				editFile(getSelectedCategory(), getSelectedFile());
+			}
+		});
 		mainSplitPanel.setLeftComponent(filesTablePanel);
 
 		JPanel optionsPanel = new JPanel();

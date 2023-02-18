@@ -24,7 +24,12 @@ package org.glasspath.common.swing.file.manager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -33,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -46,6 +52,7 @@ public abstract class FilesTablePanel extends JPanel {
 
 	protected final List<File> files;
 	protected final Table filesTable;
+	private final List<ActionListener> actionListeners = new ArrayList<>();
 
 	public FilesTablePanel(List<File> files) {
 
@@ -77,12 +84,35 @@ public abstract class FilesTablePanel extends JPanel {
 				selecionChanged(e);
 			}
 		});
+		filesTable.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
+					fireActionPerformed(new ActionEvent(getSelectedFile(), ActionEvent.ACTION_PERFORMED, null));
+				}
+			}
+		});
 
 		JScrollPane filesTableScrollPane = new JScrollPane(filesTable);
 		filesTableScrollPane.setBorder(BorderFactory.createEmptyBorder());
 		// filesTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		add(filesTableScrollPane, BorderLayout.CENTER);
 
+	}
+
+	public void addActionListener(ActionListener listener) {
+		actionListeners.add(listener);
+	}
+
+	public void removeActionListener(ActionListener listener) {
+		actionListeners.add(listener);
+	}
+
+	private void fireActionPerformed(ActionEvent e) {
+		for (ActionListener listener : actionListeners) {
+			listener.actionPerformed(e);
+		}
 	}
 
 	public File getSelectedFile() {
