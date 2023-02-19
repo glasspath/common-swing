@@ -80,7 +80,7 @@ public class DefaultDialog extends JDialog {
 	private JComponent focusComponent = null;
 	private boolean focusComponentBlocksKeyEvents = false;
 	private boolean keyListenerEnabled = true;
-	private String helpPage = "index"; //$NON-NLS-1$
+	private String helpPage = "https://glasspath.org"; //$NON-NLS-1$
 
 	protected boolean submitted = false;
 

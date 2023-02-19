@@ -22,6 +22,8 @@
  */
 package org.glasspath.common.swing.help;
 
+import org.glasspath.common.swing.DesktopUtils;
+
 public class HelpUtils {
 
 	private HelpUtils() {
@@ -29,7 +31,7 @@ public class HelpUtils {
 	}
 
 	public static void showHelp(String page) {
-		// TODO
+		DesktopUtils.browse(page);
 	}
 
 }
