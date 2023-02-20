@@ -84,7 +84,6 @@ public class FileChooser extends JFileChooser {
 	}
 
 	public static boolean showFileExistsDialog(Component parentComponent) {
-		// TODO: Translate
 		return JOptionPane.showOptionDialog(parentComponent, "File already exists, replace file?", "Replace file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Yes", "No" }, "No") == JOptionPane.YES_OPTION;
 	}
 
@@ -114,7 +113,7 @@ public class FileChooser extends JFileChooser {
 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setSelectedFile(startDir);
-		fileChooser.setDialogTitle("Choose file"); // TODO: Translate
+		fileChooser.setDialogTitle("Choose file");
 		fileChooser.setExtension(fileExtension);
 
 		if (fileExtension != null) {
@@ -138,7 +137,7 @@ public class FileChooser extends JFileChooser {
 
 				@Override
 				public String getDescription() {
-					return "." + fileExtension + " files"; // TODO: Translate
+					return "." + fileExtension + " files";
 				}
 			};
 
@@ -165,7 +164,7 @@ public class FileChooser extends JFileChooser {
 
 				@Override
 				public String getTypeDescription(File f) {
-					return "." + fileExtension + " files"; // TODO: Translate
+					return "." + fileExtension + " files";
 				}
 
 				@Override
@@ -322,7 +321,7 @@ public class FileChooser extends JFileChooser {
 			description = description.substring(0, description.length() - 2);
 		}
 
-		return description + " files"; // TODO: Translate
+		return description + " files";
 
 	}
 
@@ -336,6 +335,39 @@ public class FileChooser extends JFileChooser {
 		}
 
 		return ext;
+
+	}
+
+	public static String browseForDir(Frame frame, Preferences preferences, String preferencesKey, String suggestedDirName) {
+
+		File startDir;
+		if (suggestedDirName == null || suggestedDirName.length() == 0) {
+			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home"))); //$NON-NLS-1$
+		} else {
+			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + suggestedDirName); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setCurrentDirectory(startDir);
+		fileChooser.setDialogTitle("Choose directory");
+
+		int chosenAction = fileChooser.showOpenDialog(frame);
+
+		String dirPath = null;
+		if (chosenAction == JFileChooser.APPROVE_OPTION) {
+
+			try {
+				dirPath = fileChooser.getSelectedFile().getAbsolutePath();
+				preferences.put(preferencesKey, fileChooser.getSelectedFile().getAbsolutePath());
+			} catch (Exception e) {
+				Common.LOGGER.error("Exception while browsing for file", e); //$NON-NLS-1$
+				e.printStackTrace();
+			}
+
+		}
+
+		return dirPath;
 
 	}
 
