@@ -22,16 +22,22 @@
  */
 package org.glasspath.common.swing.border;
 
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Action;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.MenuSelectionManager;
 
+import org.glasspath.common.os.OsUtils;
+import org.glasspath.common.swing.color.ColorChooserDialog;
 import org.glasspath.common.swing.color.ColorChooserPanel;
+import org.glasspath.common.swing.color.ColorChooserPanel.ColorEvent;
 
 public class BorderMenu extends JMenu {
 
@@ -43,10 +49,10 @@ public class BorderMenu extends JMenu {
 	private final Action borderMenuWidthAction;
 
 	public BorderMenu() {
-		this(null, null, null);
+		this(null, null, null, false);
 	}
 
-	public BorderMenu(Action borderMenuTypeAction, Action borderMenuWidthAction, Action borderColorAction) {
+	public BorderMenu(Action borderMenuTypeAction, Action borderMenuWidthAction, Action borderColorAction, boolean menuBarMenu) {
 		super("Border");
 
 		this.borderMenuTypeAction = borderMenuTypeAction;
@@ -210,37 +216,76 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenu editColorMenu = new JMenu("Border color");
+		if (menuBarMenu && OsUtils.PLATFORM_MACOS) {
 
-		ColorChooserPanel colorChooserPanel = new ColorChooserPanel(null) {
+			JMenuItem editColorMenuItem = new JMenuItem("Border color");
+			editColorMenuItem.addActionListener(new ActionListener() {
 
-			@Override
-			protected Frame getFrame() {
-				return BorderMenu.this.getFrame();
-			}
-		};
-		editColorMenu.add(colorChooserPanel);
-		colorChooserPanel.getColorChooser().getActionButton().addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MenuSelectionManager.defaultManager().clearSelectedPath();
-			}
-		});
-		colorChooserPanel.addActionListener(new ActionListener() {
+					JColorChooser colorChooser = new JColorChooser();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
+					JDialog dialog = new ColorChooserDialog(getFrame(), "Border color", true, null, colorChooser, new ActionListener() {
 
-				MenuSelectionManager.defaultManager().clearSelectedPath();
+						@Override
+						public void actionPerformed(ActionEvent e) {
 
-				if (borderColorAction != null) {
-					borderColorAction.actionPerformed(e);
+							final Color color;
+							if (ColorChooserDialog.NULL_COLOR.equals(colorChooser.getColor())) {
+								color = null;
+							} else {
+								color = colorChooser.getColor();
+							}
+
+							borderColorAction.actionPerformed(new ColorEvent(e, color));
+
+						}
+					}, null);
+
+					dialog.setLocationRelativeTo(getFrame());
+					dialog.setVisible(true);
+					dialog.requestFocusInWindow();
+
 				}
+			});
+			add(editColorMenuItem);
 
-			}
-		});
-		add(editColorMenu);
+		} else {
+
+			JMenu editColorMenu = new JMenu("Border color");
+
+			ColorChooserPanel colorChooserPanel = new ColorChooserPanel(null) {
+
+				@Override
+				protected Frame getFrame() {
+					return BorderMenu.this.getFrame();
+				}
+			};
+			editColorMenu.add(colorChooserPanel);
+			colorChooserPanel.getColorChooser().getActionButton().addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MenuSelectionManager.defaultManager().clearSelectedPath();
+				}
+			});
+			colorChooserPanel.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+
+					MenuSelectionManager.defaultManager().clearSelectedPath();
+
+					if (borderColorAction != null) {
+						borderColorAction.actionPerformed(e);
+					}
+
+				}
+			});
+			add(editColorMenu);
+
+		}
 
 	}
 
