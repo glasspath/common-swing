@@ -34,10 +34,8 @@ public class RemoteStringListCellEditor extends JComboBox<String> {
 
 	private final Table table;
 	private final int column;
-
+	private int modelIndex = -1;
 	private int preferredWidth = 150;
-
-	private int row = -1;
 	private boolean updatingValue = false;
 	private boolean valueChanged = false;
 
@@ -67,7 +65,7 @@ public class RemoteStringListCellEditor extends JComboBox<String> {
 			public void actionPerformed(ActionEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 					submit();
 				}
 			}
@@ -90,9 +88,9 @@ public class RemoteStringListCellEditor extends JComboBox<String> {
 	}
 
 	private void submit() {
-		if (valueChanged && row >= 0) {
+		if (valueChanged && modelIndex >= 0) {
 			valueChanged = false;
-			table.getModel().setValueAt(getSelectedIndex(), row, column);
+			table.getModel().setValueAt(getSelectedIndex(), modelIndex, column);
 		}
 	}
 

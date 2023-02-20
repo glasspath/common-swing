@@ -45,10 +45,8 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 
 	private final Table table;
 	private final int column;
-
+	private int modelIndex = -1;
 	private int preferredWidth = 150;
-
-	private int row = -1;
 	private boolean updatingValue = false;
 	private boolean valueChanged = false;
 
@@ -71,7 +69,7 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			public void removeUpdate(DocumentEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 
@@ -79,7 +77,7 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			public void insertUpdate(DocumentEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 
@@ -87,7 +85,7 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			public void changedUpdate(DocumentEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 		});
@@ -140,6 +138,9 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			}
 		});
 
+		// See https://bugs.openjdk.org/browse/JDK-8298017
+		setAutoscrolls(false);
+
 	}
 
 	public int getPreferredWidth() {
@@ -151,20 +152,26 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 	}
 
 	public void setValue(double value) {
+
+		submit();
+
 		updatingValue = true;
 		setText(FormatUtils.CURRENCY_FORMAT.format(value));
 		updatingValue = false;
+
 	}
 
 	private void submit() {
-		if (valueChanged && row >= 0) {
+
+		if (valueChanged && modelIndex >= 0) {
+
+			valueChanged = false;
 
 			String stringValue = getText();
 			if (stringValue != null && stringValue.length() >= 0) {
 
 				try {
-					table.getModel().setValueAt(FormatUtils.parseFloat(stringValue), row, column);
-					valueChanged = false;
+					table.getModel().setValueAt(FormatUtils.parseFloat(stringValue), modelIndex, column);
 				} catch (Exception e) {
 					cancel();
 				}
@@ -174,12 +181,13 @@ public class RemoteCellFloatEditor extends JFormattedTextField {
 			}
 
 		}
+
 	}
 
 	private void cancel() {
-		if (row >= 0) {
+		if (modelIndex >= 0) {
 			valueChanged = false;
-			setValue(table.getModel().getValueAt(row, column));
+			setValue(table.getModel().getValueAt(modelIndex, column));
 		}
 	}
 

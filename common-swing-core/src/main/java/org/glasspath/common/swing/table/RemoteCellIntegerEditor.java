@@ -42,14 +42,11 @@ public class RemoteCellIntegerEditor extends JTextField {
 
 	private final Table table;
 	private final int column;
-
+	private int modelIndex = -1;
 	private int preferredWidth = 150;
-
-	private int row = -1;
-	private boolean updatingText = false;
+	private boolean updatingValue = false;
 	private boolean valueChanged = false;
-
-	private boolean error = false;
+	private boolean valueInvalid = false;
 
 	public RemoteCellIntegerEditor(ApplicationContext context, Table table, int column) {
 
@@ -62,25 +59,25 @@ public class RemoteCellIntegerEditor extends JTextField {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				if (!updatingText) {
+				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				if (!updatingText) {
+				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				if (!updatingText) {
+				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 		});
@@ -148,37 +145,45 @@ public class RemoteCellIntegerEditor extends JTextField {
 
 	@Override
 	public void setText(String t) {
-		updatingText = true;
+
+		submit();
+
+		updatingValue = true;
 		super.setText(t);
-		updatingText = false;
+		updatingValue = false;
+
 	}
 
 	private void submit() {
-		if (valueChanged && row >= 0) {
+
+		if (valueChanged && modelIndex >= 0) {
+
+			valueChanged = false;
+
 			try {
-				int value = Integer.parseInt(getText());
-				table.getModel().setValueAt(value, row, column);
-				valueChanged = false;
+				table.getModel().setValueAt(Integer.parseInt(getText()), modelIndex, column);
 			} catch (Exception e) {
 				cancel();
 			}
+
 		}
+
 	}
 
 	private void cancel() {
-		if (row >= 0) {
-			setText(table.getModel().getValueAt(row, column).toString());
+		if (modelIndex >= 0) {
 			valueChanged = false;
+			setText(table.getModel().getValueAt(modelIndex, column).toString());
 		}
 	}
 
-	public void setError(boolean error) {
-		this.error = error;
+	public void setValueInvalid(boolean valueInvalid) {
+		this.valueInvalid = valueInvalid;
 	}
 
 	@Override
 	public Color getBackground() {
-		if (error) {
+		if (valueInvalid) {
 			return errorBackground;
 		} else {
 			return super.getBackground();

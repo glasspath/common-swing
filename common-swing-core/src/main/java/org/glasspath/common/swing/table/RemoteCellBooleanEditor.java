@@ -32,10 +32,8 @@ public class RemoteCellBooleanEditor extends JCheckBox {
 
 	private final Table table;
 	private final int column;
-
+	private int modelIndex = -1;
 	private int preferredWidth = 150;
-
-	private int row = -1;
 	private boolean updatingValue = false;
 
 	public RemoteCellBooleanEditor(Table table, int column) {
@@ -48,7 +46,7 @@ public class RemoteCellBooleanEditor extends JCheckBox {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!updatingValue) {
-					row = table.convertRowIndexToModel(table.getSelectedRow());
+					modelIndex = table.convertRowIndexToModel(table.getSelectedRow());
 					submit();
 				}
 			}
@@ -71,8 +69,8 @@ public class RemoteCellBooleanEditor extends JCheckBox {
 	}
 
 	private void submit() {
-		if (row >= 0) {
-			table.getModel().setValueAt(isSelected(), row, column);
+		if (modelIndex >= 0) {
+			table.getModel().setValueAt(isSelected(), modelIndex, column);
 		}
 	}
 

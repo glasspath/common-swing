@@ -44,10 +44,8 @@ public class RemoteCellDatePicker extends JXDatePicker {
 
 	private final Table table;
 	private final int column;
-
+	private int modelIndex = -1;
 	private int preferredWidth = 150;
-
-	private int row = -1;
 	private boolean updatingValue = false;
 	private boolean valueChanged = false;
 
@@ -72,7 +70,6 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			public void removeUpdate(DocumentEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 
@@ -80,7 +77,6 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			public void insertUpdate(DocumentEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 
@@ -88,7 +84,6 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			public void changedUpdate(DocumentEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
 				}
 			}
 		});
@@ -121,7 +116,6 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			public void actionPerformed(ActionEvent e) {
 				if (!updatingValue) {
 					valueChanged = true;
-					row = table.convertRowIndexToModel(table.getSelectedRow());
 					submit();
 				}
 			}
@@ -139,31 +133,42 @@ public class RemoteCellDatePicker extends JXDatePicker {
 		this.preferredWidth = preferredWidth;
 	}
 
-	public void setValue(Date date) {
-		updatingValue = true;
-		setDate(date);
-		updatingValue = false;
-	}
-
 	@Override
 	public void setDate(Date date) {
 		super.setDate(date);
-		if (!updatingValue) {
+	}
+
+	public void setValue(Date date, int modelIndex) {
+		setValue(date, modelIndex, false);
+	}
+
+	public void setValue(Date date, int modelIndex, boolean submit) {
+
+		submit();
+
+		updatingValue = true;
+		super.setDate(date);
+		this.modelIndex = modelIndex;
+		updatingValue = false;
+
+		if (submit) {
+			valueChanged = true;
 			submit();
 		}
+
 	}
 
 	private void submit() {
-		if (valueChanged && row >= 0) {
+		if (valueChanged && modelIndex >= 0) {
 			valueChanged = false;
-			table.getModel().setValueAt(getDate(), row, column);
+			table.getModel().setValueAt(getDate(), modelIndex, column);
 		}
 	}
 
 	private void cancel() {
-		if (row >= 0) {
+		if (modelIndex >= 0) {
 			valueChanged = false;
-			setDate((Date) table.getModel().getValueAt(row, column));
+			setDate((Date) table.getModel().getValueAt(modelIndex, column));
 		}
 	}
 
