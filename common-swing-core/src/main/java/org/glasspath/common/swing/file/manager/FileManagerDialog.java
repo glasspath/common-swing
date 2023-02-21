@@ -400,7 +400,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 		Category selectedCategory = getSelectedCategory();
 
-		addButton.setEnabled(selectedCategory.getSourceDirectory() != null);
+		addButton.setEnabled(selectedCategory.getDirectory() != null && selectedCategory.getSourceDirectory() != null);
 
 		files.clear();
 		if (selectedCategory != null) {
@@ -475,11 +475,19 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 	public static class Category {
 
-		private final String name;
-		private final File directory;
-		private final File sourceDirectory;
-		private final FileFilter fileFilter;
-		private final List<String> linkedFileExtensions;
+		private String name = ""; //$NON-NLS-1$
+		private File directory = null;
+		private File sourceDirectory = null;
+		private FileFilter fileFilter = null;
+		private List<String> linkedFileExtensions = null;
+
+		public Category() {
+			this("", null, null); //$NON-NLS-1$
+		}
+
+		public Category(String name, FileFilter fileFilter, List<String> linkedFileExtensions) {
+			this(name, null, null, fileFilter, linkedFileExtensions);
+		}
 
 		public Category(String name, File directory, File sourceDirectory, FileFilter fileFilter, List<String> linkedFileExtensions) {
 			this.name = name;
@@ -493,12 +501,24 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			return name;
 		}
 
+		public void setName(String name) {
+			this.name = name;
+		}
+
 		public File getDirectory() {
 			return directory;
 		}
 
+		public void setDirectory(File directory) {
+			this.directory = directory;
+		}
+
 		public File getSourceDirectory() {
 			return sourceDirectory;
+		}
+
+		public void setSourceDirectory(File sourceDirectory) {
+			this.sourceDirectory = sourceDirectory;
 		}
 
 		public List<File> getDirectoryFiles() {
@@ -513,8 +533,16 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			return fileFilter;
 		}
 
+		public void setFileFilter(FileFilter fileFilter) {
+			this.fileFilter = fileFilter;
+		}
+
 		public List<String> getLinkedFileExtensions() {
 			return linkedFileExtensions;
+		}
+
+		public void setLinkedFileExtensions(List<String> linkedFileExtensions) {
+			this.linkedFileExtensions = linkedFileExtensions;
 		}
 
 		private List<File> getFiles(File dir) {
