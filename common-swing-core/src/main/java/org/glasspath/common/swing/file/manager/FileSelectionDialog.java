@@ -48,8 +48,7 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 
 		this.files = files;
 
-		// remove(getHeader());
-		getHeader().setTitle(title);
+		getHeader().setTitle(title != null ? title : "Select file");
 		remove(getHeaderSeparator());
 		setTitle("Select file");
 		setPreferredSize(DIALOG_SIZE_SQUARE);
