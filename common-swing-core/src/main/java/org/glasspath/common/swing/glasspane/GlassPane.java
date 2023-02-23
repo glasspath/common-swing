@@ -29,6 +29,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.glasspath.common.swing.search.SearchField;
@@ -38,6 +39,7 @@ public class GlassPane extends JPanel {
 	private final JFrame frame;
 	private final GridBagLayout layout;
 	private final SearchField searchField;
+	private final JLabel overlayLabel;
 
 	private Component contentComponent = null;
 	private int topMargin = 10;
@@ -54,7 +56,7 @@ public class GlassPane extends JPanel {
 			@Override
 			public void clear() {
 
-				searchField.setText("");
+				searchField.setText(""); //$NON-NLS-1$
 				searchField.setVisible(false);
 
 				if (contentComponent != null) {
@@ -68,6 +70,16 @@ public class GlassPane extends JPanel {
 		searchField.setButtonPolicy(SearchField.BUTTONS_VISIBLE_ALWAYS);
 		searchField.setVisible(false);
 
+		overlayLabel = new JLabel();
+		overlayLabel.setVisible(false);
+
+		float overlayLabelFontSize = overlayLabel.getFont().getSize2D();
+		overlayLabelFontSize = overlayLabelFontSize + 4.0F;
+		if (overlayLabelFontSize < 14.0F) {
+			overlayLabelFontSize = 14.0F;
+		}
+		overlayLabel.setFont(overlayLabel.getFont().deriveFont(overlayLabelFontSize));
+
 		layout = new GridBagLayout();
 		layout.rowWeights = new double[] { 0.0, 0.0, 0.1, 0.0 };
 		layout.rowHeights = new int[] { topMargin, 38, 100, 10 };
@@ -76,6 +88,7 @@ public class GlassPane extends JPanel {
 		setLayout(layout);
 
 		add(searchField, new GridBagConstraints(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		add(overlayLabel, new GridBagConstraints(0, 1, 5, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 	}
 
@@ -147,6 +160,44 @@ public class GlassPane extends JPanel {
 	public void hideSearchField() {
 
 		searchField.clear();
+
+		invalidate();
+		revalidate();
+		repaint();
+
+	}
+
+	public JLabel getOverlayLabel() {
+		return overlayLabel;
+	}
+
+	public void showOverlayLabel() {
+		showOverlayLabel(null);
+	}
+
+	public void showOverlayLabel(String text) {
+
+		updateLayout(false); // TODO?
+
+		if (text != null) {
+			overlayLabel.setText(text);
+		}
+
+		overlayLabel.setVisible(true);
+
+		invalidate();
+		revalidate();
+		repaint();
+
+	}
+
+	public boolean isOverlayLabelVisible() {
+		return overlayLabel.isVisible();
+	}
+
+	public void hideOverlayLabel() {
+
+		overlayLabel.setVisible(false);
 
 		invalidate();
 		revalidate();
