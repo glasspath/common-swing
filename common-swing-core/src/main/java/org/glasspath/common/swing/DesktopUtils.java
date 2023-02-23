@@ -29,9 +29,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import org.glasspath.common.Common;
+import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.resources.Resources;
 
 public class DesktopUtils {
@@ -76,6 +79,39 @@ public class DesktopUtils {
 						Desktop.getDesktop().open(file);
 					} catch (IOException e) {
 						Common.LOGGER.error("IOException while launching file explorer for file: " + file.getAbsolutePath(), e); //$NON-NLS-1$
+					}
+
+				}
+			}).start();
+
+		}
+
+	}
+
+	public static void open(File file, JFrame frame, String failedTitle, String failedMessage) {
+
+		if (Desktop.isDesktopSupported() && file != null) {
+
+			// TODO: https://bugs.openjdk.org/browse/JDK-8270269, occurs after using c++/cli/c# functions from UwpShareUtils, for now we just create a new thread
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+
+					try {
+						Desktop.getDesktop().open(file);
+					} catch (IOException e) {
+
+						Common.LOGGER.error("IOException while launching file explorer for file: " + file.getAbsolutePath(), e); //$NON-NLS-1$
+
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+								DialogUtils.showWarningMessage(frame, failedTitle, failedMessage);
+							}
+						});
+
 					}
 
 				}
