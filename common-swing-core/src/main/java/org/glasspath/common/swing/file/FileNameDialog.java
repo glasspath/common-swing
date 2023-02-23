@@ -157,7 +157,8 @@ public class FileNameDialog extends DefaultDialog {
 
 	private boolean isFileNameValid() {
 
-		boolean fileNameValid = OsUtils.isNewFileNameAllowed(file, fileNameTextField.getText(), newParentDir, true);
+		File targetFile = OsUtils.getFileWithNewName(file, fileNameTextField.getText(), newParentDir, true);
+		boolean fileNameValid = targetFile != null && !targetFile.exists();
 
 		if (fileNameValid && linkedFileExtensions != null && linkedFileExtensions.size() > 0) {
 
@@ -165,6 +166,7 @@ public class FileNameDialog extends DefaultDialog {
 
 				extension = extension.trim();
 
+				// TODO: Add extension instead of replacing
 				File linkedFile = OsUtils.getFileWithOtherExtension(file, extension);
 				if (linkedFile != null && linkedFile.exists()) {
 
@@ -210,6 +212,7 @@ public class FileNameDialog extends DefaultDialog {
 
 					extension = extension.trim();
 
+					// TODO: Add extension instead of replacing
 					File linkedFile = OsUtils.getFileWithOtherExtension(file, extension);
 					if (linkedFile != null && linkedFile.exists()) {
 
