@@ -50,11 +50,11 @@ import org.glasspath.common.swing.table.Table;
 
 public abstract class FilesTablePanel extends JPanel {
 
-	protected final List<File> files;
+	protected final FileList files;
 	protected final Table filesTable;
 	private final List<ActionListener> actionListeners = new ArrayList<>();
 
-	public FilesTablePanel(List<File> files) {
+	public FilesTablePanel(FileList files) {
 
 		this.files = files;
 
@@ -202,7 +202,7 @@ public abstract class FilesTablePanel extends JPanel {
 			return getValueAt(rowIndex, columnIndex, files);
 		}
 
-		protected Object getValueAt(int rowIndex, int columnIndex, List<File> fromList) {
+		protected Object getValueAt(int rowIndex, int columnIndex, FileList fromList) {
 
 			File file = fromList.get(rowIndex);
 			Object value = null;

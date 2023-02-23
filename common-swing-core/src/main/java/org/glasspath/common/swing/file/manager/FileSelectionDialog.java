@@ -40,9 +40,9 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 
 	protected final FilesTablePanel filesTablePanel;
 
-	protected final List<File> files;
+	protected final FileList files;
 
-	public FileSelectionDialog(FrameContext context, List<File> files, String title) {
+	public FileSelectionDialog(FrameContext context, FileList files, String title) {
 
 		super(context);
 

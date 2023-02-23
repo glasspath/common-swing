@@ -76,7 +76,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 	protected final FilesTablePanel filesTablePanel;
 	protected final JPanel optionsContentPanel;
 
-	protected final List<File> files = new ArrayList<>();
+	protected final DefaultFileList files = new DefaultFileList();
 
 	public FileManagerDialog(FrameContext context) {
 
@@ -125,7 +125,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 				Category selectedCategory = getSelectedCategory();
 				if (selectedCategory != null && selectedCategory.getSourceDirectory() != null) {
 
-					FileSelectionDialog fileSelectionDialog = new FileSelectionDialog(context, selectedCategory.getSourceDirectoryFiles(), selectedCategory.getName()) {
+					FileSelectionDialog fileSelectionDialog = new FileSelectionDialog(context, new DefaultFileList(selectedCategory.getSourceDirectory(), selectedCategory.getFileFilter()), selectedCategory.getName()) {
 
 						@Override
 						protected Icon getFileIcon(File file) {
@@ -278,6 +278,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 								for (String extension : selectedCategory.getLinkedFileExtensions()) {
 
+									// TODO: Add extension instead of replacing
 									File linkedFile = OsUtils.getFileWithOtherExtension(selectedFile, extension);
 									if (linkedFile != null && linkedFile.exists()) {
 
@@ -400,12 +401,15 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 		Category selectedCategory = getSelectedCategory();
 
-		addButton.setEnabled(selectedCategory.getDirectory() != null && selectedCategory.getSourceDirectory() != null);
-
-		files.clear();
-		if (selectedCategory != null) {
-			files.addAll(selectedCategory.getDirectoryFiles());
+		if (selectedCategory == null) {
+			files.setDirectory(null);
+		} else {
+			files.setDirectory(selectedCategory.getDirectory());
+			files.setFileFilter(selectedCategory.getFileFilter());
 		}
+
+		addButton.setEnabled(selectedCategory.getDirectory() != null && selectedCategory.getDirectory().isDirectory()
+				&& selectedCategory.getSourceDirectory() != null && selectedCategory.getSourceDirectory().isDirectory());
 
 		filesTablePanel.reload();
 
