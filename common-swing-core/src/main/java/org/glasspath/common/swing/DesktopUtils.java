@@ -43,7 +43,7 @@ public class DesktopUtils {
 
 	}
 
-	public static JMenuItem createLaunchFileMenuItem(String path) {
+	public static JMenuItem createLaunchFileMenuItem(String path, JFrame frame) {
 
 		JMenuItem item = new JMenuItem(Resources.getString("OpenFile")); //$NON-NLS-1$
 		item.setEnabled(path != null && path.length() > 0);
@@ -51,7 +51,7 @@ public class DesktopUtils {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				open(path);
+				open(path, frame);
 			}
 		});
 
@@ -59,33 +59,14 @@ public class DesktopUtils {
 
 	}
 
-	public static void open(String path) {
+	public static void open(String path, JFrame frame) {
 		if (path != null && path.length() > 0) {
-			open(new File(path));
+			open(new File(path), frame);
 		}
 	}
 
-	public static void open(File file) {
-
-		if (Desktop.isDesktopSupported() && file != null) {
-
-			// TODO: https://bugs.openjdk.org/browse/JDK-8270269, occurs after using c++/cli/c# functions from UwpShareUtils, for now we just create a new thread
-			new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-
-					try {
-						Desktop.getDesktop().open(file);
-					} catch (IOException e) {
-						Common.LOGGER.error("IOException while launching file explorer for file: " + file.getAbsolutePath(), e); //$NON-NLS-1$
-					}
-
-				}
-			}).start();
-
-		}
-
+	public static void open(File file, JFrame frame) {
+		open(file, frame, "File could not be opened", "The file could not be opened..");
 	}
 
 	public static void open(File file, JFrame frame, String failedTitle, String failedMessage) {

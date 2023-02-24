@@ -44,6 +44,7 @@ import org.glasspath.common.swing.FrameContext;
 
 public class AboutDialog extends JDialog {
 
+	private final FrameContext context;
 	private final ImageIcon image;
 	private final File logFile;
 	private final File logFileBackup;
@@ -51,10 +52,10 @@ public class AboutDialog extends JDialog {
 	private final Dimension contentSize;
 	private final FooterPanel footerPanel;
 
-
 	public AboutDialog(FrameContext context, IAbout about) {
 		super(context.getFrame());
 
+		this.context = context;
 		this.image = about.getAboutImage();
 		this.logFile = about.getLogFile();
 		this.logFileBackup = about.getLogFileBackup();
@@ -135,7 +136,7 @@ public class AboutDialog extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent event) {
 					if (logFile != null) {
-						DesktopUtils.open(logFile.getAbsolutePath());
+						DesktopUtils.open(logFile.getAbsolutePath(), context.getFrame());
 					}
 				}
 			});
@@ -148,7 +149,7 @@ public class AboutDialog extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent event) {
 					if (logFileBackup != null) {
-						DesktopUtils.open(logFileBackup.getAbsolutePath());
+						DesktopUtils.open(logFileBackup.getAbsolutePath(), context.getFrame());
 					}
 				}
 			});
