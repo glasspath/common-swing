@@ -50,13 +50,13 @@ import org.glasspath.common.swing.table.Table;
 
 public abstract class FilesTablePanel extends JPanel {
 
-	protected final FileList files;
+	protected final FileList fileList;
 	protected final Table filesTable;
 	private final List<ActionListener> actionListeners = new ArrayList<>();
 
-	public FilesTablePanel(FileList files) {
+	public FilesTablePanel(FileList fileList) {
 
-		this.files = files;
+		this.fileList = fileList;
 
 		setLayout(new BorderLayout());
 
@@ -119,8 +119,8 @@ public abstract class FilesTablePanel extends JPanel {
 
 		if (filesTable.getSelectedRowCount() == 1 && filesTable.getSelectedRow() >= 0) {
 			int modelIndex = filesTable.convertRowIndexToModel(filesTable.getSelectedRow());
-			if (modelIndex >= 0 && modelIndex < files.size()) {
-				return files.get(modelIndex);
+			if (modelIndex >= 0 && modelIndex < fileList.size()) {
+				return fileList.get(modelIndex);
 			}
 		}
 
@@ -132,7 +132,7 @@ public abstract class FilesTablePanel extends JPanel {
 
 		filesTable.clearSelection();
 
-		int index = files.indexOf(file);
+		int index = fileList.indexOf(file);
 		if (index >= 0) {
 
 			int viewIndex = filesTable.convertRowIndexToView(index);
@@ -194,12 +194,12 @@ public abstract class FilesTablePanel extends JPanel {
 
 		@Override
 		public int getRowCount() {
-			return files.size();
+			return fileList.size();
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			return getValueAt(rowIndex, columnIndex, files);
+			return getValueAt(rowIndex, columnIndex, fileList);
 		}
 
 		protected Object getValueAt(int rowIndex, int columnIndex, FileList fromList) {
@@ -253,9 +253,9 @@ public abstract class FilesTablePanel extends JPanel {
 			if (filesTable.convertColumnIndexToModel(column) == 0 && row >= 0) {
 
 				int modelIndex = filesTable.convertRowIndexToModel(row);
-				if (modelIndex >= 0 && modelIndex < files.size()) {
+				if (modelIndex >= 0 && modelIndex < fileList.size()) {
 
-					File file = files.get(row);
+					File file = fileList.get(row);
 
 					setIcon(getFileIcon(file));
 

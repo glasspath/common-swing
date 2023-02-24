@@ -23,13 +23,16 @@
 package org.glasspath.common.swing.file.manager;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.List;
+import java.io.FileFilter;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
+import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 
@@ -38,15 +41,20 @@ import org.glasspath.common.swing.dialog.DefaultDialog;
 
 public abstract class FileSelectionDialog extends DefaultDialog {
 
+	protected final JCheckBox showAllFilesCheckBox;
 	protected final FilesTablePanel filesTablePanel;
 
-	protected final FileList files;
+	protected final FileList fileList;
 
-	public FileSelectionDialog(FrameContext context, FileList files, String title) {
+	public FileSelectionDialog(FrameContext context, FileList fileList, String title) {
+		this(context, fileList, null, null, title);
+	}
+
+	public FileSelectionDialog(FrameContext context, FileList fileList, FileFilter defaultFileFilter, FileFilter preferredFileFilter, String title) {
 
 		super(context);
 
-		this.files = files;
+		this.fileList = fileList;
 
 		getHeader().setTitle(title != null ? title : "Select file");
 		remove(getHeaderSeparator());
@@ -57,7 +65,31 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 		getContentPanel().setLayout(new BorderLayout());
 		getContentPanel().setBorder(BorderFactory.createEmptyBorder());
 
-		filesTablePanel = new FilesTablePanel(files) {
+		if (defaultFileFilter != null && preferredFileFilter != null) {
+
+			showAllFilesCheckBox = new JCheckBox("Show all files");
+			showAllFilesCheckBox.setBorder(BorderFactory.createEmptyBorder(0, 7, 2, 0));
+			getFooter().add(showAllFilesCheckBox, 0);
+			showAllFilesCheckBox.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (showAllFilesCheckBox.isSelected()) {
+						fileList.setFileFilter(defaultFileFilter);
+					} else {
+						fileList.setFileFilter(preferredFileFilter);
+					}
+					filesTablePanel.reload();
+				}
+			});
+
+			fileList.setFileFilter(preferredFileFilter);
+
+		} else {
+			showAllFilesCheckBox = null;
+		}
+
+		filesTablePanel = new FilesTablePanel(fileList) {
 
 			@Override
 			protected String getFileDescription(File file) {
@@ -75,7 +107,7 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 			}
 		};
 		filesTablePanel.filesTable.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() >= 2) {
@@ -87,6 +119,11 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 
 		selectionChanged();
 
+	}
+
+	@Override
+	protected void setContentChanged() {
+		// Content is not changed
 	}
 
 	private void selectionChanged() {
@@ -111,5 +148,5 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 			super.submit();
 		}
 	}
-	
+
 }

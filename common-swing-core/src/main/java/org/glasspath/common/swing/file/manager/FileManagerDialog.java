@@ -122,10 +122,12 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				Category selectedCategory = getSelectedCategory();
-				if (selectedCategory != null && selectedCategory.getSourceDirectory() != null) {
+				Category category = getSelectedCategory();
+				if (category != null && category.getSourceDirectory() != null) {
 
-					FileSelectionDialog fileSelectionDialog = new FileSelectionDialog(context, new DefaultFileList(selectedCategory.getSourceDirectory(), selectedCategory.getFileFilter()), selectedCategory.getName()) {
+					FileList fileList = new DefaultFileList(category.getSourceDirectory(), category.getFileFilter());
+
+					FileSelectionDialog fileSelectionDialog = new FileSelectionDialog(context, fileList, category.getFileFilter(), category.getPreferredFileFilter(), category.getName()) {
 
 						@Override
 						protected Icon getFileIcon(File file) {
@@ -142,7 +144,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 						File selectedFile = fileSelectionDialog.getSelectedFile();
 						if (selectedFile != null) {
 
-							FileNameDialog fileNameDialog = new FileNameDialog(context, selectedFile, true, selectedCategory.getDirectory(), selectedCategory.linkedFileExtensions);
+							FileNameDialog fileNameDialog = new FileNameDialog(context, selectedFile, true, category.getDirectory(), category.linkedFileExtensions);
 							if (fileNameDialog.setVisibleAndGetAction()) {
 
 								File fileCopy = fileNameDialog.getFileWithNewName();
@@ -483,21 +485,27 @@ public abstract class FileManagerDialog extends DefaultDialog {
 		private File directory = null;
 		private File sourceDirectory = null;
 		private FileFilter fileFilter = null;
+		private FileFilter preferredFileFilter = null;
 		private List<String> linkedFileExtensions = null;
 
 		public Category() {
-			this("", null, null); //$NON-NLS-1$
+			this("", null, null, null, null, null); //$NON-NLS-1$
 		}
 
 		public Category(String name, FileFilter fileFilter, List<String> linkedFileExtensions) {
-			this(name, null, null, fileFilter, linkedFileExtensions);
+			this(name, null, null, fileFilter, null, linkedFileExtensions);
 		}
 
-		public Category(String name, File directory, File sourceDirectory, FileFilter fileFilter, List<String> linkedFileExtensions) {
+		public Category(String name, FileFilter fileFilter, FileFilter preferredFileFilter, List<String> linkedFileExtensions) {
+			this(name, null, null, fileFilter, preferredFileFilter, linkedFileExtensions);
+		}
+
+		public Category(String name, File directory, File sourceDirectory, FileFilter fileFilter, FileFilter preferredFileFilter, List<String> linkedFileExtensions) {
 			this.name = name;
 			this.directory = directory;
 			this.sourceDirectory = sourceDirectory;
 			this.fileFilter = fileFilter;
+			this.preferredFileFilter = preferredFileFilter;
 			this.linkedFileExtensions = linkedFileExtensions;
 		}
 
@@ -539,6 +547,14 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 		public void setFileFilter(FileFilter fileFilter) {
 			this.fileFilter = fileFilter;
+		}
+
+		public FileFilter getPreferredFileFilter() {
+			return preferredFileFilter;
+		}
+
+		public void setPreferredFileFilter(FileFilter preferredFileFilter) {
+			this.preferredFileFilter = preferredFileFilter;
 		}
 
 		public List<String> getLinkedFileExtensions() {
