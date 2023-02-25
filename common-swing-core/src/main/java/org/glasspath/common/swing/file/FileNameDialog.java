@@ -138,6 +138,11 @@ public class FileNameDialog extends DefaultDialog {
 
 	}
 
+	@Override
+	protected void setContentChanged() {
+		// Application content is not changed by file name dialog
+	}
+
 	private void validateFileName() {
 
 		SwingUtilities.invokeLater(new Runnable() {

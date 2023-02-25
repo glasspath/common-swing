@@ -367,6 +367,11 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 	}
 
+	@Override
+	protected void setContentChanged() {
+		// Application content is not changed by file manager
+	}
+
 	protected void setCategories(List<Category> categories) {
 		categoryComboBox.removeAllItems();
 		for (Category category : categories) {

@@ -123,7 +123,7 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 
 	@Override
 	protected void setContentChanged() {
-		// Content is not changed
+		// Application content is not changed by file selection dialog
 	}
 
 	private void selectionChanged() {
