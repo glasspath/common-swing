@@ -56,6 +56,22 @@ public class UISearchHandler {
 		this.container = container;
 	}
 
+	public HighlightPainter getOccurenceHighlighter() {
+		return occurenceHighlighter;
+	}
+
+	public void setOccurenceHighlighter(HighlightPainter occurenceHighlighter) {
+		this.occurenceHighlighter = occurenceHighlighter;
+	}
+
+	public HighlightPainter getSearchHighlighter() {
+		return searchHighlighter;
+	}
+
+	public void setSearchHighlighter(HighlightPainter searchHighlighter) {
+		this.searchHighlighter = searchHighlighter;
+	}
+
 	public void searchNext(String text) {
 
 		if (exit && isSearchThreadAlive()) {
