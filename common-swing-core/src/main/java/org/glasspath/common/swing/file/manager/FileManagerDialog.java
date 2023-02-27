@@ -280,8 +280,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 								for (String extension : selectedCategory.getLinkedFileExtensions()) {
 
-									// TODO: Add extension instead of replacing
-									File linkedFile = OsUtils.getFileWithOtherExtension(selectedFile, extension);
+									File linkedFile = OsUtils.getFileByAddingExtension(selectedFile, extension);
 									if (linkedFile != null && linkedFile.exists()) {
 
 										if (!OsUtils.deleteFile(linkedFile)) {

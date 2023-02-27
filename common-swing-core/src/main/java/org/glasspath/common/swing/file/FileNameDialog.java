@@ -171,12 +171,11 @@ public class FileNameDialog extends DefaultDialog {
 
 				extension = extension.trim();
 
-				// TODO: Add extension instead of replacing
-				File linkedFile = OsUtils.getFileWithOtherExtension(file, extension);
+				File linkedFile = OsUtils.getFileByAddingExtension(file, extension);
 				if (linkedFile != null && linkedFile.exists()) {
 
-					String linkedFileName = fileNameTextField.getText() + (extension.length() == 0 ? "" : "." + extension); //$NON-NLS-1$ //$NON-NLS-2$
-					if (!OsUtils.isNewFileNameAllowed(file, linkedFileName, newParentDir, false)) {
+					String newLinkedFileName = targetFile.getName() + (extension.length() == 0 ? "" : "." + extension); //$NON-NLS-1$ //$NON-NLS-2$
+					if (!OsUtils.isNewFileNameAllowed(linkedFile, newLinkedFileName, newParentDir, false)) {
 						fileNameValid = false;
 						break;
 					}
@@ -217,12 +216,11 @@ public class FileNameDialog extends DefaultDialog {
 
 					extension = extension.trim();
 
-					// TODO: Add extension instead of replacing
-					File linkedFile = OsUtils.getFileWithOtherExtension(file, extension);
+					File linkedFile = OsUtils.getFileByAddingExtension(file, extension);
 					if (linkedFile != null && linkedFile.exists()) {
 
-						String linkedFileName = fileNameTextField.getText() + (extension.length() == 0 ? "" : "." + extension); //$NON-NLS-1$ //$NON-NLS-2$
-						targetFile = OsUtils.getFileWithNewName(linkedFile, linkedFileName, newParentDir, false);
+						String newLinkedFileName = targetFile.getName() + (extension.length() == 0 ? "" : "." + extension); //$NON-NLS-1$ //$NON-NLS-2$
+						targetFile = OsUtils.getFileWithNewName(linkedFile, newLinkedFileName, newParentDir, false);
 
 						if (copy) {
 							if (OsUtils.copyFile(linkedFile, targetFile) == null) {
