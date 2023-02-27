@@ -47,14 +47,13 @@ public class Fonts {
 
 	}
 
-	public static List<String> registerBundledFonts(Class<?> applicationClass, FontFilter filter) {
-		return registerBundledFonts(OsUtils.getBundledFile(applicationClass, "fonts"), filter);
-	}
-
-	public static List<String> registerBundledFonts(File fontsDir, FontFilter filter) {
+	public static List<String> registerBundledFonts(String bundledFontsPath, FontFilter filter) {
 
 		List<String> fontFamilyNames = new ArrayList<>();
-		registerFonts(fontsDir, fontFamilyNames, filter);
+
+		if (bundledFontsPath != null && bundledFontsPath.length() > 0) {
+			registerFonts(new File(bundledFontsPath), fontFamilyNames, filter);
+		}
 
 		return fontFamilyNames;
 
@@ -62,7 +61,7 @@ public class Fonts {
 
 	private static void registerFonts(File fontsDir, List<String> fontFamilyNames, FontFilter filter) {
 
-		if (fontsDir != null && fontsDir.exists()) {
+		if (fontsDir != null && fontsDir.isDirectory()) {
 
 			GraphicsEnvironment graphicsEnvirontment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
