@@ -25,6 +25,7 @@ package org.glasspath.common.swing.file.manager;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.glasspath.common.Common;
@@ -70,12 +71,18 @@ public class DefaultFileList extends FileList {
 		files.clear();
 
 		try {
+
 			if (directory != null && directory.isDirectory()) {
+
 				File[] filteredFiles = directory.listFiles(fileFilter);
 				for (File file : filteredFiles) {
 					files.add(file);
 				}
+
+				Collections.sort(files);
+
 			}
+
 		} catch (Exception e) {
 			Common.LOGGER.error("Exception while getting files: ", e); //$NON-NLS-1$
 		}
