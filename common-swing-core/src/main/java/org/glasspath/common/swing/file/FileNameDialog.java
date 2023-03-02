@@ -92,7 +92,11 @@ public class FileNameDialog extends DefaultDialog {
 
 		fileNameTextField = new JTextField();
 		if (copy) {
-			fileNameTextField.setText(OsUtils.getNextAvailableFileName(file, newParentDir));
+			if (newParentDir == null || OsUtils.isSameFile(file.getParentFile(), newParentDir)) {
+				fileNameTextField.setText(OsUtils.getNextAvailableFileName(file, newParentDir, false));
+			} else {
+				fileNameTextField.setText(OsUtils.getFileNameWithoutExtension(file));
+			}
 		} else {
 			fileNameTextField.setText(OsUtils.getFileNameWithoutExtension(file));
 		}
