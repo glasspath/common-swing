@@ -38,9 +38,9 @@ public abstract class AbstractTools<T extends FrameContext> {
 
 		this.context = context;
 
-		menu = new JMenu("File");
+		menu = new JMenu(text);
 
-		toolBar = new JToolBar("File") {
+		toolBar = new JToolBar(text) {
 
 			@Override
 			public void updateUI() {
