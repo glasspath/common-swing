@@ -22,6 +22,7 @@
  */
 package org.glasspath.common.swing.tools;
 
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 
@@ -58,6 +59,38 @@ public abstract class AbstractTools<T extends FrameContext> {
 
 	public JToolBar getToolBar() {
 		return toolBar;
+	}
+
+	public boolean isToolBarVisible() {
+		return toolBar.isVisible();
+	}
+
+	public void setToolBarVisible(boolean visible) {
+		setToolBarVisible(visible, true);
+	}
+
+	public void setToolBarVisible(boolean visible, boolean revalidateFrame) {
+
+		toolBar.setVisible(visible);
+
+		if (revalidateFrame) {
+			revalidateFrame();
+		}
+
+	}
+
+	protected void revalidateFrame() {
+
+		if (context != null) {
+
+			JFrame frame = context.getFrame();
+
+			frame.invalidate(); // TODO: Remove?
+			frame.revalidate();
+			frame.repaint();
+
+		}
+
 	}
 
 }
