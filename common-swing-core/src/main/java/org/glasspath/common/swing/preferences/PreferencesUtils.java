@@ -34,6 +34,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.glasspath.common.os.preferences.BoolPref;
+import org.glasspath.common.os.preferences.IntPref;
 import org.glasspath.common.os.preferences.Pref;
 import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
@@ -47,11 +49,11 @@ public class PreferencesUtils {
 	}
 
 	public static JTextField createTextField(PreferencesProvider provider, Pref pref) {
-		return createTextField(provider, pref.getKey(), pref.getDefaultStringValue(), JTextField.LEFT);
+		return createTextField(provider, pref.key, pref.defaultValue, JTextField.LEFT);
 	}
 
 	public static JTextField createTextField(PreferencesProvider provider, Pref pref, int alignment) {
-		return createTextField(provider, pref.getKey(), pref.getDefaultStringValue(), alignment);
+		return createTextField(provider, pref.key, pref.defaultValue, alignment);
 	}
 
 	public static JTextField createTextField(PreferencesProvider provider, String key, String defaultValue, int alignment) {
@@ -125,8 +127,8 @@ public class PreferencesUtils {
 
 	}
 
-	public static JCheckBox createCheckBox(PreferencesProvider provider, Pref pref, String text) {
-		return createCheckBox(provider, pref.getKey(), pref.getDefaultBooleanValue(), text);
+	public static JCheckBox createCheckBox(PreferencesProvider provider, BoolPref pref, String text) {
+		return createCheckBox(provider, pref.key, pref.defaultValue, text);
 	}
 
 	public static JCheckBox createCheckBox(PreferencesProvider provider, String key, boolean defaultValue, String text) {
@@ -174,12 +176,12 @@ public class PreferencesUtils {
 
 	}
 
-	public static <T> JComboBox<T> createComboBox(PreferencesProvider provider, Pref pref, T[] items) {
-		return createComboBox(provider, pref.getKey(), pref.getDefaultIntValue(), items, null);
+	public static <T> JComboBox<T> createComboBox(PreferencesProvider provider, IntPref pref, T[] items) {
+		return createComboBox(provider, pref.key, pref.defaultValue, items, null);
 	}
 
-	public static <T> JComboBox<T> createComboBox(PreferencesProvider provider, Pref pref, T[] items, ListCellRenderer<T> renderer) {
-		return createComboBox(provider, pref.getKey(), pref.getDefaultIntValue(), items, renderer);
+	public static <T> JComboBox<T> createComboBox(PreferencesProvider provider, IntPref pref, T[] items, ListCellRenderer<T> renderer) {
+		return createComboBox(provider, pref.key, pref.defaultValue, items, renderer);
 	}
 
 	public static <T> JComboBox<T> createComboBox(PreferencesProvider provider, String key, int defaultValue, T[] items, ListCellRenderer<T> renderer) {
