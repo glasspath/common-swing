@@ -47,6 +47,7 @@ public class UISearchHandler {
 	private HighlightPainter occurenceHighlighter = new DefaultHighlightPainter(OCCURENCE_COLOR);
 	private HighlightPainter searchHighlighter = new DefaultHighlightPainter(HIGHLIGHT_COLOR);
 	private String searchText = "";
+	private boolean searchReverse = false;
 	private Thread searchThread = null;
 	private boolean threadPaused = false;
 	private boolean exit = false;
@@ -72,7 +73,7 @@ public class UISearchHandler {
 		this.searchHighlighter = searchHighlighter;
 	}
 
-	public void searchNext(String text) {
+	public void search(String text, boolean reverse) {
 
 		if (exit && isSearchThreadAlive()) {
 			System.err.println("UISearchHandler: TODO: searchNext() called while searchThread is exiting");
@@ -80,6 +81,7 @@ public class UISearchHandler {
 
 			// TODO: Handle changing of search text
 			searchText = text.toLowerCase();
+			searchReverse = reverse;
 
 			exit = false;
 			threadPaused = false;
@@ -116,106 +118,132 @@ public class UISearchHandler {
 
 	private void parseContainer(Container container, int mode) {
 
-		for (int i = 0; i < container.getComponentCount(); i++) {
+		int i = searchReverse ? container.getComponentCount() - 1 : 0;
+
+		while (true) {
 
 			if (exit) {
 				return;
 			}
 
-			Component component = container.getComponent(i);
+			if (i >= 0 && i < container.getComponentCount()) {
 
-			if (component instanceof JTextComponent) {
+				Component component = container.getComponent(i);
 
-				JTextComponent textComponent = (JTextComponent) component;
-				Document document = textComponent.getDocument();
+				if (component instanceof JTextComponent) {
 
-				// TODO: text.indexOf(searchText) returns wrong index, why?
-				// For now we retrieve the text from the document
-				// String text = textComponent.getText().toLowerCase();
+					JTextComponent textComponent = (JTextComponent) component;
+					Document document = textComponent.getDocument();
 
-				String text = "";
+					// TODO: text.indexOf(searchText) returns wrong index, why?
+					// For now we retrieve the text from the document
+					// String text = textComponent.getText().toLowerCase();
 
-				if (document.getLength() > 0) {
-					try {
-						text = document.getText(0, document.getLength());
-					} catch (BadLocationException e) {
-						e.printStackTrace();
-						text = textComponent.getText();
-					}
-				}
+					String text = "";
 
-				text = text.toLowerCase();
-
-				int index = text.indexOf(searchText);
-
-				while (!exit && index >= 0) {
-
-					if (mode == MODE_SEARCH) {
-						threadPaused = true;
+					if (document.getLength() > 0) {
+						try {
+							text = document.getText(0, document.getLength());
+						} catch (BadLocationException e) {
+							e.printStackTrace();
+							text = textComponent.getText();
+						}
 					}
 
-					int textIndex = index;
-					SwingUtilities.invokeLater(new Runnable() {
+					text = text.toLowerCase();
 
-						@Override
-						public void run() {
+					int index = searchReverse ? text.lastIndexOf(searchText) : text.indexOf(searchText);
 
-							if (mode == MODE_ADD_HIGHLIGHTS) {
+					while (!exit && index >= 0) {
 
-								try {
-									textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), occurenceHighlighter);
-								} catch (BadLocationException e1) {
-									e1.printStackTrace();
+						if (mode == MODE_SEARCH) {
+							threadPaused = true;
+						}
+
+						int textIndex = index;
+						SwingUtilities.invokeLater(new Runnable() {
+
+							@Override
+							public void run() {
+
+								if (mode == MODE_ADD_HIGHLIGHTS) {
+
+									try {
+										textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), occurenceHighlighter);
+									} catch (BadLocationException e1) {
+										e1.printStackTrace();
+									}
+
+								} else if (mode == MODE_SEARCH) {
+
+									try {
+										activeHighlight = textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), searchHighlighter);
+									} catch (BadLocationException e1) {
+										e1.printStackTrace();
+									}
+
+									textFound(textComponent, searchText, textIndex);
+
 								}
 
-							} else if (mode == MODE_SEARCH) {
+							}
+						});
 
-								try {
-									activeHighlight = textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), searchHighlighter);
-								} catch (BadLocationException e1) {
-									e1.printStackTrace();
-								}
+						while (!exit && threadPaused) {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
 
-								textFound(textComponent, searchText, textIndex);
+						if (!exit && mode == MODE_SEARCH) {
+
+							Object removeHighlight = activeHighlight;
+							if (removeHighlight != null) {
+
+								SwingUtilities.invokeLater(new Runnable() {
+
+									@Override
+									public void run() {
+										textComponent.getHighlighter().removeHighlight(removeHighlight);
+									}
+								});
 
 							}
 
 						}
-					});
 
-					while (!exit && threadPaused) {
-						try {
-							Thread.sleep(10);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-
-					if (!exit && mode == MODE_SEARCH) {
-
-						Object removeHighlight = activeHighlight;
-						if (removeHighlight != null) {
-
-							SwingUtilities.invokeLater(new Runnable() {
-
-								@Override
-								public void run() {
-									textComponent.getHighlighter().removeHighlight(removeHighlight);
-								}
-							});
-
+						if (!exit) {
+							if (searchReverse) {
+								index = text.lastIndexOf(searchText, index - 1);
+							} else {
+								index = text.indexOf(searchText, index + searchText.length() + 1);
+							}
 						}
 
 					}
 
-					if (!exit) {
-						index = text.indexOf(searchText, index + searchText.length() + 1);
-					}
-
+				} else if (component instanceof Container) {
+					parseContainer((Container) component, mode);
 				}
 
-			} else if (component instanceof Container) {
-				parseContainer((Container) component, mode);
+			}
+
+			if (searchReverse && mode == MODE_SEARCH) {
+
+				i--;
+				if (i < 0) {
+					return;
+				}
+
+			} else {
+
+				i++;
+				if (i >= container.getComponentCount()) {
+					return;
+				}
+
 			}
 
 		}
