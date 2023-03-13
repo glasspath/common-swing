@@ -1,5 +1,5 @@
 /*
- * This file is part of Glasspath Aerialist.
+ * This file is part of Glasspath Common.
  * Copyright (C) 2011 - 2022 Remco Poelstra
  * Authors: Remco Poelstra
  * 
@@ -118,132 +118,117 @@ public class UISearchHandler {
 
 	private void parseContainer(Container container, int mode) {
 
-		int i = searchReverse ? container.getComponentCount() - 1 : 0;
-
-		while (true) {
+		int i = searchReverse && mode == MODE_SEARCH ? container.getComponentCount() - 1 : 0;
+		while (i >= 0 && i < container.getComponentCount()) {
 
 			if (exit) {
 				return;
 			}
 
-			if (i >= 0 && i < container.getComponentCount()) {
+			Component component = container.getComponent(i);
 
-				Component component = container.getComponent(i);
+			if (component instanceof JTextComponent) {
 
-				if (component instanceof JTextComponent) {
+				JTextComponent textComponent = (JTextComponent) component;
+				Document document = textComponent.getDocument();
 
-					JTextComponent textComponent = (JTextComponent) component;
-					Document document = textComponent.getDocument();
+				// TODO: text.indexOf(searchText) returns wrong index, why?
+				// For now we retrieve the text from the document
+				// String text = textComponent.getText().toLowerCase();
 
-					// TODO: text.indexOf(searchText) returns wrong index, why?
-					// For now we retrieve the text from the document
-					// String text = textComponent.getText().toLowerCase();
+				String text = "";
 
-					String text = "";
-
-					if (document.getLength() > 0) {
-						try {
-							text = document.getText(0, document.getLength());
-						} catch (BadLocationException e) {
-							e.printStackTrace();
-							text = textComponent.getText();
-						}
+				if (document.getLength() > 0) {
+					try {
+						text = document.getText(0, document.getLength());
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+						text = textComponent.getText();
 					}
-
-					text = text.toLowerCase();
-
-					int index = searchReverse ? text.lastIndexOf(searchText) : text.indexOf(searchText);
-
-					while (!exit && index >= 0) {
-
-						if (mode == MODE_SEARCH) {
-							threadPaused = true;
-						}
-
-						int textIndex = index;
-						SwingUtilities.invokeLater(new Runnable() {
-
-							@Override
-							public void run() {
-
-								if (mode == MODE_ADD_HIGHLIGHTS) {
-
-									try {
-										textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), occurenceHighlighter);
-									} catch (BadLocationException e1) {
-										e1.printStackTrace();
-									}
-
-								} else if (mode == MODE_SEARCH) {
-
-									try {
-										activeHighlight = textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), searchHighlighter);
-									} catch (BadLocationException e1) {
-										e1.printStackTrace();
-									}
-
-									textFound(textComponent, searchText, textIndex);
-
-								}
-
-							}
-						});
-
-						while (!exit && threadPaused) {
-							try {
-								Thread.sleep(10);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-
-						if (!exit && mode == MODE_SEARCH) {
-
-							Object removeHighlight = activeHighlight;
-							if (removeHighlight != null) {
-
-								SwingUtilities.invokeLater(new Runnable() {
-
-									@Override
-									public void run() {
-										textComponent.getHighlighter().removeHighlight(removeHighlight);
-									}
-								});
-
-							}
-
-						}
-
-						if (!exit) {
-							if (searchReverse) {
-								index = text.lastIndexOf(searchText, index - 1);
-							} else {
-								index = text.indexOf(searchText, index + searchText.length() + 1);
-							}
-						}
-
-					}
-
-				} else if (component instanceof Container) {
-					parseContainer((Container) component, mode);
 				}
 
+				text = text.toLowerCase();
+
+				int index = searchReverse ? text.lastIndexOf(searchText) : text.indexOf(searchText);
+
+				while (!exit && index >= 0) {
+
+					if (mode == MODE_SEARCH) {
+						threadPaused = true;
+					}
+
+					int textIndex = index;
+					SwingUtilities.invokeLater(new Runnable() {
+
+						@Override
+						public void run() {
+
+							if (mode == MODE_ADD_HIGHLIGHTS) {
+
+								try {
+									textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), occurenceHighlighter);
+								} catch (BadLocationException e1) {
+									e1.printStackTrace();
+								}
+
+							} else if (mode == MODE_SEARCH) {
+
+								try {
+									activeHighlight = textComponent.getHighlighter().addHighlight(textIndex, textIndex + searchText.length(), searchHighlighter);
+								} catch (BadLocationException e1) {
+									e1.printStackTrace();
+								}
+
+								textFound(textComponent, searchText, textIndex);
+
+							}
+
+						}
+					});
+
+					while (!exit && threadPaused) {
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+					if (!exit && mode == MODE_SEARCH) {
+
+						Object removeHighlight = activeHighlight;
+						if (removeHighlight != null) {
+
+							SwingUtilities.invokeLater(new Runnable() {
+
+								@Override
+								public void run() {
+									textComponent.getHighlighter().removeHighlight(removeHighlight);
+								}
+							});
+
+						}
+
+					}
+
+					if (!exit) {
+						if (searchReverse) {
+							index = text.lastIndexOf(searchText, index - 1);
+						} else {
+							index = text.indexOf(searchText, index + searchText.length() + 1);
+						}
+					}
+
+				}
+
+			} else if (component instanceof Container) {
+				parseContainer((Container) component, mode);
 			}
 
 			if (searchReverse && mode == MODE_SEARCH) {
-
 				i--;
-				if (i < 0) {
-					return;
-				}
-
 			} else {
-
 				i++;
-				if (i >= container.getComponentCount()) {
-					return;
-				}
-
 			}
 
 		}
