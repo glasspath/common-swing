@@ -23,7 +23,6 @@
 package org.glasspath.common.swing.glasspane;
 
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -33,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.glasspath.common.swing.search.SearchField;
+import org.glasspath.common.swing.search.SearchField.SearchAdapter;
 
 public class GlassPane extends JPanel {
 
@@ -51,12 +51,16 @@ public class GlassPane extends JPanel {
 
 		setOpaque(false);
 
-		searchField = new SearchField(5, 5) {
+		searchField = new SearchField(5, 5, true);
+		// searchField.putClientProperty( "FlatLaf.style", "borderWidth: 2" );
+		// searchField.putClientProperty( "FlatLaf.style", "borderColor: #AAA" );
+		searchField.setButtonPolicy(SearchField.BUTTONS_VISIBLE_ALWAYS);
+		searchField.setVisible(false);
+		searchField.addSearchListener(new SearchAdapter() {
 
 			@Override
-			public void clear() {
+			public void searchCleared() {
 
-				searchField.setText(""); //$NON-NLS-1$
 				searchField.setVisible(false);
 
 				if (contentComponent != null) {
@@ -64,11 +68,7 @@ public class GlassPane extends JPanel {
 				}
 
 			}
-		};
-		// searchField.putClientProperty( "FlatLaf.style", "borderWidth: 2" );
-		// searchField.putClientProperty( "FlatLaf.style", "borderColor: #AAA" );
-		searchField.setButtonPolicy(SearchField.BUTTONS_VISIBLE_ALWAYS);
-		searchField.setVisible(false);
+		});
 
 		overlayLabel = new JLabel();
 		overlayLabel.setVisible(false);
@@ -212,16 +212,6 @@ public class GlassPane extends JPanel {
 		} else {
 			return false;
 		}
-	}
-
-	@Override
-	public void paint(Graphics g) {
-
-		// g.setColor(new Color(255, 255, 255, 200));
-		// g.fillRect(0, 98, getWidth(), getHeight() - 118);
-
-		super.paint(g);
-
 	}
 
 }
