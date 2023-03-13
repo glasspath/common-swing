@@ -48,6 +48,12 @@ public class Icons {
 	// SVG
 	public static final SvgIcon alert = new SvgIcon(getSvg("alert.svg"));
 	public static final SvgIcon alertLarge = new SvgIcon(22, 0, getSvg("alert.svg"));
+	public static final SvgIcon chevronDown = new SvgIcon(getSvg("chevron-down.svg"));
+	public static final SvgIcon chevronLeft = new SvgIcon(getSvg("chevron-left.svg"));
+	public static final SvgIcon chevronLeftBlue = new SvgIcon(getSvg("chevron-left.svg"));
+	public static final SvgIcon chevronRight = new SvgIcon(getSvg("chevron-right.svg"));
+	public static final SvgIcon chevronRightBlue = new SvgIcon(getSvg("chevron-right.svg"));
+	public static final SvgIcon chevronUp = new SvgIcon(getSvg("chevron-up.svg"));
 	public static final SvgIcon close = new SvgIcon(getSvg("close.svg"));
 	public static final SvgIcon closeRed = new SvgIcon(getSvg("close.svg"));
 	public static final SvgIcon cogBlue = new SvgIcon(getSvg("cog.svg"));
@@ -70,6 +76,8 @@ public class Icons {
 	static {
 		alert.setColorFilter(SvgIcon.ORANGE);
 		alertLarge.setColorFilter(SvgIcon.ORANGE);
+		chevronLeftBlue.setColorFilter(SvgIcon.BLUE);
+		chevronRightBlue.setColorFilter(SvgIcon.BLUE);
 		closeRed.setColorFilter(SvgIcon.RED);
 		cogBlue.setColorFilter(SvgIcon.BLUE);
 		cogBlueMask.setColorFilter(SvgIcon.BLUE);
