@@ -22,23 +22,19 @@
  */
 package org.glasspath.common.swing.table;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Date;
+import java.util.TimeZone;
 
-import javax.swing.BorderFactory;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.glasspath.common.date.DateUtils;
-import org.glasspath.common.format.FormatUtils;
-import org.glasspath.common.swing.color.ColorUtils;
+import org.glasspath.common.swing.date.DatePicker;
 import org.jdesktop.swingx.JXDatePicker;
-import org.jdesktop.swingx.JXMonthView;
 
 public class RemoteCellDatePicker extends JXDatePicker {
 
@@ -54,15 +50,7 @@ public class RemoteCellDatePicker extends JXDatePicker {
 		this.table = table;
 		this.column = column;
 
-		JXMonthView monthView = getMonthView();
-		monthView.setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
-		monthView.setShowingLeadingDays(true);
-		monthView.setShowingTrailingDays(true);
-		monthView.setTodayBackground(ColorUtils.createTransparentColor(Table.SELECTION_BACKGROUND, 150));
-		monthView.setMonthStringBackground(new Color(150, 150, 150, 20));
-
-		setTimeZone(DateUtils.TIME_ZONE);
-		setFormats(FormatUtils.DATE_FORMAT);
+		DatePicker.configureMonthView(getMonthView());
 
 		getEditor().getDocument().addDocumentListener(new DocumentListener() {
 
@@ -121,8 +109,12 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			}
 		});
 
-		// setLinkPanel(null);
+	}
 
+	@Override
+	public void setTimeZone(TimeZone tz) {
+		super.setTimeZone(tz);
+		DatePicker.configureLinkPanel(this); // TODO: Setting time-zone causes issues with link panel background
 	}
 
 	public int getPreferredWidth() {
@@ -133,21 +125,18 @@ public class RemoteCellDatePicker extends JXDatePicker {
 		this.preferredWidth = preferredWidth;
 	}
 
-	@Override
-	public void setDate(Date date) {
-		super.setDate(date);
-	}
-
 	public void setValue(Date date, int modelIndex) {
 		setValue(date, modelIndex, false);
 	}
 
 	public void setValue(Date date, int modelIndex, boolean submit) {
 
-		submit();
+		// TODO: This was added to ensure that changes or submitted when
+		// changing selection, this however causes problems with undo/redo
+		// submit();
 
 		updatingValue = true;
-		super.setDate(date);
+		setDate(date);
 		this.modelIndex = modelIndex;
 		updatingValue = false;
 

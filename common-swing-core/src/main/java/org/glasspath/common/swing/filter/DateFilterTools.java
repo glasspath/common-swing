@@ -29,9 +29,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -116,6 +118,24 @@ public class DateFilterTools {
 
 		toolBar.add(datePickersPanel);
 
+	}
+
+	public DatePicker getFirstDatePicker() {
+		return firstDatePicker;
+	}
+
+	public DatePicker getSecondDatePicker() {
+		return secondDatePicker;
+	}
+
+	public void setTimeZone(TimeZone timeZone) {
+		firstDatePicker.setTimeZone(timeZone);
+		secondDatePicker.setTimeZone(timeZone);
+	}
+
+	public void setFormats(DateFormat... formats) {
+		firstDatePicker.setFormats(formats);
+		secondDatePicker.setFormats(formats);
 	}
 
 	public void setBackground(Color background) {
