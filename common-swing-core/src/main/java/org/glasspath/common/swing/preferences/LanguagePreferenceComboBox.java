@@ -109,7 +109,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 		if (locale != null) {
 
 			if (showLocaleDetails) {
-				automaticEntry.text = locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale);
+				automaticEntry.text = "Automatic (" + locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale) + ")";
 			} else {
 				automaticEntry.text = "Automatic";
 			}
@@ -198,7 +198,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	public class Entry {
 
-		private String text = "";
+		private String text = ""; //$NON-NLS-1$
 
 		public Entry(String text) {
 			this.text = text;

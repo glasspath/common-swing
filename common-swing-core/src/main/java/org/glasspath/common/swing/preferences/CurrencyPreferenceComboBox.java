@@ -110,7 +110,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 		if (currencyCode != null) {
 
 			if (showCurrencyDetails) {
-				automaticEntry.text = currencyCode.code + ", " + currencyCode.symbol;
+				automaticEntry.text = "Automatic (" + currencyCode.code + ", " + currencyCode.symbol + ")";
 			} else {
 				automaticEntry.text = "Automatic";
 			}
@@ -183,7 +183,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	public class Entry {
 
-		private String text = "";
+		private String text = ""; //$NON-NLS-1$
 
 		public Entry(String text) {
 			this.text = text;
