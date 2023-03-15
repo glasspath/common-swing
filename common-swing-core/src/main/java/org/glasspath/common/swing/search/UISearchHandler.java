@@ -94,7 +94,11 @@ public class UISearchHandler {
 					public void run() {
 
 						parseContainer(container, MODE_ADD_HIGHLIGHTS);
-						parseContainer(container, MODE_SEARCH);
+
+						while (!exit) {
+							parseContainer(container, MODE_SEARCH);
+						}
+
 						clearHighlights(container);
 
 					}
