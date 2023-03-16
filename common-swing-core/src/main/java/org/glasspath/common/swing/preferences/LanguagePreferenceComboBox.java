@@ -33,6 +33,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 
+import org.glasspath.common.locale.LocaleUtils;
 import org.glasspath.common.locale.LocaleUtils.LanguageTag;
 import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
@@ -45,7 +46,8 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 	private final String key;
 	private final String defaultValue;
 	private final LanguageTag[] languageTags;
-	private final Entry automaticEntry;
+	private final Entry systemFormatEntry;
+	private final Entry systemDisplayEntry;
 
 	public LanguagePreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
 		this(provider, key, defaultValue, LanguageTag.values(), true);
@@ -60,17 +62,19 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("Automatic");
-		addItem(automaticEntry);
+		Locale systemFormatLocale = LocaleUtils.getSystemFormatLocale();
+		systemFormatEntry = new Entry(systemFormatLocale.getDisplayLanguage(systemFormatLocale) + ", " + systemFormatLocale.getDisplayCountry(systemFormatLocale)); //$NON-NLS-1$
+		addItem(systemFormatEntry);
+
+		Locale systemDisplayLocale = LocaleUtils.getSystemDisplayLocale();
+		systemDisplayEntry = new Entry("System (" + systemDisplayLocale.getDisplayLanguage(systemDisplayLocale) + ", " + systemDisplayLocale.getDisplayCountry(systemDisplayLocale) + ")"); //$NON-NLS-2$ //$NON-NLS-3$
+		addItem(systemDisplayEntry);
 
 		for (LanguageTag languageTag : languageTags) {
-			addItem(new Entry(languageTag.language + ", " + languageTag.country));
+			addItem(new Entry(languageTag.language + ", " + languageTag.country)); //$NON-NLS-1$
 		}
 
-		int index = getLanguageTagIndex(provider.getPreferences().get(key, defaultValue));
-		if (index >= 0) {
-			setSelectedIndex(index + 1);
-		}
+		reload();
 
 		if (commitOnChange) {
 
@@ -88,10 +92,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 			@Override
 			public void preferencesChanged(Preferences preferences) {
-				int index = getLanguageTagIndex(provider.getPreferences().get(key, defaultValue));
-				if (index > 0) {
-					setSelectedIndex(index + 1);
-				}
+				reload();
 			}
 
 			@Override
@@ -104,22 +105,21 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	public void setAutomaticLocale(Locale locale, boolean showLocaleDetails) {
+	private void reload() {
 
-		if (locale != null) {
+		String language = provider.getPreferences().get(key, defaultValue);
 
-			if (showLocaleDetails) {
-				automaticEntry.text = "Automatic (" + locale.getDisplayLanguage(locale) + ", " + locale.getDisplayCountry(locale) + ")";
-			} else {
-				automaticEntry.text = "Automatic";
+		if (LocaleUtils.SYSTEM_FORMAT_LANGUAGE_TAG.equals(language)) {
+			setSelectedIndex(0);
+		} else if (LocaleUtils.SYSTEM_DISPLAY_LANGUAGE_TAG.equals(language)) {
+			setSelectedIndex(1);
+		} else {
+
+			int index = getLanguageTagIndex(language);
+			if (index >= 0) {
+				setSelectedIndex(index + 2);
 			}
 
-			invalidate();
-			validate();
-			repaint();
-
-		} else {
-			automaticEntry.text = "Automatic";
 		}
 
 	}
@@ -155,8 +155,13 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 			String value = defaultValue;
 
 			int index = getSelectedIndex();
-			if (index > 0) {
-				index--;
+
+			if (index == 0) {
+				value = LocaleUtils.SYSTEM_FORMAT_LANGUAGE_TAG;
+			} else if (index == 1) {
+				value = LocaleUtils.SYSTEM_DISPLAY_LANGUAGE_TAG;
+			} else if (index >= 2) {
+				index -= 2;
 				if (index < languageTags.length) {
 					value = languageTags[index].tag;
 				}
@@ -176,19 +181,22 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 	}
 
-	public LanguageTag getSelectedLanguageTag() {
-
-		LanguageTag languageTag = null;
+	public String getSelectedLanguageTag() {
 
 		int index = getSelectedIndex();
-		if (index > 0) {
-			index--;
+
+		if (index == 0) {
+			return LocaleUtils.SYSTEM_FORMAT_LANGUAGE_TAG;
+		} else if (index == 1) {
+			return LocaleUtils.SYSTEM_DISPLAY_LANGUAGE_TAG;
+		} else if (index >= 2) {
+			index -= 2;
 			if (index < languageTags.length) {
-				languageTag = languageTags[index];
+				return languageTags[index].tag;
 			}
 		}
 
-		return languageTag;
+		return defaultValue;
 
 	}
 
@@ -225,7 +233,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-			if (index == 0) {
+			if (index < 2) {
 				setFont(italicFont);
 			} else {
 				setFont(defualtFont);
@@ -235,8 +243,8 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
 				setForeground(ColorUtils.TEXT_COLOR);
 
-				if (index - 1 >= 0 && index - 1 < languageTags.length) {
-					if (!isLanguageSupported(languageTags[index - 1].tag)) {
+				if (index - 2 >= 0 && index - 2 < languageTags.length) {
+					if (!isLanguageSupported(languageTags[index - 2].tag)) {
 						setForeground(ColorUtils.SEMI_DISABLED_TEXT_COLOR);
 					}
 				}

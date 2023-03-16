@@ -75,7 +75,7 @@ public class CurrencyCellRenderer extends DefaultTableCellRenderer {
 			SwingUtils.drawString(currencyLabel, g2d, FormatUtils.CURRENCY_SYMBOL, 5, (int)((getHeight() / 2) + (fontRect.getHeight() / 2) - 1));
 			*/
 			int y = getBaseline(getWidth(), getHeight());
-			SwingUtils.drawString(currencyLabel, g2d, FormatUtils.CURRENCY_SYMBOL, 5, y);
+			SwingUtils.drawString(currencyLabel, g2d, FormatUtils.getDefaultCurrencySymbol(), 5, y);
 
 		}
 
