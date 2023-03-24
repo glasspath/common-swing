@@ -36,7 +36,6 @@ public class BorderButton extends SplitButton {
 		setArrowOffset(-3);
 
 		setIcon(new BorderIcon(false, false, false, false, false, false));
-		// setIcon(Icons.borderNoneVariant);
 
 		setPopupMenu(new BorderMenu(borderMenuTypeAction, borderWidthAction, borderColorAction, false) {
 

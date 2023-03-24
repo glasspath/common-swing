@@ -252,7 +252,7 @@ public class FlatActionFieldUI extends ComponentUI {
 	@Override
 	public void update(Graphics g, JComponent c) {
 
-		// fill background if opaque to avoid garbage if user sets opaque to true
+		// Fill background if opaque to avoid garbage if user sets opaque to true
 		if (c.isOpaque()) {
 			FlatUIUtils.paintParentBackground(g, c);
 		}
@@ -274,7 +274,7 @@ public class FlatActionFieldUI extends ComponentUI {
 			active = false;
 		}
 
-		// paint background
+		// Paint background
 		if (!enabled) {
 			g2d.setColor(disabledBackground);
 		} else if (!active) {
@@ -284,7 +284,7 @@ public class FlatActionFieldUI extends ComponentUI {
 		}
 		FlatUIUtils.paintComponentBackground(g2d, 0, 0, width, height, focusWidth, arc);
 
-		// paint arrow button background
+		// Paint arrow button background
 		if (enabled) {
 			g2d.setColor(buttonBackground);
 			Shape oldClip = g2d.getClip();
@@ -297,7 +297,7 @@ public class FlatActionFieldUI extends ComponentUI {
 			g2d.setClip(oldClip);
 		}
 
-		// paint vertical line between value and arrow button
+		// Paint vertical line between value and arrow button
 		g2d.setColor(enabled ? borderColor : disabledBorderColor);
 		float lw = scale(1f);
 		float lx = isLeftToRight ? arrowX : arrowX + arrowWidth - lw;
