@@ -45,9 +45,9 @@ public class ComponentTitledBorder implements Border, MouseListener, SwingConsta
 	private int offset = 5;
 	private Rectangle rect = null;
 
-	public ComponentTitledBorder(Component comp, JComponent container, Border border) {
+	public ComponentTitledBorder(Component component, JComponent container, Border border) {
 
-		this.component = comp;
+		this.component = component;
 		this.container = container;
 		this.border = border;
 
@@ -106,6 +106,7 @@ public class ComponentTitledBorder implements Border, MouseListener, SwingConsta
 		dispatchEvent(event);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void dispatchEvent(MouseEvent event) {
 
 		if (rect != null && rect.contains(event.getX(), event.getY())) {
