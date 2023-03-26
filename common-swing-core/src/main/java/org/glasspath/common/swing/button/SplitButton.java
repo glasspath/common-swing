@@ -22,15 +22,12 @@
  */
 package org.glasspath.common.swing.button;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -53,16 +50,6 @@ import javax.swing.UIManager;
 
 import org.glasspath.common.swing.theme.Theme;
 
-/**
- * A swing split button implementation. A JButton that has an additional section with an arrow icon on the right that when clicked shows a JPopupMenu that is positioned flush with the button.
- * 
- * The implementation sets the buttons pop-up menu using setComponentPopupMenu() meaning that in addition to clicking the drop-down arrow, user can also right click the button to open the pop-up menu.
- * 
- * Author: DUDSS - 21.02.2020 I modified the button to use a JPopupMenu instead of a custom JFrame to avoid hacky focus workarounds and fix focus issues.
- * 
- * Credit: Modified version of a split button by MadProgrammer. https://stackoverflow.com/questions/36352707/actions-inside-of-another-action-like-netbeans It's original author seems to be unknown.
- *
- */
 @SuppressWarnings("nls")
 public class SplitButton extends JButton {
 
@@ -80,16 +67,15 @@ public class SplitButton extends JButton {
 	private int arrowOffset = 0;
 	private int splitWidth = 14;
 	private int arrowSize = 8;
-	private boolean onSplit;
-	private Rectangle splitRectangle;
-	private boolean alwaysDropDown;
+	private boolean onSplit = false;
+	private Rectangle splitRectangle = null;
+	private boolean alwaysDropDown = false;
 	private Color arrowColor = Color.BLACK;
 	private Color disabledArrowColor = Color.GRAY;
-	private Image image;
-	private MouseHandler mouseHandler;
-	private boolean toolBarButton;
+	private MouseHandler mouseHandler = null;
+	private boolean toolBarButton = false;
 
-	private JPopupMenu popupMenu;
+	private JPopupMenu popupMenu = null;
 	private boolean popupRightAligned = false;
 
 	/**
@@ -100,16 +86,19 @@ public class SplitButton extends JButton {
 	 */
 	public SplitButton() {
 		super();
+
 		addMouseMotionListener(getMouseHandler());
 		addMouseListener(getMouseHandler());
+
 		// Default for no "default" action...
 		setAlwaysDropDown(true);
 
-		InputMap im = getInputMap(WHEN_FOCUSED);
-		ActionMap am = getActionMap();
+		InputMap inputMap = getInputMap(WHEN_FOCUSED);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "PopupMenu.close");
 
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "PopupMenu.close");
-		am.put("PopupMenu.close", new ClosePopupAction());
+		ActionMap actionMap = getActionMap();
+		actionMap.put("PopupMenu.close", new ClosePopupAction());
+
 	}
 
 	public SplitButton(Action defaultAction) {
@@ -226,7 +215,7 @@ public class SplitButton extends JButton {
 		}
 		return popupMenu;
 	}
-	
+
 	private void initPopupMenu() {
 
 		if (popupRightAligned) {
@@ -279,21 +268,6 @@ public class SplitButton extends JButton {
 		return getPopupMenu().getComponentCount();
 	}
 
-	/*protected void addActionAt(Action action, int index) {
-	    if (index < 0 || index >= getOptionsCount()) {
-	        getPopupWindow().add(createMenuItem(action));
-	    } else {
-	        getPopupWindow().add(createMenuItem(action), index);
-	    }
-	}*/
-
-	/*protected void removeAction(Action action) {
-	    AbstractButton btn = getButtonFor(action);
-	    if (btn != null) {
-	        getPopupWindow().remove(btn);
-	    }
-	}*/
-
 	@Override
 	public Insets getInsets() {
 		Insets insets = (Insets) super.getInsets().clone();
@@ -331,7 +305,7 @@ public class SplitButton extends JButton {
 			//menu.setVisible(true); // Necessary to calculate pop-up menu width the first time it's displayed.
 
 			if (popupRightAligned) {
-				
+
 				int menuWidth = menu.getWidth();
 				if (menuWidth == 0) {
 					menuWidth = menu.getPreferredSize().width;
@@ -364,10 +338,7 @@ public class SplitButton extends JButton {
 	 */
 	public void setSeparatorSpacing(int spacing) {
 		if (spacing != separatorSpacing && spacing >= 0) {
-			int old = separatorSpacing;
-			this.separatorSpacing = spacing;
-			image = null;
-			firePropertyChange("separatorSpacing", old, separatorSpacing);
+			separatorSpacing = spacing;
 			revalidate();
 			repaint();
 		}
@@ -423,8 +394,7 @@ public class SplitButton extends JButton {
 	 */
 	public void setAlwaysDropDown(boolean value) {
 		if (alwaysDropDown != value) {
-			this.alwaysDropDown = value;
-			firePropertyChange("alwaysDropDown", !alwaysDropDown, alwaysDropDown);
+			alwaysDropDown = value;
 		}
 	}
 
@@ -444,10 +414,7 @@ public class SplitButton extends JButton {
 	 */
 	public void setArrowColor(Color color) {
 		if (arrowColor != color) {
-			Color old = arrowColor;
-			this.arrowColor = color;
-			image = null;
-			firePropertyChange("arrowColor", old, arrowColor);
+			arrowColor = color;
 			repaint();
 		}
 	}
@@ -468,10 +435,7 @@ public class SplitButton extends JButton {
 	 */
 	public void setDisabledArrowColor(Color color) {
 		if (disabledArrowColor != color) {
-			Color old = disabledArrowColor;
-			this.disabledArrowColor = color;
-			image = null; // to repaint the image with the new color
-			firePropertyChange("disabledArrowColor", old, disabledArrowColor);
+			disabledArrowColor = color;
 		}
 	}
 
@@ -491,9 +455,7 @@ public class SplitButton extends JButton {
 	 */
 	public void setSplitWidth(int width) {
 		if (splitWidth != width) {
-			int old = splitWidth;
-			this.splitWidth = width;
-			firePropertyChange("splitWidth", old, splitWidth);
+			splitWidth = width;
 			revalidate();
 			repaint();
 		}
@@ -515,67 +477,23 @@ public class SplitButton extends JButton {
 	 */
 	public void setArrowSize(int size) {
 		if (arrowSize != size) {
-			int old = arrowSize;
-			this.arrowSize = size;
-			image = null; // to repaint the image with the new size
-			firePropertyChange("setArrowSize", old, arrowSize);
+			arrowSize = size;
 			revalidate();
 			repaint();
 		}
 	}
 
-	/**
-	 * Gets the image to be drawn in the split part. If no is set, a new image is created with the triangle.
-	 *
-	 * @return image
-	 */
-	public Image getImage() {
-		if (image == null) {
-			Graphics2D g = null;
-			BufferedImage img = new BufferedImage(arrowSize, arrowSize, BufferedImage.TYPE_INT_RGB);
-			g = (Graphics2D) img.createGraphics();
-			g.setColor(Color.WHITE);
-			g.fillRect(0, 0, img.getWidth(), img.getHeight());
-			g.setColor(popupMenu != null ? arrowColor : disabledArrowColor);
-			// this creates a triangle facing right >
-			g.fillPolygon(new int[] { 0, 0, arrowSize / 2 }, new int[] { 0, arrowSize, arrowSize / 2 }, 3);
-			g.dispose();
-			// rotate it to face downwards
-			img = rotate(img, 90);
-			BufferedImage dimg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			g = (Graphics2D) dimg.createGraphics();
-			g.setComposite(AlphaComposite.Src);
-			g.drawImage(img, null, 0, 0);
-			g.dispose();
-			for (int i = 0; i < dimg.getHeight(); i++) {
-				for (int j = 0; j < dimg.getWidth(); j++) {
-					if (dimg.getRGB(j, i) == Color.WHITE.getRGB()) {
-						dimg.setRGB(j, i, 0x8F1C1C);
-					}
-				}
-			}
-
-			image = Toolkit.getDefaultToolkit().createImage(dimg.getSource());
-		}
-		return image;
-	}
-
-	/**
-	 *
-	 * @param g
-	 */
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		// Graphics gClone = g.create();//EDIT: Hervé Guillaume
 		Color oldColor = g2d.getColor();
 		splitRectangle = new Rectangle(getWidth() - splitWidth, 0, splitWidth, getHeight());
 		int mh = getHeight() / 2;
 		int mw = splitRectangle.x + (splitWidth / 2);
-		// g.drawImage(getImage(), mw - arrowSize / 2, mh + 2 - arrowSize / 2, null);
 
 		if (arrowMode == ARROW_MODE_ALWAYS || (arrowMode == ARROW_MODE_HOVER && model.isRollover())) {
 
@@ -591,16 +509,6 @@ public class SplitButton extends JButton {
 
 		}
 
-		/* TODO: Disabled for now..
-		if (!alwaysDropDown) {
-		    if (getModel().isRollover() || isFocusable()) {
-		        g.setColor(UIManager.getLookAndFeelDefaults().getColor("Button.background"));
-		        g.drawLine(1, separatorSpacing + 2, 1, getHeight() - separatorSpacing - 2);
-		        g.setColor(UIManager.getLookAndFeelDefaults().getColor("Button.shadow"));
-		        g.drawLine(2, separatorSpacing + 2, 2, getHeight() - separatorSpacing - 2);
-		    }
-		}
-		*/
 		if (separatorMode == SEPARATOR_MODE_ALWAYS || (separatorMode == SEPARATOR_MODE_HOVER && model.isRollover())) {
 
 			g2d.setColor(UIManager.getLookAndFeelDefaults().getColor("Button.shadow"));
@@ -648,6 +556,7 @@ public class SplitButton extends JButton {
 
 	@Override
 	protected void fireActionPerformed(ActionEvent event) {
+
 		// This is a little bit of a nasty trick. Basically this is where
 		// we try and decide if the buttons "default" action should
 		// be fired or not. We don't want it firing if the button
@@ -657,8 +566,8 @@ public class SplitButton extends JButton {
 			showPopupMenu();
 		} else {
 			super.fireActionPerformed(event);
-
 		}
+
 	}
 
 	protected class MouseHandler extends MouseAdapter {
@@ -687,4 +596,5 @@ public class SplitButton extends JButton {
 			closePopupMenu();
 		}
 	}
+
 }
