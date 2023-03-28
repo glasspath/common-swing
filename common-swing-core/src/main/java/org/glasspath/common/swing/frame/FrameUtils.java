@@ -85,14 +85,10 @@ public class FrameUtils {
 
 	public static void installLookAndFeel(String nativesPath) throws UnsupportedLookAndFeelException {
 
-		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
 		if (nativesPath != null) {
 			System.setProperty(FlatSystemProperties.NATIVE_LIBRARY_PATH, nativesPath);
 			Common.LOGGER.info("FlatLaf library path set to: " + nativesPath);
 		}
-
-		// System.setProperty(FlatSystemProperties.USE_WINDOW_DECORATIONS, "false");
 
 		if (Theme.isDark()) {
 			UIManager.setLookAndFeel(new FlatDarculaLaf());
@@ -104,9 +100,6 @@ public class FrameUtils {
 
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			JDialog.setDefaultLookAndFeelDecorated(true);
-
-			// Default seems to be true in latest FlatLaf releases
-			// UIManager.put("TitlePane.unifiedBackground", true);
 
 		}
 
