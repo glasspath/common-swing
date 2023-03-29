@@ -96,7 +96,6 @@ public abstract class FilesTablePanel extends JPanel {
 
 		JScrollPane filesTableScrollPane = new JScrollPane(filesTable);
 		filesTableScrollPane.setBorder(BorderFactory.createEmptyBorder());
-		// filesTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		add(filesTableScrollPane, BorderLayout.CENTER);
 
 	}
@@ -176,7 +175,7 @@ public abstract class FilesTablePanel extends JPanel {
 
 		@Override
 		public int getColumnCount() {
-			return 2; // TODO?
+			return 2;
 		}
 
 		@Override
@@ -218,26 +217,8 @@ public abstract class FilesTablePanel extends JPanel {
 		}
 
 		@Override
-		public void setValueAt(Object value, int rowIndex, int columnIndex) {
-			super.setValueAt(value, rowIndex, columnIndex);
-
-			// TODO?
-
-			fireTableCellUpdated(rowIndex, columnIndex);
-
-		}
-
-		@Override
 		public Class<?> getColumnClass(int colIndex) {
-
-			if (colIndex == NAME) {
-				return String.class;
-			} else if (colIndex == TYPE) {
-				return String.class;
-			} else {
-				return super.getColumnClass(colIndex);
-			}
-
+			return String.class;
 		}
 
 	}
