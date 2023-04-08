@@ -36,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
@@ -50,6 +51,7 @@ import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.calendar.DateSelectionModel;
+import org.jdesktop.swingx.plaf.basic.BasicDatePickerUI;
 
 public class DatePicker extends JXDatePicker {
 
@@ -156,6 +158,28 @@ public class DatePicker extends JXDatePicker {
 	public void setTimeZone(TimeZone tz) {
 		super.setTimeZone(tz);
 		configureLinkPanel(this); // TODO: Setting time-zone causes issues with link panel background
+	}
+
+	public void setFlaggedDates(List<Date> flaggedDates) {
+		getMonthView().setFlaggedDates(flaggedDates.toArray(new Date[0]));
+	}
+
+	public void clearFlaggedDates() {
+		getMonthView().clearFlaggedDates();
+	}
+
+	public boolean isPopupVisible() {
+		if (getUI() instanceof BasicDatePickerUI) {
+			return ((BasicDatePickerUI) getUI()).isPopupVisible();
+		} else {
+			return false;
+		}
+	}
+
+	public void closePopup() {
+		if (getUI() instanceof BasicDatePickerUI) {
+			((BasicDatePickerUI) getUI()).hidePopup();
+		}
 	}
 
 	public void clear() {
