@@ -46,9 +46,6 @@ public class SvgIcon extends FlatSVGIcon {
 	public static final IColorFilter RED = new BasicColorFilter(new Color(242, 73, 92));
 	public static final IColorFilter ORANGE = new BasicColorFilter(new Color(237, 162, 0));
 	public static final IColorFilter YELLOW = new BasicColorFilter(new Color(250, 222, 42));
-	static {
-		ColorFilter.getInstance().add(FlatSVGIcon.currentColor, Theme.isDark() ? new Color(175, 175, 175) : new Color(125, 125, 125));
-	}
 
 	protected URL url = null;
 	protected int size = 0;
@@ -67,17 +64,17 @@ public class SvgIcon extends FlatSVGIcon {
 	}
 
 	public SvgIcon(int size, int padding, URL url, boolean disabled) {
-		
+
 		super(null, size - (padding * 2), size - (padding * 2), 1, false, null, getUri(url));
 
 		this.url = url;
 		this.size = size;
 		this.padding = padding;
-		
+
 		// super(null, -1, -1, 1, false, null, getUri(url));
 		// this.size = 24;
 		// this.padding = 0;
-		
+
 	}
 
 	@Override
@@ -118,7 +115,7 @@ public class SvgIcon extends FlatSVGIcon {
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		super.paintIcon(c, g, x + padding, y + padding);
 	}
-	
+
 	@Override
 	public Icon getDisabledIcon() {
 		return new SvgIcon(size, padding, url, true);
@@ -143,7 +140,7 @@ public class SvgIcon extends FlatSVGIcon {
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			super.paintIcon(c, g, x + padding + left, y + padding + top);
 		}
-		
+
 		@Override
 		public Icon getDisabledIcon() {
 			return new OffsetSvgIcon(size, padding, top, left, url, true);

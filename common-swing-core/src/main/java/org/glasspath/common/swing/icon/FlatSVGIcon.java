@@ -52,11 +52,8 @@ import com.formdev.flatlaf.util.MultiResolutionImageSupport;
 import com.formdev.flatlaf.util.SoftCache;
 import com.formdev.flatlaf.util.UIScale;
 import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.attributes.paint.AwtSVGPaint;
 import com.github.weisj.jsvg.attributes.paint.DefaultPaintParser;
 import com.github.weisj.jsvg.attributes.paint.PaintParser;
-import com.github.weisj.jsvg.attributes.paint.SVGPaint;
-import com.github.weisj.jsvg.parser.AttributeNode;
 import com.github.weisj.jsvg.parser.DefaultParserProvider;
 import com.github.weisj.jsvg.parser.ParserProvider;
 import com.github.weisj.jsvg.parser.SVGLoader;
@@ -68,22 +65,12 @@ import com.github.weisj.jsvg.parser.SVGLoader;
  */
 public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 
-	// Replaced SVGSalamander by JSVG, added custom currentColor for replacing colors
-	protected static final Color currentColor = new Color(1, 1, 1);
-	private static final AwtSVGPaint currentColorPaint = new AwtSVGPaint(currentColor);
-	private static final SVGLoader svgLoader = new SVGLoader();
-	private static final PaintParser paintParser = new DefaultPaintParser() {
+	// Replaced SVGSalamander by JSVG, added BasicColorFilter
 
-		@Override
-		public SVGPaint parsePaint(String value, AttributeNode node) {
-			SVGPaint paint = super.parsePaint(value, node);
-			if (paint == SVGPaint.CURRENT_COLOR) {
-				return currentColorPaint;
-			} else {
-				return paint;
-			}
-		}
-	};
+	public static final BasicColorFilter DEFAULT_COLOR_FILTER = new BasicColorFilter(isDarkLaf() ? new Color(175, 175, 175) : new Color(125, 125, 125));
+
+	private static final SVGLoader svgLoader = new SVGLoader();
+	private static final PaintParser paintParser = new DefaultPaintParser();
 	private static final ParserProvider parserProvider = new DefaultParserProvider() {
 
 		@Override
@@ -103,7 +90,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 	private final ClassLoader classLoader;
 	private final URI uri;
 
-	private IColorFilter colorFilter = null;
+	private IColorFilter colorFilter = DEFAULT_COLOR_FILTER;
 
 	private SVGDocument diagram;
 	private boolean dark;
@@ -687,9 +674,17 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 
 	public static class BasicColorFilter implements IColorFilter {
 
-		private final Color color;
+		private Color color;
 
 		public BasicColorFilter(Color color) {
+			this.color = color;
+		}
+
+		public Color getColor() {
+			return color;
+		}
+
+		public void setColor(Color color) {
 			this.color = color;
 		}
 
