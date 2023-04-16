@@ -25,13 +25,9 @@ import java.awt.Image;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -39,9 +35,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.UIManager;
+
 import com.formdev.flatlaf.FlatIconColors;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLaf.DisabledIconProvider;
@@ -52,10 +51,15 @@ import com.formdev.flatlaf.util.LoggingFacade;
 import com.formdev.flatlaf.util.MultiResolutionImageSupport;
 import com.formdev.flatlaf.util.SoftCache;
 import com.formdev.flatlaf.util.UIScale;
-import com.kitfox.svg.FillElement;
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGException;
-import com.kitfox.svg.SVGUniverse;
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.attributes.paint.AwtSVGPaint;
+import com.github.weisj.jsvg.attributes.paint.DefaultPaintParser;
+import com.github.weisj.jsvg.attributes.paint.PaintParser;
+import com.github.weisj.jsvg.attributes.paint.SVGPaint;
+import com.github.weisj.jsvg.parser.AttributeNode;
+import com.github.weisj.jsvg.parser.DefaultParserProvider;
+import com.github.weisj.jsvg.parser.ParserProvider;
+import com.github.weisj.jsvg.parser.SVGLoader;
 
 /**
  * An icon that loads and paints SVG.
@@ -64,42 +68,32 @@ import com.kitfox.svg.SVGUniverse;
  */
 public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 
+	// Replaced SVGSalamander by JSVG, added custom currentColor for replacing colors
 	protected static final Color currentColor = new Color(1, 1, 1);
+	private static final AwtSVGPaint currentColorPaint = new AwtSVGPaint(currentColor);
+	private static final SVGLoader svgLoader = new SVGLoader();
+	private static final PaintParser paintParser = new DefaultPaintParser() {
 
-	// cache that uses soft references for values, which allows freeing SVG diagrams if no longer used
-	private static final SoftCache<URI, SVGDiagram> svgCache = new SoftCache<>();
-
-	// use own SVG universe so that it can not be cleared from anywhere
-	private static final SVGUniverse svgUniverse = new SVGUniverse() {
-		
-		// TODO: Modified to support 'currentColor' used by material design icons
-		public com.kitfox.svg.SVGElement getElement(URI path) {
-			if (path.toString().endsWith("currentColor")) { // TODO!
-
-				return new FillElement() {
-
-					@Override
-					public boolean updateTime(double curTime) throws SVGException {
-						return false;
-					}
-
-					@Override
-					public String getTagName() {
-						return "solid";
-					}
-
-					@Override
-					public Paint getPaint(Rectangle2D bounds, AffineTransform xform) {
-						return currentColor;
-					}
-				};
-
+		@Override
+		public SVGPaint parsePaint(String value, AttributeNode node) {
+			SVGPaint paint = super.parsePaint(value, node);
+			if (paint == SVGPaint.CURRENT_COLOR) {
+				return currentColorPaint;
 			} else {
-				return super.getElement(path);
+				return paint;
 			}
 		}
 	};
-	private static int streamNumber;
+	private static final ParserProvider parserProvider = new DefaultParserProvider() {
+
+		@Override
+		public PaintParser createPaintParser() {
+			return paintParser;
+		}
+	};
+
+	// cache that uses soft references for values, which allows freeing SVG diagrams if no longer used
+	private static final SoftCache<URI, SVGDocument> svgCache = new SoftCache<>();
 
 	private final String name;
 	private final int width;
@@ -109,9 +103,9 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 	private final ClassLoader classLoader;
 	private final URI uri;
 
-	private ColorFilter colorFilter;
+	private IColorFilter colorFilter = null;
 
-	private SVGDiagram diagram;
+	private SVGDocument diagram;
 	private boolean dark;
 	private boolean loadFailed;
 
@@ -267,34 +261,6 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 	}
 
 	/**
-	 * Creates an SVG icon from the given input stream.
-	 * <p>
-	 * The SVG attributes {@code width} and {@code height} (or {@code viewBox}) in the tag {@code <svg>} are used as icon size.
-	 * <p>
-	 * The input stream is loaded, parsed and closed immediately.
-	 *
-	 * @param in the input stream for reading a SVG resource
-	 * @throws IOException if an I/O exception occurs
-	 * @since 2
-	 */
-	public FlatSVGIcon(InputStream in) throws IOException {
-		this(null, -1, -1, 1, false, null, loadFromStream(in));
-
-		// since the input stream is already loaded and parsed,
-		// get diagram here and remove it from cache
-		update();
-		synchronized (FlatSVGIcon.class) {
-			svgCache.remove(uri);
-		}
-	}
-
-	private static synchronized URI loadFromStream(InputStream in) throws IOException {
-		try (InputStream in2 = in) {
-			return svgUniverse.loadSVG(in2, "/flatlaf-stream-" + (streamNumber++));
-		}
-	}
-
-	/**
 	 * Creates a copy of the given icon.
 	 * <p>
 	 * If the icon has a color filter, then it is shared with the new icon.
@@ -440,7 +406,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 	 *
 	 * @since 1.2
 	 */
-	public ColorFilter getColorFilter() {
+	public IColorFilter getColorFilter() {
 		return colorFilter;
 	}
 
@@ -466,7 +432,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 	 * @param colorFilter The color filter
 	 * @since 1.2
 	 */
-	public void setColorFilter(ColorFilter colorFilter) {
+	public void setColorFilter(IColorFilter colorFilter) {
 		this.colorFilter = colorFilter;
 	}
 
@@ -498,29 +464,41 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 			uri = url2uri(url);
 		}
 
-		diagram = loadSVG(uri);
+		diagram = loadSVG(uri, colorFilter);
 		loadFailed = (diagram == null);
 	}
 
-	static synchronized SVGDiagram loadSVG(URI uri) {
+	static synchronized SVGDocument loadSVG(URI uri, IColorFilter colorFilter) {
+
 		// get from our cache
-		SVGDiagram diagram = svgCache.get(uri);
-		if (diagram != null)
+		SVGDocument diagram = svgCache.get(uri);
+		if (diagram != null) {
 			return diagram;
+		} else {
 
-		// load/get SVG diagram
-		diagram = svgUniverse.getDiagram(uri);
+			try {
 
-		if (diagram == null) {
-			LoggingFacade.INSTANCE.logSevere("FlatSVGIcon: failed to load '" + uri + "'", null);
+				// load/get SVG diagram
+				diagram = svgLoader.load(uri.toURL(), parserProvider);
+
+				if (diagram == null) {
+					LoggingFacade.INSTANCE.logSevere("FlatSVGIcon: failed to load '" + uri + "'", null);
+					return null;
+				}
+
+				// add to our (soft) cache and remove from SVGUniverse (hard) cache
+				svgCache.put(uri, diagram);
+
+				return diagram;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			return null;
+
 		}
 
-		// add to our (soft) cache and remove from SVGUniverse (hard) cache
-		svgCache.put(uri, diagram);
-		svgUniverse.removeDocument(uri);
-
-		return diagram;
 	}
 
 	private URL getIconURL(String name, boolean dark) {
@@ -552,7 +530,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 			return scaleSize(width);
 
 		update();
-		return scaleSize((diagram != null) ? Math.round(diagram.getWidth()) : 16);
+		return scaleSize((diagram != null) ? Math.round((int) diagram.size().getWidth()) : 16);
 	}
 
 	/**
@@ -564,7 +542,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 			return scaleSize(height);
 
 		update();
-		return scaleSize((diagram != null) ? Math.round(diagram.getHeight()) : 16);
+		return scaleSize((diagram != null) ? Math.round((int) diagram.size().getHeight()) : 16);
 	}
 
 	private int scaleSize(int size) {
@@ -590,19 +568,25 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 			grayFilter = (grayFilterObj instanceof RGBImageFilter) ? (RGBImageFilter) grayFilterObj : GrayFilter.createDisabledIconFilter(dark);
 		}
 
-		Graphics2D g2 = new GraphicsFilter((Graphics2D) g.create(), colorFilter, ColorFilter.getInstance(), grayFilter);
+		Graphics2D g2 = new GraphicsFilter((Graphics2D) g.create(), colorFilter, ColorFilter.getInstance(), grayFilter) {
+
+			@Override
+			public Graphics create() {
+				return this;
+			}
+		};
 
 		try {
 			FlatUIUtils.setRenderingHints(g2);
 			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-			paintSvg(g2, x, y);
+			paintSvg((JComponent) c, g2, x, y);
 		} finally {
 			g2.dispose();
 		}
 	}
 
-	private void paintSvg(Graphics2D g, int x, int y) {
+	private void paintSvg(JComponent c, Graphics2D g, int x, int y) {
 		if (diagram == null) {
 			paintSvgError(g, x, y);
 			return;
@@ -613,21 +597,18 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 
 		UIScale.scaleGraphics(g);
 		if (width > 0 || height > 0) {
-			double sx = (width > 0) ? width / diagram.getWidth() : 1;
-			double sy = (height > 0) ? height / diagram.getHeight() : 1;
+			double sx = (width > 0) ? width / diagram.size().getWidth() : 1;
+			double sy = (height > 0) ? height / diagram.size().getHeight() : 1;
 			if (sx != 1 || sy != 1)
 				g.scale(sx, sy);
 		}
 		if (scale != 1)
 			g.scale(scale, scale);
 
-		diagram.setIgnoringClipHeuristic(true);
+		// diagram.setIgnoringClipHeuristic(true);
 
-		try {
-			diagram.render(g);
-		} catch (SVGException ex) {
-			paintSvgError(g, 0, 0);
-		}
+		diagram.render(c, g);
+
 	}
 
 	private void paintSvgError(Graphics2D g, int x, int y) {
@@ -698,6 +679,27 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 		darkLaf = FlatLaf.isLafDark();
 	}
 
+	public static interface IColorFilter {
+
+		public Color filter(Color color);
+
+	}
+
+	public static class BasicColorFilter implements IColorFilter {
+
+		private final Color color;
+
+		public BasicColorFilter(Color color) {
+			this.color = color;
+		}
+
+		@Override
+		public Color filter(Color color) {
+			return this.color;
+		}
+	}
+
+
 	// ---- class ColorFilter --------------------------------------------------
 
 	/**
@@ -709,7 +711,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 	 * <p>
 	 * Global {@link FlatSVGIcon} ColorFilter can be retrieved using the {@link ColorFilter#getInstance()} method.
 	 */
-	public static class ColorFilter {
+	public static class ColorFilter implements IColorFilter {
 
 		private static ColorFilter instance;
 
@@ -896,6 +898,7 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 				darkColorMap = new HashMap<>(colorMap);
 		}
 
+		@Override
 		public Color filter(Color color) {
 			// apply mappings
 			color = applyMappings(color);
@@ -952,11 +955,11 @@ public class FlatSVGIcon extends ImageIcon implements DisabledIconProvider {
 
 	private static class GraphicsFilter extends Graphics2DProxy {
 
-		private final ColorFilter colorFilter;
-		private final ColorFilter globalColorFilter;
+		private final IColorFilter colorFilter;
+		private final IColorFilter globalColorFilter;
 		private final RGBImageFilter grayFilter;
 
-		GraphicsFilter(Graphics2D delegate, ColorFilter colorFilter, ColorFilter globalColorFilter, RGBImageFilter grayFilter) {
+		GraphicsFilter(Graphics2D delegate, IColorFilter colorFilter, IColorFilter globalColorFilter, RGBImageFilter grayFilter) {
 			super(delegate);
 			this.colorFilter = colorFilter;
 			this.globalColorFilter = globalColorFilter;

@@ -35,17 +35,17 @@ import org.glasspath.common.swing.theme.Theme;
 
 public class SvgIcon extends FlatSVGIcon {
 
-	public static final ColorFilter DARK = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(150, 150, 150));
-	public static final ColorFilter CONTRAST = new ColorFilter().add(FlatSVGIcon.currentColor, Theme.isDark() ? new Color(55, 55, 55) : new Color(100, 100, 100));
-	public static final ColorFilter WARNING = new ColorFilter().add(FlatSVGIcon.currentColor, Theme.isDark() ? new Color(150, 25, 25) : new Color(190, 100, 100));
-	public static final ColorFilter BLACK = new ColorFilter().add(FlatSVGIcon.currentColor, Color.black);
-	public static final ColorFilter WHITE = new ColorFilter().add(FlatSVGIcon.currentColor, Color.white);
-	public static final ColorFilter BLUE = new ColorFilter().add(FlatSVGIcon.currentColor, ColorUtils.BLUE);
-	public static final ColorFilter PURPLE = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(184, 119, 217));
-	public static final ColorFilter GREEN = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(151, 191, 105));
-	public static final ColorFilter RED = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(242, 73, 92));
-	public static final ColorFilter ORANGE = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(237, 162, 0));
-	public static final ColorFilter YELLOW = new ColorFilter().add(FlatSVGIcon.currentColor, new Color(250, 222, 42));
+	public static final IColorFilter DARK = new BasicColorFilter(new Color(150, 150, 150));
+	public static final IColorFilter CONTRAST = new BasicColorFilter(Theme.isDark() ? new Color(55, 55, 55) : new Color(100, 100, 100));
+	public static final IColorFilter WARNING = new BasicColorFilter(Theme.isDark() ? new Color(150, 25, 25) : new Color(190, 100, 100));
+	public static final IColorFilter BLACK = new BasicColorFilter(Color.black);
+	public static final IColorFilter WHITE = new BasicColorFilter(Color.white);
+	public static final IColorFilter BLUE = new BasicColorFilter(ColorUtils.BLUE);
+	public static final IColorFilter PURPLE = new BasicColorFilter(new Color(184, 119, 217));
+	public static final IColorFilter GREEN = new BasicColorFilter(new Color(151, 191, 105));
+	public static final IColorFilter RED = new BasicColorFilter(new Color(242, 73, 92));
+	public static final IColorFilter ORANGE = new BasicColorFilter(new Color(237, 162, 0));
+	public static final IColorFilter YELLOW = new BasicColorFilter(new Color(250, 222, 42));
 	static {
 		ColorFilter.getInstance().add(FlatSVGIcon.currentColor, Theme.isDark() ? new Color(175, 175, 175) : new Color(125, 125, 125));
 	}
