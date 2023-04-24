@@ -31,6 +31,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.Locale;
 
@@ -43,6 +44,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import org.glasspath.common.os.OsUtils;
+
 @SuppressWarnings("nls")
 public class SwingUtils {
 
@@ -50,6 +53,14 @@ public class SwingUtils {
 
 	private SwingUtils() {
 
+	}
+
+	public static boolean isControlOrCmdDown(InputEvent e) {
+		if (OsUtils.PLATFORM_MACOS) {
+			return e.isMetaDown();
+		} else {
+			return e.isControlDown();
+		}
 	}
 
 	public static void installFocusJumpListenerOnJTextField(final JTextField fromTextField, final JTextField toTextField, final int jumpAtTextLength) {
