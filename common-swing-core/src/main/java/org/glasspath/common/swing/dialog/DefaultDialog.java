@@ -85,19 +85,35 @@ public class DefaultDialog extends JDialog {
 	protected boolean submitted = false;
 
 	public DefaultDialog() {
-		this(null);
+		this(null, true, true);
 	}
 
 	public DefaultDialog(FrameContext context) {
+		this(context, true, true);
+	}
+
+	public DefaultDialog(FrameContext context, boolean showHeader) {
+		this(context, showHeader, true);
+	}
+
+	public DefaultDialog(FrameContext context, boolean showHeader, boolean modal) {
 		super(context != null ? context.getFrame() : null);
 
 		this.context = context;
 
-		getRootPane().setBackground(ColorUtils.TITLE_BAR_COLOR);
-		setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		setPreferredSize(DIALOG_SIZE_DEFAULT);
+
+		if (showHeader) {
+			getRootPane().setBackground(ColorUtils.TITLE_BAR_COLOR);
+		}
+
+		if (modal) {
+			setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+		} else {
+			setModalityType(Dialog.ModalityType.MODELESS);
+		}
 
 		keyEventDispatcher = new KeyEventDispatcher() {
 
@@ -179,12 +195,19 @@ public class DefaultDialog extends JDialog {
 			}
 		});
 
-		header = new DefaultDialogHeader();
-		getContentPane().add(header);
+		if (showHeader) {
 
-		headerSeparator = new Separator();
-		headerSeparator.setMinimumSize(new Dimension(100, 4));
-		getContentPane().add(headerSeparator);
+			header = new DefaultDialogHeader();
+			getContentPane().add(header);
+
+			headerSeparator = new Separator();
+			headerSeparator.setMinimumSize(new Dimension(100, 4));
+			getContentPane().add(headerSeparator);
+
+		} else {
+			header = null;
+			headerSeparator = null;
+		}
 
 		contentPanel = new JPanel();
 		contentPanel.setMinimumSize(new Dimension(0, 0));
@@ -328,6 +351,10 @@ public class DefaultDialog extends JDialog {
 	}
 
 	protected void cancel() {
+		closeDialog();
+	}
+
+	public void close() {
 		closeDialog();
 	}
 
