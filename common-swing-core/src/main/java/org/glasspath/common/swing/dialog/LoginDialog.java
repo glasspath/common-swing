@@ -117,4 +117,9 @@ public class LoginDialog extends DefaultDialog {
 		return new String(passwordPasswordField.getPassword());
 	}
 
+	@Override
+	protected void setContentChanged() {
+		// Content is normally not changed when logging in
+	}
+
 }
