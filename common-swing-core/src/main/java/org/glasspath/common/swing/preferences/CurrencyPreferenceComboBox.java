@@ -45,18 +45,25 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 	private final PreferencesProvider provider;
 	private final String key;
 	private final String defaultValue;
+	private final boolean showSymbols;
 	private final Entry automaticEntry;
 	private final CurrencyCode[] currencyCodes = CurrencyCode.values();
+	private CurrencyCode automaticCurrencyCode = null;
 
 	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue) {
 		this(provider, key, defaultValue, true);
 	}
 
 	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange) {
+		this(provider, key, defaultValue, commitOnChange, true);
+	}
+
+	public CurrencyPreferenceComboBox(PreferencesProvider provider, String key, String defaultValue, boolean commitOnChange, boolean showSymbols) {
 
 		this.provider = provider;
 		this.key = key;
 		this.defaultValue = defaultValue;
+		this.showSymbols = showSymbols;
 
 		setRenderer(new Renderer());
 
@@ -64,7 +71,11 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 		addItem(automaticEntry);
 
 		for (CurrencyCode currencyCode : currencyCodes) {
-			addItem(new Entry(currencyCode.code + ", " + currencyCode.symbol));
+			if (showSymbols) {
+				addItem(new Entry(currencyCode.code + ", " + currencyCode.symbol));
+			} else {
+				addItem(new Entry(currencyCode.code));
+			}
 		}
 
 		int index = getCurrencyCodeIndex(provider.getPreferences().get(key, defaultValue));
@@ -106,11 +117,15 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	public void setAutomaticLocale(Locale locale, boolean showCurrencyDetails) {
 
-		CurrencyCode currencyCode = LocaleUtils.getCurrencyCodeForLocale(locale);
-		if (currencyCode != null) {
+		automaticCurrencyCode = LocaleUtils.getCurrencyCodeForLocale(locale);
+		if (automaticCurrencyCode != null) {
 
 			if (showCurrencyDetails) {
-				automaticEntry.text = "Automatic (" + currencyCode.code + ", " + currencyCode.symbol + ")";
+				if (showSymbols) {
+					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ", " + automaticCurrencyCode.symbol + ")";
+				} else {
+					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ")";
+				}
 			} else {
 				automaticEntry.text = "Automatic";
 			}
@@ -147,6 +162,23 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 	public String getDefaultValue() {
 		return defaultValue;
+	}
+
+	public CurrencyCode getSelectedCurrencyCode() {
+
+		int index = getSelectedIndex();
+
+		if (index == 0) {
+			return automaticCurrencyCode;
+		} else if (index > 0) {
+			index--;
+			if (index < currencyCodes.length) {
+				return currencyCodes[index];
+			}
+		}
+
+		return null;
+
 	}
 
 	public void commit() {
