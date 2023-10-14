@@ -104,11 +104,18 @@ public class FileChooser extends JFileChooser {
 
 	public static String browseForFile(String fileExtension, Icon fileIcon, boolean save, Frame frame, Preferences preferences, String preferencesKey, String suggestedFileName) {
 
-		File startDir;
-		if (suggestedFileName == null || suggestedFileName.length() == 0) {
-			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/untitled"); //$NON-NLS-1$
-		} else {
+		File startDir = null;
+
+		if (preferences == null) {
+			if (suggestedFileName != null && suggestedFileName.length() > 0) {
+				startDir = new File(System.getProperty("user.home") + "/" + suggestedFileName); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				startDir = new File(System.getProperty("user.home") + "/untitled"); //$NON-NLS-1$
+			}
+		} else if (suggestedFileName != null && suggestedFileName.length() > 0) {
 			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + suggestedFileName); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/untitled"); //$NON-NLS-1$
 		}
 
 		FileChooser fileChooser = new FileChooser();
@@ -195,8 +202,13 @@ public class FileChooser extends JFileChooser {
 		if (chosenAction == JFileChooser.APPROVE_OPTION) {
 
 			try {
+
 				filePath = fileChooser.getSelectedFile().getAbsolutePath();
-				preferences.put(preferencesKey, fileChooser.getSelectedFile().getParent());
+
+				if (preferences != null) {
+					preferences.put(preferencesKey, fileChooser.getSelectedFile().getParent());
+				}
+
 			} catch (Exception e) {
 				Common.LOGGER.error("Exception while browsing for file", e); //$NON-NLS-1$
 				e.printStackTrace();
