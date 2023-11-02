@@ -103,9 +103,10 @@ public class Table extends JTable implements Filterable {
 	public static final int MINIMUM_TOOLTIP_DELAY_AFTER_SCROLL = 250;
 
 	public static final Border DEFAULT_CELL_BORDER = BorderFactory.createEmptyBorder(0, 4, 0, 4);
+	public static final Border DEFAULT_CELL_EDITOR_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(SELECTION_BACKGROUND), BorderFactory.createEmptyBorder(0, 4, 0, 4));
 	public static final Border CELL_BUTTON_CELL_BORDER = BorderFactory.createEmptyBorder(0, 4, 0, 25);
 
-	private final TableModelListener modelListener;
+	private final ModelListener modelListener;
 	private final RowSorterListener rowSorterListener;
 
 	private TableRowSorter<TableModel> sorter = null;
@@ -148,7 +149,12 @@ public class Table extends JTable implements Filterable {
 
 		super(null); // We set the model later
 
-		this.modelListener = new TableModelListener() {
+		this.modelListener = new ModelListener() {
+
+			@Override
+			public void tableWillChange() {
+				fireTableWillChange();
+			}
 
 			@Override
 			public void tableChanged(TableModelEvent event) {
@@ -388,6 +394,14 @@ public class Table extends JTable implements Filterable {
 		listeners.remove(listener);
 	}
 
+	public void fireTableWillChange() {
+		if (!reloading) {
+			for (TableListener listener : listeners) {
+				listener.tableWillChange();
+			}
+		}
+	}
+
 	public void fireTableChanged() {
 		if (!reloading) {
 			for (TableListener listener : listeners) {
@@ -512,6 +526,18 @@ public class Table extends JTable implements Filterable {
 				comp.setForeground(isEnabled() ? DEFAULT_FOREGROUND : DISABLED_FOREGROUND);
 				comp.setBackground(row % 2 == 0 ? getBackground() : TableUI.EVEN_ROW_COLOR);
 			}
+
+			/*
+			Border border = comp.getBorder();
+			if (border != null) {
+				if (!(border instanceof CompoundBorder)) {
+					comp.setBorder(BorderFactory.createCompoundBorder(border, DEFAULT_CELL_BORDER));
+				}
+			} else {
+				comp.setBorder(DEFAULT_CELL_BORDER);
+			}
+			*/
+			comp.setBorder(DEFAULT_CELL_EDITOR_BORDER);
 
 		}
 
@@ -951,6 +977,12 @@ public class Table extends JTable implements Filterable {
 		protected void exportDone(JComponent c, Transferable t, int act) {
 			table.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+
+	}
+
+	public static interface ModelListener extends TableModelListener {
+
+		public void tableWillChange();
 
 	}
 

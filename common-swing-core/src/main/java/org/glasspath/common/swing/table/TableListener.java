@@ -24,6 +24,7 @@ package org.glasspath.common.swing.table;
 
 public interface TableListener {
 
+	public void tableWillChange();
 	public void tableChanged();
 
 }

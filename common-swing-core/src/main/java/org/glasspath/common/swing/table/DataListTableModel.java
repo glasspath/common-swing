@@ -23,13 +23,16 @@
 package org.glasspath.common.swing.table;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
 import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.table.Table.ModelListener;
 import org.glasspath.common.swing.undo.UndoManager;
 
 public abstract class DataListTableModel extends AbstractTableModel implements Reorderable {
@@ -37,6 +40,7 @@ public abstract class DataListTableModel extends AbstractTableModel implements R
 	private UndoManager undoManager = null;
 	private boolean undoRedoing = false;
 	private boolean cellButtonUpdate = false;
+	private final List<ModelListener> listeners = new ArrayList<>();
 
 	public DataListTableModel() {
 
@@ -64,6 +68,28 @@ public abstract class DataListTableModel extends AbstractTableModel implements R
 
 	public void setCellButtonUpdate(boolean cellButtonUpdate) {
 		this.cellButtonUpdate = cellButtonUpdate;
+	}
+
+	@Override
+	public void addTableModelListener(TableModelListener listener) {
+		super.addTableModelListener(listener);
+		if (listener instanceof ModelListener) {
+			listeners.add((ModelListener) listener);
+		}
+	}
+
+	@Override
+	public void removeTableModelListener(TableModelListener listener) {
+		super.removeTableModelListener(listener);
+		if (listener instanceof ModelListener) {
+			listeners.remove((ModelListener) listener);
+		}
+	}
+
+	protected void fireTabelWillChange() {
+		for (ModelListener listener : listeners) {
+			listener.tableWillChange();
+		}
 	}
 
 	@Override
