@@ -168,16 +168,26 @@ public class FrameUtils {
 	}
 
 	public static void loadFrameDimensions(JFrame frame, Preferences preferences) {
-		loadFrameDimensions(frame, preferences, true);
+		loadFrameDimensions(frame, preferences, 15, 15, 1250, 787, 0);
 	}
 
-	public static void loadFrameDimensions(JFrame frame, Preferences preferences, boolean loadExtendedState) {
+	public static void loadFrameDimensions(JFrame frame, Preferences preferences, int x, int y, int width, int height, int extendedState) {
 
-		int frameExtendedState = preferences.getInt("frameExtendedState", 0);
-		int frameX = preferences.getInt("frameX", 15);
-		int frameY = preferences.getInt("frameY", 15);
-		int frameWidth = preferences.getInt("frameWidth", 1250);
-		int frameHeight = preferences.getInt("frameHeight", 785);
+		int frameX, frameY, frameWidth, frameHeight, frameExtendedState;
+		
+		if (preferences != null) {
+			frameX = preferences.getInt("frameX", x);
+			frameY = preferences.getInt("frameY", y);
+			frameWidth = preferences.getInt("frameWidth", width);
+			frameHeight = preferences.getInt("frameHeight", height);
+			frameExtendedState = preferences.getInt("frameExtendedState", extendedState);
+		} else {
+			frameX = x;
+			frameY = y;
+			frameWidth = width;
+			frameHeight = height;
+			frameExtendedState = extendedState;
+		}
 
 		boolean locationValid = false;
 
@@ -202,26 +212,16 @@ public class FrameUtils {
 		}
 
 		if (!locationValid) {
-
-			if (loadExtendedState) {
-				preferences.putInt("frameExtendedState", 0);
-			} else {
-				frameExtendedState = 0;
-			}
-
 			frameX = 15;
 			frameY = 15;
 			frameWidth = 1250;
 			frameHeight = 785;
-
+			frameExtendedState = 0;
 		}
 
 		frame.setSize(frameWidth, frameHeight);
 		frame.setLocation(frameX, frameY);
-
-		if (loadExtendedState) {
-			frame.setExtendedState(frameExtendedState);
-		}
+		frame.setExtendedState(frameExtendedState);
 
 	}
 
