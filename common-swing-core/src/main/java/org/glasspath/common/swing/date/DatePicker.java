@@ -24,6 +24,7 @@ package org.glasspath.common.swing.date;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -35,11 +36,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -52,6 +56,10 @@ import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.calendar.DateSelectionModel;
 import org.jdesktop.swingx.plaf.basic.BasicDatePickerUI;
+import org.jdesktop.swingx.plaf.basic.CalendarRenderingHandler;
+import org.jdesktop.swingx.plaf.basic.CalendarState;
+
+import com.formdev.flatlaf.swingx.ui.FlatMonthViewUI;
 
 public class DatePicker extends JXDatePicker {
 
@@ -61,7 +69,7 @@ public class DatePicker extends JXDatePicker {
 	public DatePicker() {
 		super();
 
-		configureMonthView(getMonthView());
+		setMonthView(createMonthView());
 
 		addActionListener(new ActionListener() {
 
@@ -228,6 +236,39 @@ public class DatePicker extends JXDatePicker {
 
 	}
 
+	public static JXMonthView createMonthView() {
+
+		JXMonthView monthView = new JXMonthView() {
+
+			@Override
+			public void updateUI() {
+				setUI(new MonthViewUI());
+				invalidate();
+			}
+
+			@Override
+			public String getDayOfTheWeek(int dayOfWeek) {
+
+				String s = super.getDayOfTheWeek(dayOfWeek);
+				if (s != null) {
+					if (s.length() > 1) {
+						s = s.substring(0, 1).toUpperCase() + s.substring(1, 2).toLowerCase();
+					} else if (s.length() > 0) {
+						s = s.substring(0, 1).toUpperCase();
+					}
+				}
+
+				return s;
+
+			}
+		};
+
+		configureMonthView(monthView);
+
+		return monthView;
+
+	}
+
 	public static void configureMonthView(JXMonthView monthView) {
 
 		monthView.setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
@@ -236,6 +277,7 @@ public class DatePicker extends JXDatePicker {
 		monthView.setShowingTrailingDays(true);
 		monthView.setTodayBackground(new Color(84, 136, 217, 150));
 		monthView.setMonthStringBackground(new Color(150, 150, 150, 20));
+		monthView.setTraversable(true);
 
 	}
 
@@ -253,6 +295,71 @@ public class DatePicker extends JXDatePicker {
 				JXHyperlink todayLink = (JXHyperlink) linkPanel.getComponent(0);
 				todayLink.setUnclickedColor(UIManager.getColor("Hyperlink.linkColor"));
 				todayLink.setClickedColor(UIManager.getColor("Hyperlink.visitedColor"));
+			}
+
+		}
+
+	}
+
+	protected static class MonthViewUI extends FlatMonthViewUI {
+
+		@Override
+		protected CalendarRenderingHandler createRenderingHandler() {
+			return new ProxyRenderingHandler(super.createRenderingHandler());
+		}
+
+		@Override
+		protected void paintDaysOfWeekSeparator(Graphics g, Calendar month) {
+			// super.paintDaysOfWeekSeparator(g, month);
+		}
+
+		protected static class ProxyRenderingHandler extends RenderingHandler {
+
+			private final CalendarRenderingHandler handler;
+			private final JLabel dayLabel;
+			private int minDayWidth = 30;
+
+			public ProxyRenderingHandler(CalendarRenderingHandler handler) {
+				this.handler = handler;
+
+				dayLabel = new JLabel() {
+
+					@Override
+					public Dimension getPreferredSize() {
+						Dimension size = super.getPreferredSize();
+						if (size.width < minDayWidth) {
+							size.width = minDayWidth;
+						}
+						return size;
+					}
+				};
+				dayLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+			}
+
+			public int getMinDayWidth() {
+				return minDayWidth;
+			}
+
+			public void setMinDayWidth(int minDayWidth) {
+				this.minDayWidth = minDayWidth;
+			}
+
+			@Override
+			public JComponent prepareRenderingComponent(JXMonthView monthView, Calendar calendar, CalendarState dayState) {
+				if (dayState == CalendarState.DAY_OF_WEEK) {
+
+					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
+					if (comp instanceof JLabel) {
+						dayLabel.setText(((JLabel) comp).getText());
+						dayLabel.setFont(((JLabel) comp).getFont());
+					}
+
+					return dayLabel;
+
+				} else {
+					return handler.prepareRenderingComponent(monthView, calendar, dayState);
+				}
 			}
 
 		}

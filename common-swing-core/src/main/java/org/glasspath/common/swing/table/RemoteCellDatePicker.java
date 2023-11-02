@@ -50,7 +50,7 @@ public class RemoteCellDatePicker extends JXDatePicker {
 		this.table = table;
 		this.column = column;
 
-		DatePicker.configureMonthView(getMonthView());
+		setMonthView(DatePicker.createMonthView());
 
 		getEditor().getDocument().addDocumentListener(new DocumentListener() {
 

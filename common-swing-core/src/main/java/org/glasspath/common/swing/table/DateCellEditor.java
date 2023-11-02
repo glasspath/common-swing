@@ -29,6 +29,7 @@ import javax.swing.BorderFactory;
 import org.glasspath.common.date.DateUtils;
 import org.glasspath.common.format.FormatUtils;
 import org.glasspath.common.swing.color.ColorUtils;
+import org.glasspath.common.swing.date.DatePicker;
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.table.DatePickerCellEditor;
 
@@ -40,12 +41,13 @@ public class DateCellEditor extends DatePickerCellEditor {
 		setFormats(FormatUtils.DATE_FORMAT);
 		setClickCountToStart(2);
 
-		JXMonthView monthView = datePicker.getMonthView();
+		JXMonthView monthView = DatePicker.createMonthView();
 		monthView.setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
 		monthView.setShowingLeadingDays(true);
 		monthView.setShowingTrailingDays(true);
 		monthView.setTodayBackground(ColorUtils.createTransparentColor(Table.SELECTION_BACKGROUND, 150));
 		monthView.setMonthStringBackground(new Color(150, 150, 150, 20));
+		datePicker.setMonthView(monthView);
 
 	}
 
