@@ -390,21 +390,24 @@ public class Table extends JTable implements Filterable {
 
 		// comp.setFont(getFont());
 
-		if (isRowSelected(row)) {
-			comp.setBackground(getSelectionBackground());
-			comp.setForeground(getSelectionForeground());
-			if (getCellSelectionEnabled() && getSelectedRowCount() == 1 && getSelectedColumnCount() == 1 && getSelectedColumn() == column) {
-				comp.setBackground(focusedCellBackground);
-			}
-		} else if (alternatingBackgroundEnabled) {
-			comp.setForeground(isEnabled() ? DEFAULT_FOREGROUND : DISABLED_FOREGROUND);
-			comp.setBackground(row % 2 == 0 ? getBackground() : TableUI.EVEN_ROW_COLOR);
-		}
-
+		prepareRendererColors(comp, row, column);
 		prepareRendererBorder(comp, row, column);
 
 		return comp;
 
+	}
+
+	protected void prepareRendererColors(JComponent component, int row, int column) {
+		if (isRowSelected(row)) {
+			component.setBackground(getSelectionBackground());
+			component.setForeground(getSelectionForeground());
+			if (getCellSelectionEnabled() && getSelectedRowCount() == 1 && getSelectedColumnCount() == 1 && getSelectedColumn() == column) {
+				component.setBackground(focusedCellBackground);
+			}
+		} else if (alternatingBackgroundEnabled) {
+			component.setForeground(isEnabled() ? DEFAULT_FOREGROUND : DISABLED_FOREGROUND);
+			component.setBackground(row % 2 == 0 ? getBackground() : TableUI.EVEN_ROW_COLOR);
+		}
 	}
 
 	protected void prepareRendererBorder(JComponent component, int row, int column) {
