@@ -36,6 +36,8 @@ import org.glasspath.common.swing.table.Filterable;
 
 public class FilterTools {
 
+	public static final int DEFAULT_WIDTH = 250;
+
 	private Filterable filterable;
 
 	private final JToolBar toolBar;
@@ -44,6 +46,10 @@ public class FilterTools {
 	private DateFilterTools dateFilterTools = null;
 
 	public FilterTools(Filterable filterable) {
+		this(filterable, DEFAULT_WIDTH);
+	}
+
+	public FilterTools(Filterable filterable, int width) {
 
 		this.filterable = filterable;
 		this.toolBar = new JToolBar();
@@ -59,15 +65,15 @@ public class FilterTools {
 			public void clear() {
 				clearFilter();
 			}
-			
+
 			@Override
 			public Dimension getPreferredSize() {
 				Dimension preferredSize = super.getPreferredSize();
-				preferredSize.width = 250;
+				preferredSize.width = width;
 				return preferredSize;
 			}
 		};
-		searchField.setMaximumSize(new Dimension(250, searchField.getFont().getSize() >= 14.0F ? 35 : 26)); // TODO?
+		searchField.setMaximumSize(new Dimension(width, searchField.getFont().getSize() >= 14.0F ? 35 : 26)); // TODO?
 		toolBar.add(searchField);
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 
