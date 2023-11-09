@@ -60,8 +60,12 @@ public class Icons {
 	public static final SvgIcon cogBlueMask = new OffsetSvgIcon(10, 0, 6, 6, getSvg("cog.svg"));
 	public static final SvgIcon contentCopy = new SvgIcon(getSvg("content-copy.svg"));
 	public static final SvgIcon contentCopyXLarge = new SvgIcon(36, 0, getSvg("content-copy.svg"));
+	public static final SvgIcon contentSave = new SvgIcon(getSvg("content-save.svg"));
 	public static final SvgIcon dotsHorizontal = new OffsetSvgIcon(16, 0, 4, 0, getSvg("dots-horizontal.svg"));
+	public static final SvgIcon fileDocumentOutline = new SvgIcon(getSvg("file-document-outline.svg"));
+	public static final SvgIcon formTextbox = new SvgIcon(getSvg("form-textbox.svg"));
 	public static final SvgIcon link = new SvgIcon(getSvg("link.svg"));
+	public static final SvgIcon linkGreen = new SvgIcon(getSvg("link.svg"));
 	public static final SvgIcon linkOff = new SvgIcon(getSvg("link-off.svg"));
 	public static final SvgIcon loupe = new SvgIcon(getSvg("loupe.svg"));
 	public static final SvgIcon magnify = new SvgIcon(getSvg("magnify.svg"));
@@ -81,6 +85,7 @@ public class Icons {
 		closeRed.setColorFilter(SvgIcon.RED);
 		cogBlue.setColorFilter(SvgIcon.BLUE);
 		cogBlueMask.setColorFilter(SvgIcon.BLUE);
+		linkGreen.setColorFilter(SvgIcon.GREEN);
 		plus.setColorFilter(SvgIcon.GREEN);
 		redo.setColorFilter(SvgIcon.BLUE);
 		renameBox.setColorFilter(SvgIcon.BLUE);
