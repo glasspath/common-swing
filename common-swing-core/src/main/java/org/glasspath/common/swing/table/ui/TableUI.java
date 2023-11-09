@@ -28,8 +28,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.CellRendererPane;
@@ -38,7 +36,6 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicTableUI;
 
-import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 
 public class TableUI extends BasicTableUI {
@@ -68,7 +65,7 @@ public class TableUI extends BasicTableUI {
 	private final boolean paintSelectedRow;
 	private final boolean repaintOnSelectionChange;
 
-	private final FocusAdapter tableFocusListener;
+	// private final FocusAdapter tableFocusListener;
 
 	private Color stripedColor = EVEN_ROW_COLOR;
 	private Color gridColor = TABLE_GRID_COLOR;
@@ -91,18 +88,20 @@ public class TableUI extends BasicTableUI {
 		this.paintSelectedRow = paintSelectedRow;
 		this.repaintOnSelectionChange = repaintOnSelectionChange;
 
+		/*
 		tableFocusListener = new FocusAdapter() {
-
+		
 			@Override
 			public void focusGained(FocusEvent e) {
 				makeTableActive();
 			}
-
+		
 			@Override
 			public void focusLost(FocusEvent e) {
 				makeTableInactive();
 			}
 		};
+		*/
 
 	}
 
@@ -139,10 +138,11 @@ public class TableUI extends BasicTableUI {
 		TableHeaderUtils.makeHeaderFillEmptySpace(table); // TODO: Make sure this isn't causing memory leaks
 		TableUtils.makeStriped(table, striped ? stripedColor : table.getBackground(), paintSelectedRow, repaintOnSelectionChange);
 
-		makeTableActive();
+		// makeTableActive();
 
 	}
 
+	/*
 	@Override
 	protected void installListeners() {
 		super.installListeners();
@@ -158,10 +158,11 @@ public class TableUI extends BasicTableUI {
 	private void makeTableActive() {
 		table.setSelectionBackground(ColorUtils.SELECTION_COLOR_FOCUSSED);
 	}
-
+	
 	private void makeTableInactive() {
 		table.setSelectionBackground(ColorUtils.SELECTION_COLOR_NOT_FOCUSSED);
 	}
+	*/
 
 	public Border getRowBorder() {
 		return BorderFactory.createEmptyBorder(0, 5, 0, 5);

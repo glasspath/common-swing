@@ -113,9 +113,11 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 			g.setColor(getRowColor(currentRow));
 			g.fillRect(clip.x, topY, clip.width, rowHeight);
 
+			/*
 			if (border != null && table.isRowSelected(currentRow)) {
 				border.paintBorder(viewport, g, 0, topY, viewport.getWidth(), table.getRowHeight());
 			}
+			*/
 
 			topY = bottomY;
 
@@ -127,7 +129,7 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 
 	private Color getRowColor(int row) {
 		if (paintSelectedRow && table.isRowSelected(row)) {
-			return Table.SELECTION_BACKGROUND;
+			return table.getSelectionBackground();
 		} else {
 			return row % 2 == 0? table.getBackground() : stripeColor;			
 		}

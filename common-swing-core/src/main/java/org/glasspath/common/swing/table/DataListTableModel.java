@@ -98,7 +98,7 @@ public abstract class DataListTableModel extends AbstractTableModel implements R
 	}
 
 	public void setValueAt(Object newValue, int rowIndex, int columnIndex, DataListTableModel tableModel) {
-		if (!undoRedoing) {
+		if (undoManager != null && !undoRedoing) {
 			Object oldValue = getValueAt(rowIndex, columnIndex);
 			if (oldValue != newValue && (oldValue == null || !oldValue.equals(newValue))) {
 				undoManager.addEdit(new SetValueUndoable(rowIndex, columnIndex, oldValue, newValue, tableModel));

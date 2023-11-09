@@ -33,8 +33,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class BooleanCellRenderer extends DefaultTableCellRenderer {
 
-	private final JCheckBox checkBox;
+	protected final JCheckBox checkBox;
 
+	protected int row = -1;
 	private boolean modifyClip = false;
 
 	public BooleanCellRenderer() {
@@ -60,10 +61,16 @@ public class BooleanCellRenderer extends DefaultTableCellRenderer {
 
 				super.paint(g);
 
+				paintCheckBox(g);
+
 			}
 
 		};
 		checkBox.setHorizontalAlignment(JCheckBox.CENTER);
+
+	}
+
+	protected void paintCheckBox(Graphics g) {
 
 	}
 
@@ -72,6 +79,8 @@ public class BooleanCellRenderer extends DefaultTableCellRenderer {
 
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+		this.row = row;
+		
 		modifyClip = true;
 		for (int r : table.getSelectedRows()) {
 			if (r == row) {

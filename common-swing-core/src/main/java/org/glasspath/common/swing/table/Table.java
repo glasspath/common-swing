@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.prefs.Preferences;
+import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
 import javax.activation.ActivationDataFlavor;
@@ -52,11 +52,9 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
@@ -76,7 +74,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -93,17 +90,17 @@ public class Table extends JTable implements Filterable {
 	// TODO
 	public static int MINIMUM_ROW_HEIGHT = 27;
 
-	public static final Color SELECTION_BACKGROUND = new Color(84, 136, 217);
-	public static final Color FOCUSED_CELL_BACKGROUND = new Color(44, 96, 177);
+	public static final Color DEFAULT_SELECTION_BACKGROUND = new Color(84, 136, 217);
+	public static final Color DEFAULT_FOCUSED_CELL_BACKGROUND = new Color(44, 96, 177);
 	public static final Color DEFAULT_FOREGROUND = ColorUtils.TEXT_COLOR;
-	public static final Color SELECTION_FOREGROUND = Color.white;
+	public static final Color DEFAULT_SELECTION_FOREGROUND = Color.white;
 	public static final Color DISABLED_FOREGROUND = ColorUtils.DISABLED_TEXT_COLOR;
 	public static final Color ALTERNATING_BACKGROUND = new Color(245, 245, 247);
 	public static final Color GRID_COLOR = new Color(225, 225, 225);
 	public static final int MINIMUM_TOOLTIP_DELAY_AFTER_SCROLL = 250;
 
 	public static final Border DEFAULT_CELL_BORDER = BorderFactory.createEmptyBorder(0, 4, 0, 4);
-	public static final Border DEFAULT_CELL_EDITOR_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(SELECTION_BACKGROUND), BorderFactory.createEmptyBorder(0, 4, 0, 4));
+	public static final Border DEFAULT_CELL_EDITOR_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(DEFAULT_SELECTION_BACKGROUND), BorderFactory.createEmptyBorder(0, 4, 0, 4));
 	public static final Border CELL_BUTTON_CELL_BORDER = BorderFactory.createEmptyBorder(0, 4, 0, 25);
 
 	private final ModelListener modelListener;
@@ -113,16 +110,14 @@ public class Table extends JTable implements Filterable {
 	private int dateColumn1ForFilter = -1;
 	private int dateColumn2ForFilter = -1;
 
-	private RowFilter<Object, Object> baseFilter;
+	private RowFilter<Object, Object> baseFilter = null;
 
-	private final HashMap<Integer, JButton> cellButtons = new HashMap<Integer, JButton>();
+	private final Map<Integer, JButton> cellButtons = new HashMap<>();
 
-	private boolean columnHidingAllowed = true;
-	private final HashMap<Integer, TableColumn> hiddenColumns = new HashMap<Integer, TableColumn>();
-
-	private final ArrayList<TableListener> listeners = new ArrayList<TableListener>();
+	private final List<TableListener> listeners = new ArrayList<>();
 	private boolean reloading = false;
 
+	private Color focusedCellBackground = DEFAULT_FOCUSED_CELL_BACKGROUND;
 	private boolean alternatingBackgroundEnabled = true;
 
 	private final KeyAdapter keyListener = new KeyAdapter() {
@@ -136,9 +131,6 @@ public class Table extends JTable implements Filterable {
 	};
 
 	private UndoManager undoManager = null;
-	private Preferences preferences = null;
-	private String preferencesKey = null;
-	private boolean loadingColumnSettings = false;
 	private long lastScroll = 0;
 
 	public Table() {
@@ -184,9 +176,8 @@ public class Table extends JTable implements Filterable {
 		putClientProperty("JTable.autoStartsEdit", false); //$NON-NLS-1$
 
 		setCellSelectionEnabled(true);
-		// setSelectionBackground(SELECTION_BACKGROUND);
-		setSelectionBackground(FOCUSED_CELL_BACKGROUND);
-		setSelectionForeground(SELECTION_FOREGROUND);
+		setSelectionBackground(DEFAULT_SELECTION_BACKGROUND);
+		setSelectionForeground(DEFAULT_SELECTION_FOREGROUND);
 
 		setShowHorizontalLines(false);
 		setShowVerticalLines(false);
@@ -234,44 +225,6 @@ public class Table extends JTable implements Filterable {
 			@Override
 			public void componentMoved(ComponentEvent e) {
 				lastScroll = System.currentTimeMillis();
-			}
-		});
-
-		getTableHeader().addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON3) {
-					if (columnHidingAllowed && getModel().getColumnCount() > 0) {
-
-						JPopupMenu popupMenu = new JPopupMenu();
-
-						for (int i = 0; i < getModel().getColumnCount(); i++) {
-
-							final int modelColumnIndex = i;
-							final boolean hidden = hiddenColumns.containsKey(modelColumnIndex);
-
-							final JCheckBoxMenuItem item = new JCheckBoxMenuItem(getModel().getColumnName(i));
-							item.setSelected(!hidden);
-							item.addActionListener(new ActionListener() {
-
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									if (hidden) {
-										showColumn(modelColumnIndex);
-									} else {
-										hideColumn(modelColumnIndex);
-									}
-								}
-							});
-							popupMenu.add(item);
-
-						}
-
-						popupMenu.show(e.getComponent(), e.getX(), e.getY());
-
-					}
-				}
 			}
 		});
 
@@ -410,68 +363,12 @@ public class Table extends JTable implements Filterable {
 		}
 	}
 
-	public void setPreferences(Preferences preferences, String preferencesKey) {
-		this.preferences = preferences;
-		this.preferencesKey = preferencesKey;
-		loadColumnSettingsFromPreferences();
+	public Color getFocusedCellBackground() {
+		return focusedCellBackground;
 	}
 
-	public boolean isColumnHidingAllowed() {
-		return columnHidingAllowed;
-	}
-
-	public void setColumnHidingAllowed(boolean columnHidingAllowed) {
-		this.columnHidingAllowed = columnHidingAllowed;
-	}
-
-	public void hideColumn(int modelColumnIndex) {
-		if (columnHidingAllowed) {
-			int columnViewIndex = convertColumnIndexToView(modelColumnIndex);
-			if (columnViewIndex >= 0) {
-				TableColumn column = getColumnModel().getColumn(columnViewIndex);
-				removeColumn(column);
-				hiddenColumns.put(modelColumnIndex, column);
-			}
-			storeColumnSettingsToPreferences();
-		}
-	}
-
-	public void showColumn(int modelColumnIndex) {
-		if (hiddenColumns.containsKey(modelColumnIndex)) {
-			addColumn(hiddenColumns.get(modelColumnIndex));
-			hiddenColumns.remove(modelColumnIndex);
-			for (int i = 0; i < getColumnCount(); i++) {
-				if (convertColumnIndexToModel(i) > modelColumnIndex) {
-					getColumnModel().moveColumn(getColumnCount() - 1, i);
-					break;
-				}
-			}
-		}
-		storeColumnSettingsToPreferences();
-	}
-
-	private void loadColumnSettingsFromPreferences() {
-		if (preferences != null && preferencesKey != null && preferencesKey.length() > 0) {
-			loadingColumnSettings = true;
-			for (int i = getModel().getColumnCount() - 1; i >= 0; i--) {
-				if (preferences.getBoolean(preferencesKey + "HideColumn" + i, false)) { //$NON-NLS-1$
-					hideColumn(i);
-				}
-			}
-			loadingColumnSettings = false;
-		}
-	}
-
-	private void storeColumnSettingsToPreferences() {
-		if (!loadingColumnSettings && preferences != null && preferencesKey != null && preferencesKey.length() > 0) {
-			for (int i = 0; i < getModel().getColumnCount(); i++) {
-				preferences.putBoolean(preferencesKey + "HideColumn" + i, hiddenColumns.containsKey(i)); //$NON-NLS-1$
-			}
-		}
-	}
-
-	public HashMap<Integer, TableColumn> getHiddenColumns() {
-		return hiddenColumns;
+	public void setFocusedCellBackground(Color focusedCellBackground) {
+		this.focusedCellBackground = focusedCellBackground;
 	}
 
 	public boolean isAlternatingBackgroundEnabled() {
@@ -494,24 +391,28 @@ public class Table extends JTable implements Filterable {
 		// comp.setFont(getFont());
 
 		if (isRowSelected(row)) {
-			comp.setBackground(SELECTION_BACKGROUND);
-			comp.setForeground(SELECTION_FOREGROUND);
+			comp.setBackground(getSelectionBackground());
+			comp.setForeground(getSelectionForeground());
 			if (getCellSelectionEnabled() && getSelectedRowCount() == 1 && getSelectedColumnCount() == 1 && getSelectedColumn() == column) {
-				comp.setBackground(FOCUSED_CELL_BACKGROUND);
+				comp.setBackground(focusedCellBackground);
 			}
 		} else if (alternatingBackgroundEnabled) {
 			comp.setForeground(isEnabled() ? DEFAULT_FOREGROUND : DISABLED_FOREGROUND);
 			comp.setBackground(row % 2 == 0 ? getBackground() : TableUI.EVEN_ROW_COLOR);
 		}
 
-		if (getSelectedRowCount() == 1 && row == getSelectedRow() && cellButtons.containsKey(convertColumnIndexToModel(column))) {
-			comp.setBorder(CELL_BUTTON_CELL_BORDER);
-		} else {
-			comp.setBorder(DEFAULT_CELL_BORDER);
-		}
+		prepareRendererBorder(comp, row, column);
 
 		return comp;
 
+	}
+
+	protected void prepareRendererBorder(JComponent component, int row, int column) {
+		if (getSelectedRowCount() == 1 && row == getSelectedRow() && cellButtons.containsKey(convertColumnIndexToModel(column))) {
+			component.setBorder(CELL_BUTTON_CELL_BORDER);
+		} else {
+			component.setBorder(DEFAULT_CELL_BORDER);
+		}
 	}
 
 	@Override
@@ -527,21 +428,27 @@ public class Table extends JTable implements Filterable {
 				comp.setBackground(row % 2 == 0 ? getBackground() : TableUI.EVEN_ROW_COLOR);
 			}
 
-			/*
-			Border border = comp.getBorder();
-			if (border != null) {
-				if (!(border instanceof CompoundBorder)) {
-					comp.setBorder(BorderFactory.createCompoundBorder(border, DEFAULT_CELL_BORDER));
-				}
-			} else {
-				comp.setBorder(DEFAULT_CELL_BORDER);
-			}
-			*/
-			comp.setBorder(DEFAULT_CELL_EDITOR_BORDER);
+			prepareEditorBorder(comp, row, column);
 
 		}
 
 		return comp;
+
+	}
+
+	protected void prepareEditorBorder(JComponent component, int row, int column) {
+
+		/*
+		Border border = comp.getBorder();
+		if (border != null) {
+			if (!(border instanceof CompoundBorder)) {
+				comp.setBorder(BorderFactory.createCompoundBorder(border, DEFAULT_CELL_BORDER));
+			}
+		} else {
+			comp.setBorder(DEFAULT_CELL_BORDER);
+		}
+		*/
+		component.setBorder(DEFAULT_CELL_EDITOR_BORDER);
 
 	}
 
@@ -689,9 +596,11 @@ public class Table extends JTable implements Filterable {
 		fireTableChanged();
 	}
 
-	public void stopEditing() {
+	public boolean stopEditing() {
 		if (getCellEditor() != null) {
-			getCellEditor().stopCellEditing();
+			return getCellEditor().stopCellEditing();
+		} else {
+			return true;
 		}
 	}
 

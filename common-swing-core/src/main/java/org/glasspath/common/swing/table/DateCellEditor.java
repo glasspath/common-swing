@@ -45,7 +45,7 @@ public class DateCellEditor extends DatePickerCellEditor {
 		monthView.setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
 		monthView.setShowingLeadingDays(true);
 		monthView.setShowingTrailingDays(true);
-		monthView.setTodayBackground(ColorUtils.createTransparentColor(Table.SELECTION_BACKGROUND, 150));
+		monthView.setTodayBackground(ColorUtils.createTransparentColor(Table.DEFAULT_SELECTION_BACKGROUND, 150));
 		monthView.setMonthStringBackground(new Color(150, 150, 150, 20));
 		datePicker.setMonthView(monthView);
 
