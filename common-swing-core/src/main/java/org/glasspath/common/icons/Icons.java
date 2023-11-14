@@ -47,6 +47,7 @@ public class Icons {
 
 	// SVG
 	public static final SvgIcon alert = new SvgIcon(getSvg("alert.svg"));
+	public static final SvgIcon alertMask = new OffsetSvgIcon(10, 0, 7, 7, getSvg("alert.svg"));
 	public static final SvgIcon alertLarge = new SvgIcon(22, 0, getSvg("alert.svg"));
 	public static final SvgIcon arrowUp = new SvgIcon(getSvg("arrow-up.svg"));
 	public static final SvgIcon arrowDown = new SvgIcon(getSvg("arrow-down.svg"));
@@ -91,6 +92,7 @@ public class Icons {
 
 	static {
 		alert.setColorFilter(SvgIcon.ORANGE);
+		alertMask.setColorFilter(SvgIcon.ORANGE);
 		alertLarge.setColorFilter(SvgIcon.ORANGE);
 		chevronLeftBlue.setColorFilter(SvgIcon.BLUE);
 		chevronRightBlue.setColorFilter(SvgIcon.BLUE);
