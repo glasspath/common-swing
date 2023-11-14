@@ -32,9 +32,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.glasspath.common.icons.Icons;
 import org.glasspath.common.swing.color.ColorUtils;
 
-public class FileTreeRenderer extends DefaultTreeCellRenderer {
+public class FileTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	public FileTreeRenderer() {
+	public FileTreeCellRenderer() {
 		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		setBackgroundSelectionColor(ColorUtils.SELECTION_COLOR_FOCUSSED);
 		setTextSelectionColor(getTextNonSelectionColor());
@@ -47,11 +47,19 @@ public class FileTreeRenderer extends DefaultTreeCellRenderer {
 		if (value instanceof File) {
 
 			File file = (File) value;
-			setText(file.getName());
 
 			if (file.isDirectory()) {
-				setIcon(Icons.folderBlue);
+
+				if (tree.getModel() instanceof FileTreeModel && ((FileTreeModel) tree.getModel()).isRootDirectory(file)) {
+					setText(file.getAbsolutePath());
+					setIcon(Icons.folderOutlineBlue);
+				} else {
+					setText(file.getName());
+					setIcon(Icons.folderBlue);
+				}
+
 			} else {
+				setText(file.getName());
 				setIcon(Icons.fileOutline);
 			}
 

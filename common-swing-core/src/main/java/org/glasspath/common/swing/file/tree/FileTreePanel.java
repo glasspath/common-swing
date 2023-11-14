@@ -23,7 +23,12 @@
 package org.glasspath.common.swing.file.tree;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +48,7 @@ public class FileTreePanel extends JPanel {
 	private final JTree tree;
 	private final JToolBar toolBar;
 	private final FilterTools filterTools;
+	private final List<ActionListener> actionListeners = new ArrayList<>();
 
 	public FileTreePanel() {
 		this(null);
@@ -55,8 +61,24 @@ public class FileTreePanel extends JPanel {
 		tree = new JTree();
 		tree.setRootVisible(false);
 		tree.setShowsRootHandles(true);
-		tree.setCellRenderer(new FileTreeRenderer());
+		tree.setCellRenderer(new FileTreeCellRenderer());
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		tree.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				if (e.getClickCount() >= 2) {
+
+					Object selectedObject = tree.getLastSelectedPathComponent();
+					if (selectedObject instanceof File) {
+						fireActionPerformed((File) selectedObject);
+					}
+
+				}
+
+			}
+		});
 
 		JScrollPane treeScrollPane = new JScrollPane(tree);
 		treeScrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -114,6 +136,41 @@ public class FileTreePanel extends JPanel {
 
 	public void setRootDirectories(List<File> rootDirs) {
 		tree.setModel(new FileTreeModel(rootDirs));
+	}
+
+	public void addActionListener(ActionListener listener) {
+		actionListeners.add(listener);
+	}
+
+	public void removeActionListener(ActionListener listener) {
+		actionListeners.remove(listener);
+	}
+
+	private void fireActionPerformed(File file) {
+
+		FileTreeEvent event = new FileTreeEvent(tree, file);
+
+		for (ActionListener listener : actionListeners) {
+			listener.actionPerformed(event);
+		}
+
+	}
+
+	public static class FileTreeEvent extends ActionEvent {
+
+		public static final String FILE_SELECTED = "FileSelected"; //$NON-NLS-1$
+
+		private final File file;
+
+		public FileTreeEvent(JTree tree, File file) {
+			super(tree, ACTION_PERFORMED, FILE_SELECTED);
+			this.file = file;
+		}
+
+		public File getFile() {
+			return file;
+		}
+
 	}
 
 }

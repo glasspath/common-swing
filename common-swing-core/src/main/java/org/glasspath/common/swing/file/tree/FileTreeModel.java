@@ -23,6 +23,7 @@
 package org.glasspath.common.swing.file.tree;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,21 +32,29 @@ import java.util.Map;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 public class FileTreeModel implements TreeModel {
 
 	private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+	private final List<File> rootDirs = new ArrayList<>();
 	private final Map<String, File[]> cache = new HashMap<>();
 
 	public FileTreeModel(List<File> rootDirs) {
 		for (File rootDir : rootDirs) {
 			if (rootDir.isDirectory()) {
-				root.add(new DefaultMutableTreeNode(rootDir));
+				this.rootDirs.add(rootDir);
 			} else {
-				// TODO
+				// TODO?
 			}
 		}
+	}
+
+	public List<File> getRootDirs() {
+		return rootDirs;
+	}
+
+	public boolean isRootDirectory(File file) {
+		return rootDirs.contains(file);
 	}
 
 	@Override
@@ -54,90 +63,33 @@ public class FileTreeModel implements TreeModel {
 	}
 
 	@Override
-	public boolean isLeaf(Object node) {
-
-		if (node == root) {
-			return false;
-		}
-
-		File file = null;
-
-		if (node instanceof DefaultMutableTreeNode) {
-			file = (File) ((DefaultMutableTreeNode) node).getUserObject();
-		} else if (node instanceof File) {
-			file = (File) node;
-		}
-
-		if (file != null) {
-			return !file.isDirectory();
-		} else {
-			return false;
-		}
-
-	}
-
-	@Override
 	public int getChildCount(Object parent) {
-
 		if (parent == root) {
-			return root.getChildCount();
-		}
-
-		File file = null;
-
-		if (parent instanceof DefaultMutableTreeNode) {
-			file = (File) ((DefaultMutableTreeNode) parent).getUserObject();
+			return rootDirs.size();
 		} else if (parent instanceof File) {
-			file = (File) parent;
-		}
-
-		if (file != null) {
-			return listFiles(file).length;
+			return listFiles((File) parent).length;
 		} else {
 			return 0;
 		}
-
 	}
 
 	@Override
 	public Object getChild(Object parent, int index) {
-
 		if (parent == root) {
-			return root.getChildAt(index);
-		}
-
-		File file = null;
-
-		if (parent instanceof DefaultMutableTreeNode) {
-			file = (File) ((DefaultMutableTreeNode) parent).getUserObject();
+			return rootDirs.get(index);
 		} else if (parent instanceof File) {
-			file = (File) parent;
-		}
-
-		if (file != null) {
-			return listFiles(file)[index];
+			return listFiles((File) parent)[index];
 		} else {
 			return null;
 		}
-
 	}
 
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
 
 		if (parent == root) {
-			return root.getIndex((TreeNode) child);
-		}
-
-		File file = null;
-
-		if (parent instanceof DefaultMutableTreeNode) {
-			file = (File) ((DefaultMutableTreeNode) parent).getUserObject();
+			return rootDirs.indexOf(child);
 		} else if (parent instanceof File) {
-			file = (File) parent;
-		}
-
-		if (file != null) {
 			File[] files = listFiles((File) parent);
 			for (int i = 0; i < files.length; i++) {
 				if (files[i] == child) {
@@ -148,6 +100,17 @@ public class FileTreeModel implements TreeModel {
 
 		return -1;
 
+	}
+
+	@Override
+	public boolean isLeaf(Object node) {
+		if (node == root) {
+			return false;
+		} else if (node instanceof File) {
+			return !((File) node).isDirectory();
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -165,7 +128,7 @@ public class FileTreeModel implements TreeModel {
 
 	}
 
-	private File[] listFiles(File file) {
+	public synchronized File[] listFiles(File file) {
 
 		File[] files = cache.get(file.getAbsolutePath());
 
