@@ -35,12 +35,10 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.AbstractBorder;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import org.glasspath.common.swing.table.Table;
 import org.glasspath.common.swing.theme.Theme;
 
 /**
@@ -99,25 +97,12 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 		int currentRow = rowAtPoint < 0 ? 0 : rowAtPoint;
 		int rowHeight = table.getRowHeight();
 
-		final Border border;
-		if (paintSelectedRow && table.getSelectedRowCount() > 1 && table.getUI() instanceof TableUI) {
-			border = ((TableUI) table.getUI()).getSelectedRowBorder();
-		} else {
-			border = null;
-		}
-
 		while (topY < clip.y + clip.height) {
 
 			int bottomY = topY + rowHeight;
 
 			g.setColor(getRowColor(currentRow));
 			g.fillRect(clip.x, topY, clip.width, rowHeight);
-
-			/*
-			if (border != null && table.isRowSelected(currentRow)) {
-				border.paintBorder(viewport, g, 0, topY, viewport.getWidth(), table.getRowHeight());
-			}
-			*/
 
 			topY = bottomY;
 
@@ -177,14 +162,14 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 
 		if (evt.getSource().equals(table)) {
 
-			if (evt.getPropertyName().equals("selectionModel")) {
+			if (evt.getPropertyName().equals("selectionModel")) { //$NON-NLS-1$
 
 				final ListSelectionModel oldModel = (ListSelectionModel)evt.getOldValue();
 				final ListSelectionModel newModel = (ListSelectionModel)evt.getNewValue();
 				oldModel.removeListSelectionListener(this);
 				newModel.addListSelectionListener(this);
 
-			} else if (evt.getPropertyName().equals("selectionBackground")) {
+			} else if (evt.getPropertyName().equals("selectionBackground")) { //$NON-NLS-1$
 				viewport.repaint();
 			}
 

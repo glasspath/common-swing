@@ -32,6 +32,10 @@ public class ColorUtils {
 	public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 	public static final Color BLUE = new Color(87, 148, 242);
 	public static final Color DARK_BLUE = new Color(31, 96, 196);
+	public static final Color GREEN = new Color(151, 191, 105);
+	public static final Color RED = new Color(242, 73, 92);
+	public static final Color ORANGE = new Color(237, 162, 0);
+	public static final Color YELLOW = new Color(250, 222, 42);
 
 	public static Color TITLE_BAR_COLOR;
 	public static Color SELECTION_COLOR_FOCUSSED;

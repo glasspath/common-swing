@@ -76,6 +76,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.JTextComponent;
 
 import org.glasspath.common.date.DateUtils;
 import org.glasspath.common.icons.Icons;
@@ -384,6 +385,7 @@ public class Table extends JTable implements Filterable {
 		return isEnabled() ? super.getForeground() : DISABLED_FOREGROUND;
 	}
 
+	@Override
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 
 		JComponent comp = (JComponent) super.prepareRenderer(renderer, row, column);
@@ -398,7 +400,12 @@ public class Table extends JTable implements Filterable {
 	}
 
 	protected void prepareRendererColors(JComponent component, int row, int column) {
-		if (isRowSelected(row)) {
+
+		boolean rowSelected = isRowSelected(row);
+
+		component.setOpaque(rowSelected);
+
+		if (rowSelected) {
 			component.setBackground(getSelectionBackground());
 			component.setForeground(getSelectionForeground());
 			if (getCellSelectionEnabled() && getSelectedRowCount() == 1 && getSelectedColumnCount() == 1 && getSelectedColumn() == column) {
@@ -408,6 +415,7 @@ public class Table extends JTable implements Filterable {
 			component.setForeground(isEnabled() ? DEFAULT_FOREGROUND : DISABLED_FOREGROUND);
 			component.setBackground(row % 2 == 0 ? getBackground() : TableUI.EVEN_ROW_COLOR);
 		}
+
 	}
 
 	protected void prepareRendererBorder(JComponent component, int row, int column) {
@@ -432,6 +440,11 @@ public class Table extends JTable implements Filterable {
 			}
 
 			prepareEditorBorder(comp, row, column);
+
+			// See https://bugs.openjdk.org/browse/JDK-8298017
+			if (OsUtils.PLATFORM_MACOS && comp instanceof JTextComponent) {
+				((JTextComponent) comp).setAutoscrolls(false);
+			}
 
 		}
 

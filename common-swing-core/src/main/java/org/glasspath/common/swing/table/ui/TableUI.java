@@ -27,14 +27,19 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.CellRendererPane;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicTableUI;
+import javax.swing.table.TableCellRenderer;
 
 import org.glasspath.common.swing.theme.Theme;
 
@@ -48,7 +53,6 @@ public class TableUI extends BasicTableUI {
 	protected static final Color SELECTION_ACTIVE_BOTTOM_BORDER_COLOR = new Color(125, 170, 234);
 	protected static final Color SELECTION_INACTIVE_BOTTOM_BORDER_COLOR = new Color(224, 224, 224);
 	public static final Color TRANSPARENT_COLOR = new Color(0, 0, 0, 0);
-	// public static final Font TABLE_FONT = UIManager.getFont("Table.font").deriveFont(11.0f);
 
 	public static Color EVEN_ROW_COLOR;
 	static {
@@ -61,11 +65,11 @@ public class TableUI extends BasicTableUI {
 		});
 	}
 
+	private static final CellRendererPane CELL_RENDER_PANE = new CellRendererPane();
+
 	private final boolean striped;
 	private final boolean paintSelectedRow;
 	private final boolean repaintOnSelectionChange;
-
-	// private final FocusAdapter tableFocusListener;
 
 	private Color stripedColor = EVEN_ROW_COLOR;
 	private Color gridColor = TABLE_GRID_COLOR;
@@ -83,26 +87,9 @@ public class TableUI extends BasicTableUI {
 	}
 
 	public TableUI(boolean striped, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
-
 		this.striped = striped;
 		this.paintSelectedRow = paintSelectedRow;
 		this.repaintOnSelectionChange = repaintOnSelectionChange;
-
-		/*
-		tableFocusListener = new FocusAdapter() {
-		
-			@Override
-			public void focusGained(FocusEvent e) {
-				makeTableActive();
-			}
-		
-			@Override
-			public void focusLost(FocusEvent e) {
-				makeTableInactive();
-			}
-		};
-		*/
-
 	}
 
 	public Color getStripedColor() {
@@ -130,55 +117,15 @@ public class TableUI extends BasicTableUI {
 		table.add(rendererPane);
 
 		table.setOpaque(false);
-		// table.setFont(TABLE_FONT);
 		table.setGridColor(striped ? gridColor : table.getBackground());
 		table.setIntercellSpacing(new Dimension(0, 0));
 
 		table.setShowHorizontalLines(false);
-		TableHeaderUtils.makeHeaderFillEmptySpace(table); // TODO: Make sure this isn't causing memory leaks
-		TableUtils.makeStriped(table, striped ? stripedColor : table.getBackground(), paintSelectedRow, repaintOnSelectionChange);
-
-		// makeTableActive();
+		makeHeaderFillEmptySpace(table); // TODO: Make sure this isn't causing memory leaks
+		makeStriped(table, striped ? stripedColor : table.getBackground(), paintSelectedRow, repaintOnSelectionChange);
 
 	}
 
-	/*
-	@Override
-	protected void installListeners() {
-		super.installListeners();
-		table.addFocusListener(tableFocusListener);
-	}
-
-	@Override
-	public void uninstallListeners() {
-		super.uninstallListeners();
-		table.removeFocusListener(tableFocusListener);
-	}
-
-	private void makeTableActive() {
-		table.setSelectionBackground(ColorUtils.SELECTION_COLOR_FOCUSSED);
-	}
-	
-	private void makeTableInactive() {
-		table.setSelectionBackground(ColorUtils.SELECTION_COLOR_NOT_FOCUSSED);
-	}
-	*/
-
-	public Border getRowBorder() {
-		return BorderFactory.createEmptyBorder(0, 5, 0, 5);
-	}
-
-	public Border getSelectedRowBorder() {
-		return BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, getSelectedRowBottomHighlight()), BorderFactory.createEmptyBorder(1, 5, 0, 5));
-	}
-
-	private Color getSelectedRowBottomHighlight() {
-		return WindowUtils.isParentWindowFocused(table) ? SELECTION_ACTIVE_BOTTOM_BORDER_COLOR : SELECTION_INACTIVE_BOTTOM_BORDER_COLOR;
-	}
-
-	/**
-	 * Creates a custom {@link CellRendererPane} that sets the renderer component to be non-opaque if the associated row isn't selected. This custom {@code CellRendererPane} is needed because a table UI delegate has no prepare renderer like {@link JTable} has.
-	 */
 	protected CellRendererPane createCustomCellRendererPane() {
 
 		return new CellRendererPane() {
@@ -186,17 +133,118 @@ public class TableUI extends BasicTableUI {
 			@Override
 			public void paintComponent(Graphics graphics, Component component, Container container, int x, int y, int w, int h, boolean shouldValidate) {
 
-				int rowAtPoint = table.rowAtPoint(new Point(x, y));
-				boolean isSelected = table.isRowSelected(rowAtPoint);
-
+				/*
 				if (component instanceof JComponent) {
-					JComponent jComponent = (JComponent) component;
-					jComponent.setOpaque(isSelected);
-					// jComponent.setBorder(isSelected ? getSelectedRowBorder() : getRowBorder());
-					// jComponent.setBackground(isSelected ? table.getSelectionBackground() : TRANSPARENT_COLOR);
+
+					int rowAtPoint = table.rowAtPoint(new Point(x, y));
+					boolean isSelected = table.isRowSelected(rowAtPoint);
+
+					((JComponent) component).setOpaque(isSelected);
+
 				}
+				*/
 
 				super.paintComponent(graphics, component, container, x, y, w, h, shouldValidate);
+
+			}
+		};
+
+	}
+
+	public static void makeStriped(JTable table, Color stipeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+
+		table.addPropertyChangeListener("ancestor", createAncestorPropertyChangeListener(table, stipeColor, paintSelectedRow, repaintOnSelectionChange)); //$NON-NLS-1$
+
+		// install a listener to cause the whole table to repaint when a column is resized. we do
+		// this because the extended grid lines may need to be repainted. this could be cleaned up,
+		// but for now, it works fine.
+		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).addPropertyChangeListener(createAncestorPropertyChangeListener(table, stipeColor, paintSelectedRow, repaintOnSelectionChange));
+		}
+
+	}
+
+	private static PropertyChangeListener createAncestorPropertyChangeListener(JTable table, Color stipeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+
+		return new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				// indicate that the parent of the JTable has changed.
+				parentDidChange(table, stipeColor, paintSelectedRow, repaintOnSelectionChange);
+			}
+		};
+
+	}
+
+	private static void parentDidChange(JTable table, Color stipeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+
+		// if the parent of the table is an instance of JViewport, and that JViewport's parent is
+		// a JScrollpane, then install the custom BugFixedViewportLayout.
+		if (table.getParent() instanceof JViewport && table.getParent().getParent() instanceof JScrollPane) {
+
+			JScrollPane scrollPane = (JScrollPane) table.getParent().getParent();
+			scrollPane.setViewportBorder(new StripedViewportBorder(scrollPane.getViewport(), table, stipeColor, paintSelectedRow, repaintOnSelectionChange));
+			scrollPane.getViewport().setOpaque(false);
+			scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, createCornerComponent(table));
+			scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+		}
+
+	}
+
+	public static JComponent createCornerComponent(JTable table) {
+
+		return new JComponent() {
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				paintHeader(g, table, 0, getWidth());
+			}
+		};
+
+	}
+
+	public static void makeHeaderFillEmptySpace(JTable table) {
+		table.getTableHeader().setBorder(createTableHeaderEmptyColumnPainter(table));
+	}
+
+	public static void paintHeader(Graphics graphics, JTable table, int x, int width) {
+
+		TableCellRenderer renderer = table.getTableHeader().getDefaultRenderer();
+		Component component = renderer.getTableCellRendererComponent(table, "", false, false, -1, table.getColumnCount() - 1); // TODO: Added the -1 because we were getting ArrayOutOfIndex exceptions, don't really know yet how this is used.. //$NON-NLS-1$
+
+		component.setBounds(0, 0, width, table.getTableHeader().getHeight());
+
+		((JComponent) component).setOpaque(false);
+
+		// TODO: Make sure this isn't causing memory leaks
+		CELL_RENDER_PANE.paintComponent(graphics, component, null, x, 0, width, table.getTableHeader().getHeight(), true);
+
+		// TODO: This fixes a painting artifact in the upper right corner when using FlatLaf LnF
+		// The vertical divider is now also covered in white.. but this looks better than the artifact..
+		if (!Theme.isSystemTheme()) {
+			graphics.setColor(table.getTableHeader().getBackground());
+			graphics.fillRect(x, 0, width, table.getTableHeader().getHeight() - 1);
+		}
+
+	}
+
+	private static Border createTableHeaderEmptyColumnPainter(JTable table) {
+
+		return new AbstractBorder() {
+
+			@Override
+			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+
+				// if this JTableHeader is parented in a JViewport, then paint the table header
+				// background to the right of the last column if neccessary.
+				JComponent viewport = (JComponent) table.getParent();
+				if (viewport != null && table.getWidth() < viewport.getWidth()) {
+					int startX = table.getWidth();
+					int emptyColumnWidth = viewport.getWidth() - table.getWidth();
+					paintHeader(g, table, startX, emptyColumnWidth);
+				}
 
 			}
 		};
