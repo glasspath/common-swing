@@ -26,7 +26,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class ReorderUndoable implements UndoableEdit {
 
@@ -44,17 +44,17 @@ public class ReorderUndoable implements UndoableEdit {
 
 	@Override
 	public String getPresentationName() {
-		return Resources.getString("MoveRow"); //$NON-NLS-1$
+		return CommonResources.getString("MoveRow"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getRedoPresentationName() {
-		return Resources.getString("RedoMoveRow"); //$NON-NLS-1$
+		return CommonResources.getString("RedoMoveRow"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getUndoPresentationName() {
-		return Resources.getString("UndoMoveRow"); //$NON-NLS-1$
+		return CommonResources.getString("UndoMoveRow"); //$NON-NLS-1$
 	}
 
 	@Override

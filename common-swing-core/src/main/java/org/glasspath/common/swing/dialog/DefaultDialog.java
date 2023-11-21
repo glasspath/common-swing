@@ -50,7 +50,7 @@ import javax.swing.WindowConstants;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.help.HelpUtils;
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 import org.glasspath.common.swing.separator.Separator;
 
 public class DefaultDialog extends JDialog {
@@ -224,7 +224,7 @@ public class DefaultDialog extends JDialog {
 		footer.setLayout(new BoxLayout(footer, BoxLayout.LINE_AXIS));
 		footer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		helpButton = new JButton(Resources.getString("Help")); //$NON-NLS-1$
+		helpButton = new JButton(CommonResources.getString("Help")); //$NON-NLS-1$
 		footer.add(helpButton);
 		helpButton.addActionListener(new ActionListener() {
 
@@ -237,7 +237,7 @@ public class DefaultDialog extends JDialog {
 
 		footer.add(Box.createHorizontalGlue());
 
-		okButton = new JButton(Resources.getString("Ok")); //$NON-NLS-1$
+		okButton = new JButton(CommonResources.getString("Ok")); //$NON-NLS-1$
 		footer.add(okButton);
 		okButton.addActionListener(new ActionListener() {
 
@@ -249,7 +249,7 @@ public class DefaultDialog extends JDialog {
 
 		footer.add(Box.createRigidArea(new Dimension(5, 5)));
 
-		cancelButton = new JButton(Resources.getString("Cancel")); //$NON-NLS-1$
+		cancelButton = new JButton(CommonResources.getString("Cancel")); //$NON-NLS-1$
 		footer.add(cancelButton);
 		cancelButton.addActionListener(new ActionListener() {
 

@@ -31,7 +31,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 import org.glasspath.common.swing.table.Table.ModelListener;
 import org.glasspath.common.swing.undo.UndoManager;
 
@@ -136,17 +136,17 @@ public abstract class DataListTableModel extends AbstractTableModel implements R
 
 		@Override
 		public String getPresentationName() {
-			return Resources.getString("ChangeField"); //$NON-NLS-1$
+			return CommonResources.getString("ChangeField"); //$NON-NLS-1$
 		}
 
 		@Override
 		public String getRedoPresentationName() {
-			return Resources.getString("RedoChangeField"); //$NON-NLS-1$
+			return CommonResources.getString("RedoChangeField"); //$NON-NLS-1$
 		}
 
 		@Override
 		public String getUndoPresentationName() {
-			return Resources.getString("UndoChangeField"); //$NON-NLS-1$
+			return CommonResources.getString("UndoChangeField"); //$NON-NLS-1$
 		}
 
 		@Override

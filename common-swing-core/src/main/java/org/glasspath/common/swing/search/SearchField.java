@@ -45,7 +45,7 @@ import javax.swing.KeyStroke;
 import org.glasspath.common.icons.Icons;
 import org.glasspath.common.swing.SwingUtils;
 import org.glasspath.common.swing.color.ColorUtils;
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class SearchField extends JTextField {
 
@@ -171,7 +171,7 @@ public class SearchField extends JTextField {
 			int yText = getBaseline(getWidth(), getHeight());
 
 			g.setColor(Color.lightGray);
-			SwingUtils.drawString(this, (Graphics2D) g, Resources.getString("Search"), leftMargin + 27, yText); //$NON-NLS-1$
+			SwingUtils.drawString(this, (Graphics2D) g, CommonResources.getString("Search"), leftMargin + 27, yText); //$NON-NLS-1$
 
 		}
 

@@ -35,7 +35,7 @@ import javax.swing.SwingUtilities;
 
 import org.glasspath.common.Common;
 import org.glasspath.common.swing.dialog.DialogUtils;
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class DesktopUtils {
 
@@ -45,7 +45,7 @@ public class DesktopUtils {
 
 	public static JMenuItem createLaunchFileMenuItem(String path, JFrame frame) {
 
-		JMenuItem item = new JMenuItem(Resources.getString("OpenFile")); //$NON-NLS-1$
+		JMenuItem item = new JMenuItem(CommonResources.getString("OpenFile")); //$NON-NLS-1$
 		item.setEnabled(path != null && path.length() > 0);
 		item.addActionListener(new ActionListener() {
 

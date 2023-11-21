@@ -82,7 +82,7 @@ import org.glasspath.common.date.DateUtils;
 import org.glasspath.common.icons.Icons;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.color.ColorUtils;
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 import org.glasspath.common.swing.table.ui.TableUI;
 import org.glasspath.common.swing.undo.UndoManager;
 
@@ -749,7 +749,7 @@ public class Table extends JTable implements Filterable {
 
 	public void createMenu(JMenu menu) {
 
-		JMenuItem selectAllItem = new JMenuItem(Resources.getString("SelectAll")); //$NON-NLS-1$
+		JMenuItem selectAllItem = new JMenuItem(CommonResources.getString("SelectAll")); //$NON-NLS-1$
 		selectAllItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, OsUtils.CTRL_OR_CMD_MASK));
 		selectAllItem.addActionListener(new ActionListener() {
 
@@ -760,7 +760,7 @@ public class Table extends JTable implements Filterable {
 		});
 		menu.add(selectAllItem);
 
-		JMenuItem clearSelectionItem = new JMenuItem(Resources.getString("ClearSelection")); //$NON-NLS-1$
+		JMenuItem clearSelectionItem = new JMenuItem(CommonResources.getString("ClearSelection")); //$NON-NLS-1$
 		clearSelectionItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, OsUtils.CTRL_OR_CMD_MASK | OsUtils.SHIFT_MASK));
 		clearSelectionItem.addActionListener(new ActionListener() {
 

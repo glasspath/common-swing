@@ -27,7 +27,7 @@ import java.awt.Component;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
-import org.glasspath.common.swing.resources.Resources;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class RememberChoiseDialog {
 
@@ -35,7 +35,7 @@ public class RememberChoiseDialog {
 	private int choise = -1;
 
 	public RememberChoiseDialog() {
-		checkBox = new JCheckBox(Resources.getString("ApplyChoiseToSelection")); //$NON-NLS-1$
+		checkBox = new JCheckBox(CommonResources.getString("ApplyChoiseToSelection")); //$NON-NLS-1$
 	}
 
 	public boolean isChoiseRemebered() {
@@ -48,7 +48,7 @@ public class RememberChoiseDialog {
 
 	public int showYesNoOptionDialog(Component parentComponent, String title, String text) {
 		Object[] params = { text, checkBox };
-		choise = JOptionPane.showOptionDialog(parentComponent, params, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { Resources.getString("Yes"), Resources.getString("No") }, Resources.getString("No")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		choise = JOptionPane.showOptionDialog(parentComponent, params, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return choise;
 	}
 
