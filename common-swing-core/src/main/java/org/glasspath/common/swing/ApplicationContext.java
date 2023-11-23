@@ -36,10 +36,6 @@ public interface ApplicationContext extends FrameContext {
 
 	public void removeContentListener(ContentListener listener);
 
-	public boolean isContentChanged();
-
-	public void setContentChanged(boolean changed);
-
 	public void undoPerformed();
 
 	public void redoPerformed();
