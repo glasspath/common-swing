@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.tree.TreePath;
 
 import org.glasspath.common.icons.Icons;
 import org.glasspath.common.swing.filter.FilterTools;
@@ -152,6 +154,44 @@ public class FileTreePanel extends JPanel {
 
 		for (ActionListener listener : actionListeners) {
 			listener.actionPerformed(event);
+		}
+
+	}
+
+	public void selectFile(File file) {
+
+		if (file != null) {
+
+			if (tree.getModel() instanceof FileTreeModel) {
+
+				List<File> rootDirs = ((FileTreeModel) tree.getModel()).getRootDirs();
+
+				List<Object> selectionPath = new ArrayList<>();
+
+				File parent = file;
+				while (parent != null) {
+
+					selectionPath.add(parent);
+
+					if (rootDirs.contains(parent)) {
+
+						selectionPath.add(((FileTreeModel) tree.getModel()).getRoot());
+
+						Collections.reverse(selectionPath);
+						tree.setSelectionPath(new TreePath(selectionPath.toArray()));
+
+						break;
+
+					}
+
+					parent = parent.getParentFile();
+
+				}
+
+			}
+
+		} else {
+			tree.getSelectionModel().clearSelection();
 		}
 
 	}
