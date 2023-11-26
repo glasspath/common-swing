@@ -36,6 +36,7 @@ import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 
+import org.glasspath.common.io.file.FileList;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 

@@ -45,6 +45,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import org.glasspath.common.io.file.FileList;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.table.Table;
 

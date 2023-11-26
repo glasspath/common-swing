@@ -57,6 +57,8 @@ import javax.swing.table.TableCellRenderer;
 
 import org.glasspath.common.Common;
 import org.glasspath.common.icons.Icons;
+import org.glasspath.common.io.file.DefaultFileList;
+import org.glasspath.common.io.file.FileList;
 import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
