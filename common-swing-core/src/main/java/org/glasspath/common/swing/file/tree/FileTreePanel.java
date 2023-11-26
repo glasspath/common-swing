@@ -56,7 +56,7 @@ public class FileTreePanel extends JPanel {
 		this(null);
 	}
 
-	public FileTreePanel(List<File> rootDirs) {
+	public FileTreePanel(List<File> rootFiles) {
 
 		setLayout(new BorderLayout());
 
@@ -118,8 +118,8 @@ public class FileTreePanel extends JPanel {
 			}
 		}, 200);
 
-		if (rootDirs != null) {
-			setRootDirectories(rootDirs);
+		if (rootFiles != null) {
+			setRootFiles(rootFiles);
 		}
 
 	}
@@ -136,8 +136,8 @@ public class FileTreePanel extends JPanel {
 		return filterTools;
 	}
 
-	public void setRootDirectories(List<File> rootDirs) {
-		tree.setModel(new FileTreeModel(rootDirs));
+	public void setRootFiles(List<File> rootFiles) {
+		tree.setModel(new FileTreeModel(rootFiles));
 	}
 
 	public void addActionListener(ActionListener listener) {
@@ -158,13 +158,40 @@ public class FileTreePanel extends JPanel {
 
 	}
 
+	public File getRootFile(File file) {
+
+		if (file != null) {
+
+			if (tree.getModel() instanceof FileTreeModel) {
+
+				List<File> rootFiles = ((FileTreeModel) tree.getModel()).getRootFiles();
+
+				File parent = file;
+				while (parent != null) {
+
+					if (rootFiles.contains(parent)) {
+						return parent;
+					}
+
+					parent = parent.getParentFile();
+
+				}
+
+			}
+
+		}
+
+		return null;
+
+	}
+
 	public void selectFile(File file) {
 
 		if (file != null) {
 
 			if (tree.getModel() instanceof FileTreeModel) {
 
-				List<File> rootDirs = ((FileTreeModel) tree.getModel()).getRootDirs();
+				List<File> rootFiles = ((FileTreeModel) tree.getModel()).getRootFiles();
 
 				List<Object> selectionPath = new ArrayList<>();
 
@@ -173,12 +200,15 @@ public class FileTreePanel extends JPanel {
 
 					selectionPath.add(parent);
 
-					if (rootDirs.contains(parent)) {
+					if (rootFiles.contains(parent)) {
 
 						selectionPath.add(((FileTreeModel) tree.getModel()).getRoot());
 
 						Collections.reverse(selectionPath);
-						tree.setSelectionPath(new TreePath(selectionPath.toArray()));
+
+						TreePath treePath = new TreePath(selectionPath.toArray());
+						tree.setSelectionPath(treePath);
+						tree.scrollPathToVisible(treePath);
 
 						break;
 

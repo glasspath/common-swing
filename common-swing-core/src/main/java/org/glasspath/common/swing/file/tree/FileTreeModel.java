@@ -36,25 +36,19 @@ import javax.swing.tree.TreeModel;
 public class FileTreeModel implements TreeModel {
 
 	private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-	private final List<File> rootDirs = new ArrayList<>();
+	private final List<File> rootFiles = new ArrayList<>();
 	private final Map<String, File[]> cache = new HashMap<>();
 
-	public FileTreeModel(List<File> rootDirs) {
-		for (File rootDir : rootDirs) {
-			if (rootDir.isDirectory()) {
-				this.rootDirs.add(rootDir);
-			} else {
-				// TODO?
-			}
-		}
+	public FileTreeModel(List<File> rootFiles) {
+		this.rootFiles.addAll(rootFiles);
 	}
 
-	public List<File> getRootDirs() {
-		return rootDirs;
+	public List<File> getRootFiles() {
+		return rootFiles;
 	}
 
-	public boolean isRootDirectory(File file) {
-		return rootDirs.contains(file);
+	public boolean isRootFile(File file) {
+		return rootFiles.contains(file);
 	}
 
 	@Override
@@ -65,7 +59,7 @@ public class FileTreeModel implements TreeModel {
 	@Override
 	public int getChildCount(Object parent) {
 		if (parent == root) {
-			return rootDirs.size();
+			return rootFiles.size();
 		} else if (parent instanceof File) {
 			return listFiles((File) parent).length;
 		} else {
@@ -76,7 +70,7 @@ public class FileTreeModel implements TreeModel {
 	@Override
 	public Object getChild(Object parent, int index) {
 		if (parent == root) {
-			return rootDirs.get(index);
+			return rootFiles.get(index);
 		} else if (parent instanceof File) {
 			return listFiles((File) parent)[index];
 		} else {
@@ -88,7 +82,7 @@ public class FileTreeModel implements TreeModel {
 	public int getIndexOfChild(Object parent, Object child) {
 
 		if (parent == root) {
-			return rootDirs.indexOf(child);
+			return rootFiles.indexOf(child);
 		} else if (parent instanceof File) {
 			File[] files = listFiles((File) parent);
 			for (int i = 0; i < files.length; i++) {

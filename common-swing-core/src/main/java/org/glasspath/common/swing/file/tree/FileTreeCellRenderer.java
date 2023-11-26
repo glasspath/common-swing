@@ -50,7 +50,7 @@ public class FileTreeCellRenderer extends DefaultTreeCellRenderer {
 
 			if (file.isDirectory()) {
 
-				if (tree.getModel() instanceof FileTreeModel && ((FileTreeModel) tree.getModel()).isRootDirectory(file)) {
+				if (tree.getModel() instanceof FileTreeModel && ((FileTreeModel) tree.getModel()).isRootFile(file)) {
 					setText(file.getAbsolutePath());
 					setIcon(Icons.folderOutlineBlue);
 				} else {
