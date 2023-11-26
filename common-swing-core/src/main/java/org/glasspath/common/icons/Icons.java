@@ -81,6 +81,8 @@ public class Icons {
 	public static final SvgIcon magnify = new SvgIcon(getSvg("magnify.svg"));
 	public static final SvgIcon menu = new SvgIcon(getSvg("menu.svg"));
 	public static final SvgIcon minusBoxMultipleOutline = new SvgIcon(16, 1, getSvg("minus-box-multiple-outline.svg"));
+	public static final SvgIcon playOutline = new SvgIcon(getSvg("play-outline.svg"));
+	public static final SvgIcon playOutlineGreen = new SvgIcon(getSvg("play-outline.svg"));
 	public static final SvgIcon plus = new SvgIcon(getSvg("plus.svg"));
 	public static final SvgIcon plusBoxMultipleOutline = new SvgIcon(16, 1, getSvg("plus-box-multiple-outline.svg"));
 	public static final SvgIcon redo = new SvgIcon(getSvg("redo.svg"));
@@ -88,6 +90,8 @@ public class Icons {
 	public static final SvgIcon renameBoxXLarge = new SvgIcon(36, 0, getSvg("rename-box.svg"));
 	public static final SvgIcon squareEditOutline = new SvgIcon(getSvg("square-edit-outline.svg"));
 	public static final SvgIcon squareEditOutlineWhite = new SvgIcon(getSvg("square-edit-outline.svg"));
+	public static final SvgIcon squareOutline = new SvgIcon(getSvg("square-outline.svg"));
+	public static final SvgIcon squareOutlineRed = new SvgIcon(getSvg("square-outline.svg"));
 	public static final SvgIcon undo = new SvgIcon(getSvg("undo.svg"));
 
 	static {
@@ -103,12 +107,14 @@ public class Icons {
 		folderBlue.setColorFilter(SvgIcon.BLUE);
 		folderOutlineBlue.setColorFilter(SvgIcon.BLUE);
 		linkGreen.setColorFilter(SvgIcon.GREEN);
+		playOutlineGreen.setColorFilter(SvgIcon.GREEN);
 		plus.setColorFilter(SvgIcon.GREEN);
 		redo.setColorFilter(SvgIcon.BLUE);
 		renameBox.setColorFilter(SvgIcon.BLUE);
 		renameBoxXLarge.setColorFilter(SvgIcon.BLUE);
 		squareEditOutline.setColorFilter(SvgIcon.BLUE);
 		squareEditOutlineWhite.setColorFilter(SvgIcon.WHITE);
+		squareOutlineRed.setColorFilter(SvgIcon.RED);
 		undo.setColorFilter(SvgIcon.BLUE);
 	}
 
