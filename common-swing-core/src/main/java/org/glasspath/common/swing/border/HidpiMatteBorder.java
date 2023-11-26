@@ -34,7 +34,7 @@ import org.glasspath.common.swing.theme.Theme;
 
 public class HidpiMatteBorder extends MatteBorder {
 
-	public static final Color COLOR = Theme.isDark() ? new Color(60, 60, 60) : new Color(210, 210, 210);
+	public static final Color COLOR = Theme.isDark() ? new Color(25, 25, 25) : new Color(210, 210, 210);
 
 	public HidpiMatteBorder(Insets insets) {
 		super(insets, COLOR);

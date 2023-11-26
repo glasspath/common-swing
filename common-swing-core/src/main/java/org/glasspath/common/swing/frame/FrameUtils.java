@@ -48,9 +48,9 @@ import org.glasspath.common.swing.border.RoundedLineBorder;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatSystemProperties;
+import com.formdev.flatlaf.IntelliJTheme;
 
 @SuppressWarnings("nls")
 public class FrameUtils {
@@ -91,7 +91,8 @@ public class FrameUtils {
 		}
 
 		if (Theme.isDark()) {
-			UIManager.setLookAndFeel(new FlatDarculaLaf());
+			// UIManager.setLookAndFeel(new FlatDarculaLaf());
+			IntelliJTheme.setup(FrameUtils.class.getResourceAsStream("/org/glasspath/themes/dark.theme.json"));
 		} else {
 			UIManager.setLookAndFeel(new FlatIntelliJLaf());
 		}

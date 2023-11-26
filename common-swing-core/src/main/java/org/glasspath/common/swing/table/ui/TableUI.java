@@ -58,7 +58,7 @@ public class TableUI extends BasicTableUI {
 	static {
 		Theme.register(() -> {
 			if (Theme.isDark()) {
-				EVEN_ROW_COLOR = new Color(64, 68, 69);
+				EVEN_ROW_COLOR = new Color(38, 40, 43);
 			} else {
 				EVEN_ROW_COLOR = new Color(245, 245, 247);
 			}

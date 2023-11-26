@@ -37,6 +37,7 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.glasspath.common.swing.border.HidpiMatteBorder;
 import org.glasspath.common.swing.theme.Theme;
 
 public class StatusBarPanel extends JPanel {
@@ -50,8 +51,8 @@ public class StatusBarPanel extends JPanel {
 	static {
 		Theme.register(() -> {
 			if (Theme.isDark()) {
-				BG_COLOR = new Color(60, 63, 65);
-				LINE_TOP_COLOR = new Color(48, 50, 52);
+				BG_COLOR = new Color(44, 43, 48);
+				LINE_TOP_COLOR = HidpiMatteBorder.COLOR;
 				SEPARATOR_DARK_COLOR = new Color(40, 40, 40);
 				SEPARATOR_LIGHT_COLOR = new Color(75, 75, 75);
 			} else {

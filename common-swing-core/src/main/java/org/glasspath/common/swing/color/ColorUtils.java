@@ -48,7 +48,7 @@ public class ColorUtils {
 	static {
 		Theme.register(() -> {
 			if (Theme.isDark()) {
-				TITLE_BAR_COLOR = new Color(60, 63, 65);
+				TITLE_BAR_COLOR = new Color(44, 43, 48);
 				SELECTION_COLOR_FOCUSSED = new Color(75, 110, 175);
 				SELECTION_COLOR_NOT_FOCUSSED = new Color(75, 110, 175);
 				TEXT_COLOR = new Color(187, 187, 187);
