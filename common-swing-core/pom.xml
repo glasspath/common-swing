@@ -29,6 +29,12 @@
 			<version>${revision}</version>
 		</dependency>
 
+ 		<dependency>
+			<groupId>org.glasspath.common</groupId>
+			<artifactId>common-io</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.formdev</groupId>
 			<artifactId>flatlaf</artifactId>
