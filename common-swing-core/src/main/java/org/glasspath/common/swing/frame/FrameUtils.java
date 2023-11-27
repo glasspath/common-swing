@@ -168,6 +168,32 @@ public class FrameUtils {
 
 	}
 
+	public static boolean isFullScreen(JFrame frame) {
+
+		Rectangle frameBounds = frame.getBounds();
+
+		GraphicsDevice[] graphicsDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		for (GraphicsDevice graphicsDevice : graphicsDevices) {
+
+			if (graphicsDevice.getDefaultConfiguration() != null) {
+
+				Rectangle bounds = graphicsDevice.getDefaultConfiguration().getBounds();
+				if (bounds != null) {
+
+					if (frameBounds.x == bounds.x && frameBounds.y == bounds.y && frameBounds.width == bounds.width && frameBounds.height == bounds.height) {
+						return true;
+					}
+
+				}
+
+			}
+
+		}
+
+		return false;
+
+	}
+
 	public static void loadFrameDimensions(JFrame frame, Preferences preferences) {
 		loadFrameDimensions(frame, preferences, 15, 15, 1250, 787, 0);
 	}
@@ -175,7 +201,7 @@ public class FrameUtils {
 	public static void loadFrameDimensions(JFrame frame, Preferences preferences, int x, int y, int width, int height, int extendedState) {
 
 		int frameX, frameY, frameWidth, frameHeight, frameExtendedState;
-		
+
 		if (preferences != null) {
 			frameX = preferences.getInt("frameX", x);
 			frameY = preferences.getInt("frameY", y);
@@ -192,20 +218,21 @@ public class FrameUtils {
 
 		boolean locationValid = false;
 
-		final GraphicsDevice[] graphicsDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-
-		Rectangle bounds;
+		GraphicsDevice[] graphicsDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 		for (GraphicsDevice graphicsDevice : graphicsDevices) {
 
-			if (graphicsDevice.getDefaultConfiguration() != null && graphicsDevice.getDefaultConfiguration().getBounds() != null) {
+			if (graphicsDevice.getDefaultConfiguration() != null) {
 
-				bounds = graphicsDevice.getDefaultConfiguration().getBounds();
+				Rectangle bounds = graphicsDevice.getDefaultConfiguration().getBounds();
+				if (bounds != null) {
 
-				if (frameX > bounds.x - 25 && frameX < (bounds.x + bounds.width) - 25) {
-					if (frameY < bounds.height - 100) {
-						locationValid = true;
-						break;
+					if (frameX > bounds.x - 25 && frameX < (bounds.x + bounds.width) - 25) {
+						if (frameY < bounds.height - 100) {
+							locationValid = true;
+							break;
+						}
 					}
+
 				}
 
 			}
