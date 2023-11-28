@@ -50,6 +50,7 @@ import javax.swing.UIManager;
 import org.glasspath.common.date.DateUtils;
 import org.glasspath.common.icons.Icons;
 import org.glasspath.common.swing.color.ColorUtils;
+import org.glasspath.common.swing.theme.Theme;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXHyperlink;
 import org.jdesktop.swingx.JXMonthView;
@@ -68,6 +69,10 @@ public class DatePicker extends JXDatePicker {
 
 	public DatePicker() {
 		super();
+
+		if (Theme.isDark()) {
+			setBackground(new Color(43, 45, 48));
+		}
 
 		setMonthView(createMonthView());
 

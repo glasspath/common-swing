@@ -107,7 +107,7 @@ public class PhonePanel extends JPanel {
 		double t = h * 0.01;
 
 		RoundRectangle2D roundRect = new RoundRectangle2D.Double(x, y, w, h, r, r);
-		g2d.setColor(Theme.isDark() ? new Color(35, 35, 35) : Color.lightGray);
+		g2d.setColor(Theme.isDark() ? new Color(5, 5, 5) : Color.lightGray);
 
 		g2d.setStroke(new BasicStroke(2.0F));
 		g2d.draw(roundRect);
