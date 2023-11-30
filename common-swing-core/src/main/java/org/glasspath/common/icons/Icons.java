@@ -66,6 +66,7 @@ public class Icons {
 	public static final SvgIcon contentCopy = new SvgIcon(getSvg("content-copy.svg"));
 	public static final SvgIcon contentCopyXLarge = new SvgIcon(36, 0, getSvg("content-copy.svg"));
 	public static final SvgIcon contentSave = new SvgIcon(getSvg("content-save.svg"));
+	public static final SvgIcon contentSaveAll = new SvgIcon(getSvg("content-save-all.svg"));
 	public static final SvgIcon dotsHorizontal = new OffsetSvgIcon(16, 0, 4, 0, getSvg("dots-horizontal.svg"));
 	public static final SvgIcon fileOutline = new SvgIcon(getSvg("file-outline.svg"));
 	public static final SvgIcon fileDocumentOutline = new SvgIcon(getSvg("file-document-outline.svg"));
