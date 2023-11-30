@@ -47,6 +47,8 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import org.glasspath.common.macos.MacOSUtils;
+import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.help.HelpUtils;
@@ -107,6 +109,9 @@ public class DefaultDialog extends JDialog {
 
 		if (showHeader) {
 			getRootPane().setBackground(ColorUtils.TITLE_BAR_COLOR);
+			if (OsUtils.PLATFORM_MACOS) {
+				MacOSUtils.hideTitleBar(this);
+			}
 		}
 
 		if (modal) {
