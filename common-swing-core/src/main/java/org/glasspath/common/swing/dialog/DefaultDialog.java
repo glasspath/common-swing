@@ -110,7 +110,7 @@ public class DefaultDialog extends JDialog {
 		if (showHeader) {
 			getRootPane().setBackground(ColorUtils.TITLE_BAR_COLOR);
 			if (OsUtils.PLATFORM_MACOS) {
-				MacOSUtils.hideTitleBar(this);
+				MacOSUtils.hideTitleBar(this, false, true);
 			}
 		}
 

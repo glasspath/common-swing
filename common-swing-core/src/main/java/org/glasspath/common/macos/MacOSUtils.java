@@ -22,6 +22,7 @@
  */
 package org.glasspath.common.macos;
 
+import java.awt.Color;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -36,8 +37,11 @@ import com.sun.jna.Pointer;
 
 public class MacOSUtils {
 
+	// Setup flags
 	public static final int FLAG_RUN_ON_MAIN_THREAD = 1;
-	public static final int FLAG_APPLY_CUSTOM_TITLE_BAR_HEIGHT = 2;
+
+	// Custom title bar flags
+	public static final int FLAG_SET_CUSTOM_TITLE_BAR_HEIGHT = 2;
 	public static final int FLAG_CHECK_FULL_WINDOW_CONTENT_IS_TRUE = 4;
 	public static final int FLAG_CHECK_FULL_WINDOW_CONTENT_IS_FALSE = 8;
 	public static final int FLAG_CHECK_TITLE_BAR_APPEARS_TRANSPARENT_IS_TRUE = 16;
@@ -45,10 +49,15 @@ public class MacOSUtils {
 	public static final int FLAG_CHECK_TITLE_VISIBILITY_IS_TRUE = 64;
 	public static final int FLAG_CHECK_TITLE_VISIBILITY_IS_FALSE = 128;
 
+	// Background color flags
+	public static final int FLAG_SET_BACKGROUND_COLOR = 256;
+
 	public static final int DEFAULT_HIDDEN_TITLE_BAR_HEIGHT = 22;
-	public static final float DEFAULT_CUSTOM_TITLE_BAR_HEIGHT = 48.0F;
-	public static final int DEFAULT_FLAGS = 0
-			| FLAG_APPLY_CUSTOM_TITLE_BAR_HEIGHT 
+	public static final int DEFAULT_CUSTOM_TITLE_BAR_HEIGHT = 48;
+	public static final Color DEFAULT_BACKGROUND_COLOR = Color.gray;
+
+	public static final int DEFAULT_CUSTOM_TITLE_BAR_FLAGS = 0
+			| FLAG_SET_CUSTOM_TITLE_BAR_HEIGHT 
 			| FLAG_CHECK_FULL_WINDOW_CONTENT_IS_TRUE 
 			| FLAG_CHECK_TITLE_BAR_APPEARS_TRANSPARENT_IS_TRUE 
 			| FLAG_CHECK_TITLE_VISIBILITY_IS_FALSE;
@@ -60,25 +69,42 @@ public class MacOSUtils {
 
 	}
 
-	public static void hideTitleBar(RootPaneContainer window) {
+	public static void hideTitleBar(RootPaneContainer window, boolean hideTitle, boolean createBorder) {
 
 		JRootPane rootPane = window.getRootPane();
 
 		rootPane.putClientProperty("apple.awt.fullWindowContent", true);
 		rootPane.putClientProperty("apple.awt.transparentTitleBar", true);
-		rootPane.setBorder(BorderFactory.createEmptyBorder(DEFAULT_HIDDEN_TITLE_BAR_HEIGHT, 0, 0, 0));
+
+		if (hideTitle) {
+			rootPane.putClientProperty("apple.awt.windowTitleVisible", false);
+		}
+
+		// TODO: Add window listener and switch borders when going from/to full screen?
+		// An alternative is to set the window background color through the methods below
+		if (createBorder) {
+			rootPane.setBorder(BorderFactory.createEmptyBorder(DEFAULT_HIDDEN_TITLE_BAR_HEIGHT, 0, 0, 0));
+		}
 
 	}
 
 	public static int enableWindowDecorations() {
-		return enableWindowDecorations(DEFAULT_FLAGS, DEFAULT_CUSTOM_TITLE_BAR_HEIGHT);
+		return enableWindowDecorations(0, DEFAULT_CUSTOM_TITLE_BAR_HEIGHT, DEFAULT_BACKGROUND_COLOR);
 	}
 
 	public static int enableWindowDecorations(float titleBarHeight) {
-		return enableWindowDecorations(DEFAULT_FLAGS, titleBarHeight);
+		return enableWindowDecorations(DEFAULT_CUSTOM_TITLE_BAR_FLAGS, titleBarHeight, DEFAULT_BACKGROUND_COLOR);
 	}
 
-	public static int enableWindowDecorations(int flags, float titleBarHeight) {
+	public static int enableWindowDecorations(Color backgroundColor) {
+		return enableWindowDecorations(FLAG_SET_BACKGROUND_COLOR, DEFAULT_CUSTOM_TITLE_BAR_HEIGHT, backgroundColor);
+	}
+
+	public static int enableWindowDecorations(float titleBarHeight, Color backgroundColor) {
+		return enableWindowDecorations(DEFAULT_CUSTOM_TITLE_BAR_FLAGS | FLAG_SET_BACKGROUND_COLOR, titleBarHeight, backgroundColor);
+	}
+
+	public static int enableWindowDecorations(int flags, float titleBarHeight, Color backgroundColor) {
 
 		int result = -1;
 
@@ -91,10 +117,10 @@ public class MacOSUtils {
 
 			Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
 			Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
-			Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("enableWindowDecorations:titleBarHeight:");
+			Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("enableWindowDecorations:titleBarHeight:backgroundColor:");
 
 			if (FoundationLibrary.INSTANCE.objc_msgSend(classId, respondsToSelector, selector)) {
-				result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, flags, titleBarHeight);
+				result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, flags, titleBarHeight, backgroundColor != null ? backgroundColor.getRGB() : 0);
 			}
 
 		} catch (UnsatisfiedLinkError e) {
@@ -108,10 +134,18 @@ public class MacOSUtils {
 	}
 
 	public static int requestWindowStyle(RootPaneContainer window, float titleBarHeight) {
-		return requestWindowStyle(window, FLAG_APPLY_CUSTOM_TITLE_BAR_HEIGHT, titleBarHeight);
+		return requestWindowStyle(window, FLAG_SET_CUSTOM_TITLE_BAR_HEIGHT, titleBarHeight, DEFAULT_BACKGROUND_COLOR);
 	}
 
-	public static int requestWindowStyle(RootPaneContainer window, int flags, float titleBarHeight) {
+	public static int requestWindowStyle(RootPaneContainer window, Color backgroundColor) {
+		return requestWindowStyle(window, FLAG_SET_BACKGROUND_COLOR, DEFAULT_CUSTOM_TITLE_BAR_HEIGHT, backgroundColor);
+	}
+
+	public static int requestWindowStyle(RootPaneContainer window, float titleBarHeight, Color backgroundColor) {
+		return requestWindowStyle(window, FLAG_SET_CUSTOM_TITLE_BAR_HEIGHT | FLAG_SET_BACKGROUND_COLOR, titleBarHeight, backgroundColor);
+	}
+
+	public static int requestWindowStyle(RootPaneContainer window, int flags, float titleBarHeight, Color backgroundColor) {
 
 		int result = -1;
 
@@ -121,13 +155,13 @@ public class MacOSUtils {
 
 				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
 				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
-				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("requestWindowStyle:flags:titleBarHeight:");
+				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("requestWindowStyle:flags:titleBarHeight:backgroundColor:");
 
 				if (FoundationLibrary.INSTANCE.objc_msgSend(classId, respondsToSelector, selector)) {
 
 					long windowNumber = getWindowNumber(window);
 					if (windowNumber >= 0) {
-						result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, windowNumber, flags, titleBarHeight);
+						result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, windowNumber, flags, titleBarHeight, backgroundColor != null ? backgroundColor.getRGB() : 0);
 					}
 
 				}
@@ -191,9 +225,9 @@ public class MacOSUtils {
 
 		boolean objc_msgSend(Pointer receiver, Pointer selector, Pointer arg1);
 
-		int objc_msgSend(Pointer receiver, Pointer selector, int arg1, float arg2);
+		int objc_msgSend(Pointer receiver, Pointer selector, int arg1, float arg2, int arg3);
 
-		int objc_msgSend(Pointer receiver, Pointer selector, long arg1, int arg2, float arg3);
+		int objc_msgSend(Pointer receiver, Pointer selector, long arg1, int arg2, float arg3, int arg4);
 
 	}
 
