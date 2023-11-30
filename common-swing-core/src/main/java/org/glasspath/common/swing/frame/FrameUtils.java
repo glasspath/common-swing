@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,6 +45,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.glasspath.common.Common;
 import org.glasspath.common.os.OsUtils;
+import org.glasspath.common.swing.border.HidpiMatteBorder;
 import org.glasspath.common.swing.border.RoundedLineBorder;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
@@ -126,6 +128,7 @@ public class FrameUtils {
 		UIManager.put("ScrollBar.minimumThumbSize", new Dimension(8, 16));
 		UIManager.put("TextComponent.arc", 5);
 		UIManager.put("TitledBorder.border", new RoundedLineBorder());
+		UIManager.getDefaults().put("TableHeader.cellBorder", new HidpiMatteBorder(new Insets(0, 0, 1, 1)));
 		// UIManager.put("Table.intercellSpacing", new Dimension(1, 1));
 		// UIManager.put("Table.alternateRowColor", TableUI.EVEN_ROW_COLOR);
 
