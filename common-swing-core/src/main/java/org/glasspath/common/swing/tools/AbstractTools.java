@@ -49,6 +49,7 @@ public abstract class AbstractTools<T extends FrameContext> {
 				setBackground(ColorUtils.TITLE_BAR_COLOR);
 			}
 		};
+		toolBar.setOpaque(false);
 		toolBar.setRollover(true);
 
 	}
