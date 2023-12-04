@@ -52,6 +52,10 @@ public class MacOSUtils {
 	// Background color flags
 	public static final int FLAG_SET_BACKGROUND_COLOR = 256;
 
+	// Vibrant background flags
+	public static final int FLAG_SET_VIBRANT_BACKGROUND = 512;
+	public static final int FLAG_VIBRANT_BACKGROUND_DARK = 1024;
+
 	public static final int DEFAULT_HIDDEN_TITLE_BAR_HEIGHT = 22;
 	public static final int DEFAULT_CUSTOM_TITLE_BAR_HEIGHT = 48;
 	public static final Color DEFAULT_BACKGROUND_COLOR = Color.gray;
@@ -61,9 +65,6 @@ public class MacOSUtils {
 			| FLAG_CHECK_FULL_WINDOW_CONTENT_IS_TRUE 
 			| FLAG_CHECK_TITLE_BAR_APPEARS_TRANSPARENT_IS_TRUE 
 			| FLAG_CHECK_TITLE_VISIBILITY_IS_FALSE;
-
-	public static LibMacOSUtils LIB_MAC_OS_UTILS = null;
-	public static FoundationLibrary FOUNDATION_LIBRARY = null;
 
 	private MacOSUtils() {
 
@@ -110,17 +111,16 @@ public class MacOSUtils {
 
 		try {
 
-			if (LIB_MAC_OS_UTILS == null && FOUNDATION_LIBRARY == null) {
-				LIB_MAC_OS_UTILS = Native.load("libmacos-utils.dylib", LibMacOSUtils.class);
-				FOUNDATION_LIBRARY = Native.load("Foundation", FoundationLibrary.class, Map.of(Library.OPTION_STRING_ENCODING, StandardCharsets.UTF_8.name()));
-			}
+			if (FoundationLibrary.INSTANCE != null && LibMacOSUtils.INSTANCE != null) {
 
-			Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
-			Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
-			Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("enableWindowDecorations:titleBarHeight:backgroundColor:");
+				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
+				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
+				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("enableWindowDecorations:titleBarHeight:backgroundColor:");
 
-			if (FoundationLibrary.INSTANCE.objc_msgSend(classId, respondsToSelector, selector)) {
-				result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, flags, titleBarHeight, backgroundColor != null ? backgroundColor.getRGB() : 0);
+				if (FoundationLibrary.INSTANCE.objc_msgSend(classId, respondsToSelector, selector)) {
+					result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, flags, titleBarHeight, backgroundColor != null ? backgroundColor.getRGB() : 0);
+				}
+
 			}
 
 		} catch (UnsatisfiedLinkError e) {
@@ -151,7 +151,7 @@ public class MacOSUtils {
 
 		try {
 
-			if (LIB_MAC_OS_UTILS != null && FOUNDATION_LIBRARY != null) {
+			if (FoundationLibrary.INSTANCE != null && LibMacOSUtils.INSTANCE != null) {
 
 				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
 				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
@@ -212,6 +212,8 @@ public class MacOSUtils {
 	}
 
 	public interface LibMacOSUtils extends Library {
+
+		LibMacOSUtils INSTANCE = Native.load("libmacos-utils.dylib", LibMacOSUtils.class);
 
 	}
 
