@@ -49,7 +49,7 @@ public class DateFilterTools {
 	private final GridBagLayout datePickersPanelLayout;
 	private final DatePicker firstDatePicker;
 	private final DatePicker secondDatePicker;
-	private final Dimension maximumSize = new Dimension(300, 26);
+	private final Dimension maximumSize = new Dimension(280, 26);
 
 	private final List<ActionListener> actionListeners = new ArrayList<>();
 
@@ -153,7 +153,7 @@ public class DateFilterTools {
 		if (firstDatePicker.getFont().getSize() >= 14.0F) {
 			maximumSize.width = 200;
 		} else {
-			maximumSize.width = 150;
+			maximumSize.width = 140;
 		}
 
 	}

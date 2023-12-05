@@ -116,7 +116,7 @@ public class FileTreePanel extends JPanel {
 			public int getFilterResultCount() {
 				return 0; // TODO
 			}
-		}, 200);
+		});
 
 		if (rootFiles != null) {
 			setRootFiles(rootFiles);

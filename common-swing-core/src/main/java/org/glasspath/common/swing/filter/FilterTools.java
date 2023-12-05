@@ -36,7 +36,7 @@ import org.glasspath.common.swing.table.Filterable;
 
 public class FilterTools {
 
-	public static final int DEFAULT_WIDTH = 250;
+	public static final int DEFAULT_WIDTH = 200;
 
 	private Filterable filterable;
 
