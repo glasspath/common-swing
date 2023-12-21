@@ -38,12 +38,13 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
-import javax.swing.plaf.basic.BasicTableUI;
 import javax.swing.table.TableCellRenderer;
 
 import org.glasspath.common.swing.theme.Theme;
 
-public class TableUI extends BasicTableUI {
+import com.formdev.flatlaf.ui.FlatTableUI;
+
+public class TableUI extends FlatTableUI {
 
 	protected static final Color TABLE_GRID_COLOR = new Color(217, 217, 217);
 	protected static final Color SELECTION_ACTIVE_SELECTION_FOREGROUND_COLOR = Color.BLACK;
