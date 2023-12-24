@@ -41,7 +41,7 @@ public class SvgIcon extends FlatSVGIcon {
 	public static final IColorFilter BLACK = new BasicColorFilter(Color.black);
 	public static final IColorFilter WHITE = new BasicColorFilter(Color.white);
 	public static final IColorFilter BLUE = new BasicColorFilter(ColorUtils.BLUE);
-	public static final IColorFilter PURPLE = new BasicColorFilter(new Color(184, 119, 217));
+	public static final IColorFilter PURPLE = new BasicColorFilter(ColorUtils.PURPLE);
 	public static final IColorFilter GREEN = new BasicColorFilter(ColorUtils.GREEN);
 	public static final IColorFilter RED = new BasicColorFilter(ColorUtils.RED);
 	public static final IColorFilter ORANGE = new BasicColorFilter(ColorUtils.ORANGE);
