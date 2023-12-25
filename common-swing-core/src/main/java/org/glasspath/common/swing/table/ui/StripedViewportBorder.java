@@ -39,34 +39,34 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import org.glasspath.common.swing.theme.Theme;
-
 /**
- * Creates a border for a {@link JViewport} that draws a striped background
- * corresponding to the row positions of the given {@link JTable}.
+ * Creates a border for a {@link JViewport} that draws a striped background corresponding to the row positions of the given {@link JTable}.
  */
 public class StripedViewportBorder extends AbstractBorder implements ListSelectionListener, PropertyChangeListener {
 
 	private final JViewport viewport;
 	private final JTable table;
 	private final Color stripeColor;
+	private final Color gridColor;
 	private final boolean paintSelectedRow;
 	private final boolean repaintOnSelectionChange;
-	private final Color gridColor;
 
-	public StripedViewportBorder(JViewport viewport, JTable table, Color stripeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+	public StripedViewportBorder(JViewport viewport, JTable table, Color stripeColor, Color gridColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
 
 		this.viewport = viewport;
 		this.table = table;
 		this.stripeColor = stripeColor;
+		this.gridColor = gridColor;
 		this.paintSelectedRow = paintSelectedRow;
 		this.repaintOnSelectionChange = repaintOnSelectionChange;
-		
+
+		/*
 		if (Theme.isDark()) {
 			gridColor = new Color(60, 60, 60);
 		} else {
 			gridColor = table.getGridColor();
 		}
+		*/
 
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addPropertyChangeListener(this);
@@ -81,19 +81,15 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 
 	private void paintStripedBackground(Graphics g, int borderY) {
 
-		// get the row index at the top of the clip bounds (the first row
-		// to paint).
+		// Get the row index at the top of the clip bounds (the first row to paint)
 		Rectangle clip = g.getClipBounds();
 		Point viewPosition = viewport.getViewPosition();
 		int rowAtPoint = table.rowAtPoint(viewPosition);
 
-		// get the y coordinate of the first row to paint. if there are no
-		// rows in the table, start painting at the top of the supplied
-		// clipping bounds.
+		// Get the y coordinate of the first row to paint. if there are no rows in the table, start painting at the top of the supplied clipping bounds
 		int topY = rowAtPoint < 0 ? borderY : table.getCellRect(rowAtPoint, 0, true).y - viewPosition.y + borderY;
 
-		// create a counter variable to hold the current row. if there are no
-		// rows in the table, start the counter at 0.
+		// Create a counter variable to hold the current row. if there are no rows in the table, start the counter at 0
 		int currentRow = rowAtPoint < 0 ? 0 : rowAtPoint;
 		int rowHeight = table.getRowHeight();
 
@@ -116,13 +112,13 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 		if (paintSelectedRow && table.isRowSelected(row)) {
 			return table.getSelectionBackground();
 		} else {
-			return row % 2 == 0? table.getBackground() : stripeColor;			
+			return row % 2 == 0 ? table.getBackground() : stripeColor;
 		}
 	}
 
 	private void paintVerticalGridLines(Graphics g, int y, int height) {
 
-		final Graphics2D g2d = (Graphics2D)g;
+		final Graphics2D g2d = (Graphics2D) g;
 
 		// paint the column grid dividers for the non-existent rows.
 		int x = 0 - viewport.getViewPosition().x + viewport.getLocation().x;
@@ -134,7 +130,7 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 
 			// increase the x position by the width of the current column.
 			x += column.getWidth();
-			//g.setColor(table.getGridColor());
+			// g.setColor(table.getGridColor());
 
 			// draw the grid line (not sure what the -1 is for, but BasicTableUI
 			// also does it.source
@@ -153,7 +149,7 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (table.getWidth() < viewport.getWidth() || repaintOnSelectionChange) {
-			viewport.repaint(); //TODO: This isn't very good for performance..
+			viewport.repaint(); // TODO: This isn't very good for performance..
 		}
 	}
 
@@ -164,8 +160,8 @@ public class StripedViewportBorder extends AbstractBorder implements ListSelecti
 
 			if (evt.getPropertyName().equals("selectionModel")) { //$NON-NLS-1$
 
-				final ListSelectionModel oldModel = (ListSelectionModel)evt.getOldValue();
-				final ListSelectionModel newModel = (ListSelectionModel)evt.getNewValue();
+				final ListSelectionModel oldModel = (ListSelectionModel) evt.getOldValue();
+				final ListSelectionModel newModel = (ListSelectionModel) evt.getNewValue();
 				oldModel.removeListSelectionListener(this);
 				newModel.addListSelectionListener(this);
 

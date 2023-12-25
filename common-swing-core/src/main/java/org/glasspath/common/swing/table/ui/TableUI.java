@@ -46,7 +46,7 @@ import com.formdev.flatlaf.ui.FlatTableUI;
 
 public class TableUI extends FlatTableUI {
 
-	protected static final Color TABLE_GRID_COLOR = new Color(217, 217, 217);
+	protected static final Color TABLE_GRID_COLOR = Theme.isDark() ? new Color(60, 60, 60) : new Color(217, 217, 217);
 	protected static final Color SELECTION_ACTIVE_SELECTION_FOREGROUND_COLOR = Color.BLACK;
 	protected static final Color SELECTION_ACTIVE_SELECTION_BACKGROUND_COLOR = new Color(84, 136, 217, 25);
 	protected static final Color SELECTION_INACTIVE_SELECTION_FOREGROUND_COLOR = Color.BLACK;
@@ -123,7 +123,7 @@ public class TableUI extends FlatTableUI {
 
 		table.setShowHorizontalLines(false);
 		makeHeaderFillEmptySpace(table); // TODO: Make sure this isn't causing memory leaks
-		makeStriped(table, striped ? stripedColor : table.getBackground(), paintSelectedRow, repaintOnSelectionChange);
+		makeStriped(table, striped ? stripedColor : table.getBackground(), gridColor, paintSelectedRow, repaintOnSelectionChange);
 
 	}
 
@@ -152,40 +152,40 @@ public class TableUI extends FlatTableUI {
 
 	}
 
-	public static void makeStriped(JTable table, Color stipeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+	public static void makeStriped(JTable table, Color stipeColor, Color gridColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
 
-		table.addPropertyChangeListener("ancestor", createAncestorPropertyChangeListener(table, stipeColor, paintSelectedRow, repaintOnSelectionChange)); //$NON-NLS-1$
+		table.addPropertyChangeListener("ancestor", createAncestorPropertyChangeListener(table, stipeColor, gridColor, paintSelectedRow, repaintOnSelectionChange)); //$NON-NLS-1$
 
 		// install a listener to cause the whole table to repaint when a column is resized. we do
 		// this because the extended grid lines may need to be repainted. this could be cleaned up,
 		// but for now, it works fine.
 		for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-			table.getColumnModel().getColumn(i).addPropertyChangeListener(createAncestorPropertyChangeListener(table, stipeColor, paintSelectedRow, repaintOnSelectionChange));
+			table.getColumnModel().getColumn(i).addPropertyChangeListener(createAncestorPropertyChangeListener(table, stipeColor, gridColor, paintSelectedRow, repaintOnSelectionChange));
 		}
 
 	}
 
-	private static PropertyChangeListener createAncestorPropertyChangeListener(JTable table, Color stipeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+	private static PropertyChangeListener createAncestorPropertyChangeListener(JTable table, Color stipeColor, Color gridColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
 
 		return new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				// indicate that the parent of the JTable has changed.
-				parentDidChange(table, stipeColor, paintSelectedRow, repaintOnSelectionChange);
+				parentDidChange(table, stipeColor, gridColor, paintSelectedRow, repaintOnSelectionChange);
 			}
 		};
 
 	}
 
-	private static void parentDidChange(JTable table, Color stipeColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
+	private static void parentDidChange(JTable table, Color stipeColor, Color gridColor, boolean paintSelectedRow, boolean repaintOnSelectionChange) {
 
 		// if the parent of the table is an instance of JViewport, and that JViewport's parent is
 		// a JScrollpane, then install the custom BugFixedViewportLayout.
 		if (table.getParent() instanceof JViewport && table.getParent().getParent() instanceof JScrollPane) {
 
 			JScrollPane scrollPane = (JScrollPane) table.getParent().getParent();
-			scrollPane.setViewportBorder(new StripedViewportBorder(scrollPane.getViewport(), table, stipeColor, paintSelectedRow, repaintOnSelectionChange));
+			scrollPane.setViewportBorder(new StripedViewportBorder(scrollPane.getViewport(), table, stipeColor, gridColor, paintSelectedRow, repaintOnSelectionChange));
 			scrollPane.getViewport().setOpaque(false);
 			scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, createCornerComponent(table));
 			scrollPane.setBorder(BorderFactory.createEmptyBorder());
