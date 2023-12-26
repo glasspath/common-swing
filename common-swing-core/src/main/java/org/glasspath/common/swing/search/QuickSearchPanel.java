@@ -27,34 +27,60 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-public class QuickSearchPanel extends JPanel {
+public abstract class QuickSearchPanel extends JPanel {
 
 	protected final SearchField searchField;
 	protected final JPanel contentPanel;
 
 	public QuickSearchPanel() {
 
-		setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		setLayout(new BorderLayout());
 
 		searchField = new SearchField() {
 
 			@Override
 			public void clear() {
-				QuickSearchPanel.this.clear();
+				setText(""); //$NON-NLS-1$
 			}
 		};
 		searchField.setPreferredSize(new Dimension(100, 25));
 		add(searchField, BorderLayout.NORTH);
+		searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				apply();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				apply();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				apply();
+			}
+
+			private void apply() {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						setFilter(searchField.getText());
+					}
+				});
+			}
+		});
 
 		contentPanel = new JPanel();
-		contentPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		contentPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
 		add(contentPanel, BorderLayout.CENTER);
-
-	}
-
-	public void clear() {
 
 	}
 
@@ -66,4 +92,6 @@ public class QuickSearchPanel extends JPanel {
 		return contentPanel;
 	}
 
+	public abstract void setFilter(String filter);
+	
 }
