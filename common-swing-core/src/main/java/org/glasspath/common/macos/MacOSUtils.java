@@ -31,11 +31,16 @@ import javax.swing.BorderFactory;
 import javax.swing.JRootPane;
 import javax.swing.RootPaneContainer;
 
+import org.glasspath.common.Common;
+import org.glasspath.common.GlasspathSystemProperties;
+
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
 public class MacOSUtils {
+
+	public static LibMacOSUtils LIB_MACOS_UTILS = null;
 
 	// Setup flags
 	public static final int FLAG_RUN_ON_MAIN_THREAD = 1;
@@ -68,6 +73,32 @@ public class MacOSUtils {
 
 	private MacOSUtils() {
 
+	}
+	
+	public static void load() {
+		
+		if (LIB_MACOS_UTILS == null) {
+			
+			File libFile = null;
+			
+			String assemblyResolvePath = System.getProperty(GlasspathSystemProperties.NATIVE_LIBRARY_PATH);
+			if (assemblyResolvePath != null) {
+				libFile = new File(assemblyResolvePath, "libmacos-utils.dylib");
+			}
+			
+			if (libFile == null || !libFile.exists()) {
+				libFile = new File("libmacos-utils.dylib");
+			}
+			
+			if (libFile != null && libFile.exists()) {
+				Common.LOGGER.info("Loading libmacos-utils.dylib from: " + libFile.getAbsolutePath());
+				LIB_MACOS_UTILS = Native.load(libFile.getAbsolutePath(), LibMacOSUtils.class);
+			} else {
+				Common.LOGGER.error("Cannot load libmacos-utils.dylib from: " + libFile);
+			}
+			
+		}
+				
 	}
 
 	public static void hideTitleBar(RootPaneContainer window, boolean hideTitle, boolean createBorder) {
@@ -111,7 +142,9 @@ public class MacOSUtils {
 
 		try {
 
-			if (FoundationLibrary.INSTANCE != null && LibMacOSUtils.INSTANCE != null) {
+			load();
+
+			if (FoundationLibrary.INSTANCE != null && LIB_MACOS_UTILS != null) {
 
 				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
 				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
@@ -151,7 +184,9 @@ public class MacOSUtils {
 
 		try {
 
-			if (FoundationLibrary.INSTANCE != null && LibMacOSUtils.INSTANCE != null) {
+			load();
+
+			if (FoundationLibrary.INSTANCE != null && LIB_MACOS_UTILS != null) {
 
 				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
 				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
@@ -210,10 +245,9 @@ public class MacOSUtils {
 		return -1L;
 
 	}
-
+	
 	public interface LibMacOSUtils extends Library {
 
-		LibMacOSUtils INSTANCE = Native.load("libmacos-utils.dylib", LibMacOSUtils.class);
 
 	}
 
