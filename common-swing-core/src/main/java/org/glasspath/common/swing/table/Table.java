@@ -53,6 +53,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
@@ -717,22 +718,31 @@ public class Table extends JTable implements Filterable {
 			int row = rowAtPoint(e.getPoint());
 			int col = columnAtPoint(e.getPoint());
 
-			Object value = null;
 			if (row >= 0 && col >= 0) {
-				value = getValueAt(row, col);
+
+				Object value = getValueAt(row, col);
+
+				if (value != null) {
+
+					TableCellRenderer renderer = getCellRenderer(row, col);
+					if (renderer != null) {
+
+						Component component = renderer.getTableCellRendererComponent(this, value, false, false, row, col);
+						if (component instanceof JLabel) {
+							return ((JLabel) component).getText();
+						}
+
+					}
+
+					return value.toString();
+
+				}
+
 			}
 
-			if (value == null || value.toString().length() == 0) {
-				return null;
-			} else {
-				// TODO: Dates are shown in wrong time-zone
-				// TODO: Use text from renderer
-				return value.toString();
-			}
-
-		} else {
-			return null;
 		}
+
+		return null;
 
 	}
 
