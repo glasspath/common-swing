@@ -22,32 +22,19 @@
  */
 package org.glasspath.common.swing.table;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
-
 import org.glasspath.common.date.DateUtils;
 import org.glasspath.common.format.FormatUtils;
-import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.date.DatePicker;
-import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.table.DatePickerCellEditor;
 
 public class DateCellEditor extends DatePickerCellEditor {
 
 	public DateCellEditor() {
 
+		datePicker.setMonthView(DatePicker.createMonthView());
 		datePicker.setTimeZone(DateUtils.TIME_ZONE);
-		setFormats(FormatUtils.DATE_FORMAT);
+		setFormats(FormatUtils.DATE_FORMAT_DAY_MONTH_YEAR);
 		setClickCountToStart(2);
-
-		JXMonthView monthView = DatePicker.createMonthView();
-		monthView.setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
-		monthView.setShowingLeadingDays(true);
-		monthView.setShowingTrailingDays(true);
-		monthView.setTodayBackground(ColorUtils.createTransparentColor(Table.DEFAULT_SELECTION_BACKGROUND, 150));
-		monthView.setMonthStringBackground(new Color(150, 150, 150, 20));
-		datePicker.setMonthView(monthView);
 
 	}
 
