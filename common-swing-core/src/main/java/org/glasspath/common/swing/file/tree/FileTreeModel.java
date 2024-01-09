@@ -37,10 +37,15 @@ public class FileTreeModel implements TreeModel {
 
 	private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 	private final List<File> rootFiles = new ArrayList<>();
-	private final Map<String, File[]> cache = new HashMap<>();
+	private final Map<String, File[]> cache;
 
 	public FileTreeModel(List<File> rootFiles) {
+		this(rootFiles, new HashMap<>());
+	}
+
+	public FileTreeModel(List<File> rootFiles, Map<String, File[]> cache) {
 		this.rootFiles.addAll(rootFiles);
+		this.cache = cache;
 	}
 
 	public List<File> getRootFiles() {
@@ -49,6 +54,10 @@ public class FileTreeModel implements TreeModel {
 
 	public boolean isRootFile(File file) {
 		return rootFiles.contains(file);
+	}
+
+	public Map<String, File[]> getCache() {
+		return cache;
 	}
 
 	@Override
@@ -149,6 +158,86 @@ public class FileTreeModel implements TreeModel {
 		}
 
 		return files;
+
+	}
+
+	public FileTreeModel createFilteredModel(List<File> files) {
+
+		List<File> rootFiles = new ArrayList<>();
+
+		Map<String, File[]> cache = new HashMap<>();
+		cache.putAll(this.cache);
+
+		List<File> queue = new ArrayList<>();
+		queue.addAll(files);
+
+		addPathsToRoot(queue, rootFiles);
+
+		List<File> filesWithSameParent = getFilesWithSameParent(queue);
+		while (filesWithSameParent != null && filesWithSameParent.size() > 0) {
+
+			cache.put(filesWithSameParent.get(0).getParentFile().getAbsolutePath(), filesWithSameParent.toArray(new File[0]));
+
+			queue.removeAll(filesWithSameParent);
+			filesWithSameParent = getFilesWithSameParent(queue);
+
+		}
+
+		return new FileTreeModel(rootFiles, cache);
+
+	}
+
+	private void addPathsToRoot(List<File> files, List<File> rootFiles) {
+
+		List<File> filesToAdd = new ArrayList<>();
+
+		for (File file : files) {
+
+			File parent = file.getParentFile();
+			while (parent != null) {
+
+				if (this.rootFiles.contains(parent)) {
+					if (!rootFiles.contains(parent)) {
+						rootFiles.add(parent);
+					}
+					break;
+				} else {
+					filesToAdd.add(parent);
+					parent = parent.getParentFile();
+				}
+
+			}
+
+		}
+
+		for (File file : filesToAdd) {
+			if (!files.contains(file)) {
+				files.add(file);
+			}
+		}
+
+	}
+
+	private List<File> getFilesWithSameParent(List<File> files) {
+
+		List<File> filesWithSameParent = new ArrayList<>();
+
+		if (files.size() > 0) {
+
+			filesWithSameParent.add(files.get(0));
+
+			File parent = files.get(0).getParentFile();
+			if (parent != null) {
+				for (int i = 1; i < files.size(); i++) {
+					if (parent.equals(files.get(i).getParentFile())) {
+						filesWithSameParent.add(files.get(i));
+					}
+				}
+			}
+
+		}
+
+		return filesWithSameParent;
 
 	}
 
