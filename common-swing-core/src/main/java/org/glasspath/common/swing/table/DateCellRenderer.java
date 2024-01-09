@@ -39,7 +39,7 @@ public class DateCellRenderer extends DefaultTableCellRenderer {
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 		if (value != null && value instanceof Date) {
-			label.setText(FormatUtils.DATE_FORMAT.format((Date) value));
+			label.setText(FormatUtils.DATE_FORMAT_DAY_MONTH_YEAR.format((Date) value));
 		}
 
 		return label;
