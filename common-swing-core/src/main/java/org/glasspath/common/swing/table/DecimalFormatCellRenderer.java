@@ -47,7 +47,7 @@ public class DecimalFormatCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		label.setHorizontalAlignment(JLabel.RIGHT);
-		if (decimalFormat != null) {
+		if (decimalFormat != null && value != null) {
 			label.setText(decimalFormat.format(Double.parseDouble(value.toString())));
 		}
 		return label;

@@ -44,7 +44,7 @@ public class CurrencyCellRenderer extends DefaultTableCellRenderer {
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		
 		currencyLabel.setFont(label.getFont());
-		currencyLabel.setText(FormatUtils.CURRENCY_FORMAT.format(Double.parseDouble(value.toString())));
+		currencyLabel.setText(value != null ? FormatUtils.CURRENCY_FORMAT.format(Double.parseDouble(value.toString())) : "");
 		currencyLabel.setBackground(label.getBackground());
 		currencyLabel.setForeground(label.getForeground());
 		
