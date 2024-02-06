@@ -38,33 +38,82 @@ public class ColorUtils {
 	public static final Color ORANGE = new Color(237, 162, 0);
 	public static final Color YELLOW = new Color(250, 222, 42);
 
+	public static final Color DARK_31 = new Color(31, 30, 37);
+	public static final Color DARK_32 = new Color(32, 31, 38);
+	public static final Color DARK_35 = new Color(35, 34, 41);
+	public static final Color DARK_35_B = new Color(35, 34, 40);
+	public static final Color DARK_37 = new Color(37, 36, 43);
+	public static final Color DARK_38 = new Color(38, 40, 43);
+	public static final Color DARK_40 = new Color(40, 41, 45);
+	public static final Color DARK_41 = new Color(41, 42, 46);
+	public static final Color DARK_43 = new Color(43, 45, 48);
+	public static final Color DARK_44 = new Color(44, 43, 48);
+	public static final Color DARK_48 = new Color(48, 47, 53);
+	public static final Color DARK_48_B = new Color(48, 50, 53);
+	public static final Color DARK_50 = new Color(50, 52, 55);
+	public static final Color DARK_52 = new Color(52, 54, 56);
+
+	public static final Color GRAY_5 = new Color(5, 5, 5);
+	public static final Color GRAY_25 = new Color(25, 25, 25);
+	public static final Color GRAY_30 = new Color(30, 30, 30);
+	public static final Color GRAY_35 = new Color(35, 35, 35);
+	public static final Color GRAY_40 = new Color(40, 40, 40);
+	public static final Color GRAY_42 = new Color(42, 42, 42);
+	public static final Color GRAY_50 = new Color(50, 50, 50);
+	public static final Color GRAY_55 = new Color(55, 55, 55);
+	public static final Color GRAY_58 = new Color(58, 58, 58);
+	public static final Color GRAY_60 = new Color(60, 60, 60);
+	public static final Color GRAY_75 = new Color(75, 75, 75);
+	public static final Color GRAY_80 = new Color(80, 80, 80);
+	public static final Color GRAY_90 = new Color(90, 90, 90);
+	public static final Color GRAY_100 = new Color(100, 100, 100);
+	public static final Color GRAY_125 = new Color(125, 125, 125);
+	public static final Color GRAY_150 = new Color(150, 150, 150);
+	public static final Color GRAY_155 = new Color(155, 155, 155);
+	public static final Color GRAY_175 = new Color(175, 175, 175);
+	public static final Color GRAY_180 = new Color(180, 180, 180);
+	public static final Color GRAY_187 = new Color(187, 187, 187);
+	public static final Color GRAY_190 = new Color(190, 190, 190);
+	public static final Color GRAY_192 = new Color(192, 192, 192);
+	public static final Color GRAY_200 = new Color(200, 200, 200);
+	public static final Color GRAY_210 = new Color(210, 210, 210);
+	public static final Color GRAY_217 = new Color(217, 217, 217);
+	public static final Color GRAY_220 = new Color(220, 220, 220);
+	public static final Color GRAY_224 = new Color(224, 224, 224);
+	public static final Color GRAY_225 = new Color(225, 225, 225);
+	public static final Color GRAY_230 = new Color(230, 230, 230);
+	public static final Color GRAY_235 = new Color(235, 235, 235);
+	public static final Color GRAY_238 = new Color(238, 238, 238);
+	public static final Color GRAY_245 = new Color(245, 245, 245);
+	public static final Color GRAY_247 = new Color(247, 247, 247);
+	public static final Color GRAY_248 = new Color(248, 248, 248);
+	public static final Color GRAY_250 = new Color(250, 250, 250);
+	public static final Color GRAY_254 = new Color(254, 254, 254);
+	
 	public static Color TITLE_BAR_COLOR;
 	public static Color SELECTION_COLOR_FOCUSSED;
 	public static Color SELECTION_COLOR_NOT_FOCUSSED; // TODO: Remove?
 	public static Color TEXT_COLOR;
 	public static Color SEMI_DISABLED_TEXT_COLOR;
 	public static Color DISABLED_TEXT_COLOR;
-	public static Color SUMMARY_CHART_BAR_COLOR;
 	public static Color INVALID_INPUT_BACKGROUND;
 	static {
 		Theme.register(() -> {
 			if (Theme.isDark()) {
-				TITLE_BAR_COLOR = new Color(44, 43, 48);
+				TITLE_BAR_COLOR = DARK_44;
 				SELECTION_COLOR_FOCUSSED = new Color(75, 110, 175);
 				SELECTION_COLOR_NOT_FOCUSSED = new Color(75, 110, 175);
-				TEXT_COLOR = new Color(187, 187, 187);
-				SEMI_DISABLED_TEXT_COLOR = new Color(155, 155, 155);
-				DISABLED_TEXT_COLOR = new Color(125, 125, 125);
-				SUMMARY_CHART_BAR_COLOR = new Color(100, 100, 100);
+				TEXT_COLOR = GRAY_187;
+				SEMI_DISABLED_TEXT_COLOR = GRAY_155;
+				DISABLED_TEXT_COLOR = GRAY_125;
 				INVALID_INPUT_BACKGROUND = new Color(255, 150, 150);
 			} else {
-				TITLE_BAR_COLOR = new Color(247, 247, 247);
+				TITLE_BAR_COLOR = GRAY_247;
 				SELECTION_COLOR_FOCUSSED = new Color(221, 232, 248);
 				SELECTION_COLOR_NOT_FOCUSSED = new Color(221, 232, 248);
 				TEXT_COLOR = Color.black;
-				SEMI_DISABLED_TEXT_COLOR = new Color(125, 125, 125);
-				DISABLED_TEXT_COLOR = Color.lightGray;
-				SUMMARY_CHART_BAR_COLOR = new Color(192, 192, 192);
+				SEMI_DISABLED_TEXT_COLOR = GRAY_125;
+				DISABLED_TEXT_COLOR = GRAY_192;
 				INVALID_INPUT_BACKGROUND = new Color(255, 150, 150);
 			}
 		});

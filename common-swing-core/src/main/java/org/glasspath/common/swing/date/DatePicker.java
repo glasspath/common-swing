@@ -71,7 +71,7 @@ public class DatePicker extends JXDatePicker {
 		super();
 
 		if (Theme.isDark()) {
-			setBackground(new Color(43, 45, 48));
+			setBackground(ColorUtils.DARK_43);
 		}
 
 		setMonthView(createMonthView());

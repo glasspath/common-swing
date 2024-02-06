@@ -32,11 +32,12 @@ import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.border.AbstractBorder;
 
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 
 public class RoundedLineBorder extends AbstractBorder {
 
-	public static final Color LINE_COLOR = Theme.isDark() ? new Color(58, 58, 58) : new Color(220, 220, 220);
+	public static final Color LINE_COLOR = Theme.isDark() ? ColorUtils.GRAY_58 : ColorUtils.GRAY_220;
 
 	@Override
 	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {

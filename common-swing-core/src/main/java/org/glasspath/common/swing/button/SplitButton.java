@@ -48,6 +48,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 
 @SuppressWarnings("nls")
@@ -498,7 +499,7 @@ public class SplitButton extends JButton {
 		if (arrowMode == ARROW_MODE_ALWAYS || (arrowMode == ARROW_MODE_HOVER && model.isRollover())) {
 
 			// TODO: This is a quick hack to improve painting of the arrow
-			g2d.setColor(Theme.isDark() ? new Color(150, 150, 150) : new Color(75, 75, 75));
+			g2d.setColor(Theme.isDark() ? ColorUtils.GRAY_150 : ColorUtils.GRAY_75);
 			mw += arrowOffset;
 			GeneralPath gp = new GeneralPath();
 			gp.moveTo(mw - 4, mh - 2);

@@ -30,11 +30,12 @@ import java.awt.Insets;
 
 import javax.swing.border.MatteBorder;
 
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 
 public class HidpiMatteBorder extends MatteBorder {
 
-	public static final Color COLOR = Theme.isDark() ? new Color(25, 25, 25) : new Color(210, 210, 210);
+	public static final Color COLOR = Theme.isDark() ? ColorUtils.GRAY_25 : ColorUtils.GRAY_210;
 
 	public HidpiMatteBorder(Insets insets) {
 		super(insets, COLOR);

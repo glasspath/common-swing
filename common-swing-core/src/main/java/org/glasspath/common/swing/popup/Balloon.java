@@ -54,8 +54,8 @@ public class Balloon {
 	public static final Stroke STROKE = new BasicStroke(1.0F);
 
 	private final Border shadow;
-	private Color background = Theme.isDark() ? new Color(31, 30, 37) : new Color(250, 250, 250);
-	private Color borderColor = new Color(125, 125, 125);
+	private Color background = Theme.isDark() ? ColorUtils.DARK_31 : ColorUtils.GRAY_250;
+	private Color borderColor =  ColorUtils.GRAY_125;
 	private int cornerRadius = 8;
 
 	public Balloon() {

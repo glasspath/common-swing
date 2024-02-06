@@ -46,6 +46,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.glasspath.common.icons.Icons;
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.frame.FrameUtils;
 import org.glasspath.common.swing.frame.FrameUtils.FrameRunnable;
 import org.glasspath.common.swing.theme.Theme;
@@ -243,7 +244,7 @@ public class PaddingPanel extends JPanel {
 		int width = xRight - xLeft;
 		int height = yBottom - yTop;
 		
-		g2d.setColor(Theme.isDark() ? new Color(90, 90, 90) : Color.lightGray);
+		g2d.setColor(Theme.isDark() ? ColorUtils.GRAY_90 : Color.lightGray);
 		Rectangle rect = new Rectangle(xLeft, yTop, width, height);
 		g2d.draw(rect);
 

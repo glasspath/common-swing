@@ -35,8 +35,8 @@ import org.glasspath.common.swing.theme.Theme;
 
 public class SvgIcon extends FlatSVGIcon {
 
-	public static final IColorFilter DARK = new BasicColorFilter(new Color(150, 150, 150));
-	public static final IColorFilter CONTRAST = new BasicColorFilter(Theme.isDark() ? new Color(55, 55, 55) : new Color(100, 100, 100));
+	public static final IColorFilter DARK = new BasicColorFilter(ColorUtils.GRAY_150);
+	public static final IColorFilter CONTRAST = new BasicColorFilter(Theme.isDark() ? ColorUtils.GRAY_55 : ColorUtils.GRAY_100);
 	public static final IColorFilter WARNING = new BasicColorFilter(Theme.isDark() ? new Color(150, 25, 25) : new Color(190, 100, 100));
 	public static final IColorFilter BLACK = new BasicColorFilter(Color.black);
 	public static final IColorFilter WHITE = new BasicColorFilter(Color.white);

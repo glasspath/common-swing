@@ -114,10 +114,6 @@ public enum Theme {
 		return theme == THEME_SYSTEM;
 	}
 
-	public static boolean isDarkTheme() {
-		return theme == THEME_DARK;
-	}
-
 	public static boolean isDark() {
 		return theme == THEME_DARK;
 	}
@@ -127,7 +123,7 @@ public enum Theme {
 		button.setMargin(new Insets(0, 2, 0, 2));
 
 		if (!Theme.isSystemTheme()) {
-			if (Theme.isDarkTheme()) {
+			if (Theme.isDark()) {
 				button.setBorder(BorderFactory.createLineBorder(DARK_BORDER_COLOR));
 			} else {
 				button.setBorder(BorderFactory.createLineBorder(LIGHT_BORDER_COLOR));

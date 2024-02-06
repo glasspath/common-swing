@@ -22,7 +22,6 @@
  */
 package org.glasspath.common.swing.table;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +33,7 @@ import java.util.TimeZone;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.date.DatePicker;
 import org.glasspath.common.swing.theme.Theme;
 import org.jdesktop.swingx.JXDatePicker;
@@ -53,7 +53,7 @@ public class RemoteCellDatePicker extends JXDatePicker {
 		this.column = column;
 
 		if (Theme.isDark()) {
-			setBackground(new Color(43, 45, 48));
+			setBackground(ColorUtils.DARK_43);
 		}
 
 		setMonthView(DatePicker.createMonthView());

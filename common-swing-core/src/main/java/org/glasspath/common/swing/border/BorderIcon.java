@@ -33,14 +33,15 @@ import java.awt.Stroke;
 
 import javax.swing.Icon;
 
+import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.theme.Theme;
 
 public class BorderIcon implements Icon {
 
 	public static final Stroke DASHED_LINE_STROKE = new BasicStroke(1.0F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0, new float[] { 1.5F, 1.5F }, 0);
-	public static final Color DASHED_LINE_COLOR = Theme.isDark() ? new Color(220, 220, 220) : new Color(75, 75, 75);
+	public static final Color DASHED_LINE_COLOR = Theme.isDark() ? ColorUtils.GRAY_220 : ColorUtils.GRAY_75;
 	public static final Stroke LINE_STROKE = new BasicStroke(1.0F);
-	public static final Color LINE_COLOR = Theme.isDark() ? new Color(220, 220, 220) : new Color(50, 50, 50);
+	public static final Color LINE_COLOR = Theme.isDark() ? ColorUtils.GRAY_220 : ColorUtils.GRAY_50;
 
 	private final boolean top;
 	private final boolean left;

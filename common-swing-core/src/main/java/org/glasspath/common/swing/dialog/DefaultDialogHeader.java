@@ -42,7 +42,7 @@ public class DefaultDialogHeader extends JPanel {
 		if (Theme.isDark()) {
 			TITLE_COLOR = ColorUtils.TEXT_COLOR;
 		} else {
-			TITLE_COLOR = new Color(50, 50, 50);
+			TITLE_COLOR = ColorUtils.GRAY_50;
 		}
 	}
 

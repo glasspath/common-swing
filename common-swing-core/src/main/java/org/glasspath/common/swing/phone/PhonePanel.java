@@ -24,7 +24,6 @@ package org.glasspath.common.swing.phone;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -107,7 +106,7 @@ public class PhonePanel extends JPanel {
 		double t = h * 0.01;
 
 		RoundRectangle2D roundRect = new RoundRectangle2D.Double(x, y, w, h, r, r);
-		g2d.setColor(Theme.isDark() ? new Color(5, 5, 5) : Color.lightGray);
+		g2d.setColor(Theme.isDark() ? ColorUtils.GRAY_5 : ColorUtils.GRAY_192);
 
 		g2d.setStroke(new BasicStroke(2.0F));
 		g2d.draw(roundRect);

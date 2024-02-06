@@ -134,7 +134,7 @@ public class ColorButton extends SplitButton {
 		if (color != null) {
 			g2d.setColor(color);
 		} else {
-			g2d.setColor(Theme.isDark() ? new Color(75, 75, 75) : new Color(220, 220, 220));
+			g2d.setColor(Theme.isDark() ? ColorUtils.GRAY_75 : ColorUtils.GRAY_220);
 		}
 
 		if (paintMode == PAINT_MODE_DEFAULT) {
