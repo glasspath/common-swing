@@ -48,6 +48,10 @@ import com.formdev.flatlaf.ui.FlatUIUtils;
 
 public class Balloon {
 
+	public static final int LEFT = 0;
+	public static final int RIGHT = 1;
+	public static final int BOTTOM = 2;
+
 	public static final int SHADOW_PADDING = 6;
 	public static final int SHADOW_PADDING_TOP = 3;
 	public static final int ARROW_SIZE = 5;
@@ -55,7 +59,7 @@ public class Balloon {
 
 	private final Border shadow;
 	private Color background = Theme.isDark() ? ColorUtils.DARK_31 : ColorUtils.GRAY_250;
-	private Color borderColor =  ColorUtils.GRAY_125;
+	private Color borderColor = ColorUtils.GRAY_125;
 	private int cornerRadius = 8;
 
 	public Balloon() {
@@ -93,6 +97,10 @@ public class Balloon {
 	}
 
 	public void paintTextBalloon(JComponent c, Graphics2D g2d, String text, int x, int y, boolean right) {
+		paintTextBalloon(c, g2d, text, x, y, right ? RIGHT : LEFT);
+	}
+
+	public void paintTextBalloon(JComponent c, Graphics2D g2d, String text, int x, int y, int orientation) {
 
 		FontMetrics fontMetrics = g2d.getFontMetrics();
 		Rectangle2D fontRect = fontMetrics.getStringBounds(text, g2d);
@@ -100,15 +108,17 @@ public class Balloon {
 		int w = (int) fontRect.getWidth() + 20;
 		int h = (int) fontRect.getHeight() + 6;
 
-		y -= h / 2; // Position balloon arrow at y
+		if (orientation != BOTTOM) {
+			y -= h / 2;
+		}
 
-		if (right) {
+		if (orientation == RIGHT) {
 			x -= w;
 		}
 
-		paintBalloon(c, g2d, x, y, w, h, right);
+		paintBalloon(c, g2d, x, y, w, h, orientation);
 
-		if (right) {
+		if (orientation == RIGHT) {
 			x -= 5;
 		}
 
@@ -118,16 +128,22 @@ public class Balloon {
 	}
 
 	public void paintBalloon(JComponent c, Graphics2D g2d, int x, int y, int w, int h, boolean right) {
+		paintBalloon(c, g2d, x, y, w, h, right ? RIGHT : LEFT);
+	}
+
+	public void paintBalloon(JComponent c, Graphics2D g2d, int x, int y, int w, int h, int orientation) {
 
 		if (shadow != null) {
-			if (right) {
+			if (orientation == RIGHT) {
 				shadow.paintBorder(c, g2d, x - SHADOW_PADDING, y - SHADOW_PADDING_TOP, w + SHADOW_PADDING + SHADOW_PADDING - ARROW_SIZE, h + SHADOW_PADDING_TOP + SHADOW_PADDING);
+			} else if (orientation == BOTTOM) {
+				shadow.paintBorder(c, g2d, x - SHADOW_PADDING, y - SHADOW_PADDING_TOP, w + SHADOW_PADDING + SHADOW_PADDING - ARROW_SIZE, h + SHADOW_PADDING_TOP + SHADOW_PADDING - ARROW_SIZE);
 			} else {
 				shadow.paintBorder(c, g2d, x - SHADOW_PADDING + ARROW_SIZE, y - SHADOW_PADDING_TOP, w + SHADOW_PADDING + SHADOW_PADDING - ARROW_SIZE, h + SHADOW_PADDING_TOP + SHADOW_PADDING);
 			}
 		}
 
-		Shape balloonShape = createBalloonShape(x, y, w, h, right);
+		Shape balloonShape = createBalloonShape(x, y, w, h, orientation);
 
 		g2d.setColor(background);
 		g2d.fill(balloonShape);
@@ -138,19 +154,34 @@ public class Balloon {
 
 	}
 
-	private Shape createBalloonShape(int x, int y, int w, int h, boolean right) {
+	private Shape createBalloonShape(int x, int y, int w, int h, int orientation) {
 
 		RoundRectangle2D balloonRect;
 		Path2D arrowPath;
 
-		int yOffset = (h - (ARROW_SIZE + ARROW_SIZE)) / 2;
-		if (right) {
-			int xOffset = w - ARROW_SIZE;
+		if (orientation == RIGHT) {
+
 			balloonRect = new RoundRectangle2D.Float(x, y, w - ARROW_SIZE, h, cornerRadius, cornerRadius);
+
+			int xOffset = w - ARROW_SIZE;
+			int yOffset = (h - (ARROW_SIZE + ARROW_SIZE)) / 2;
 			arrowPath = FlatUIUtils.createPath(x + xOffset, y + yOffset, x + xOffset + ARROW_SIZE, y + yOffset + ARROW_SIZE, x + xOffset, y + yOffset + ARROW_SIZE + ARROW_SIZE);
+
+		} else if (orientation == BOTTOM) {
+
+			balloonRect = new RoundRectangle2D.Float(x, y, w, h - ARROW_SIZE, cornerRadius, cornerRadius);
+
+			int xOffset = (w - (ARROW_SIZE + ARROW_SIZE)) / 2;
+			int yOffset = h - ARROW_SIZE;
+			arrowPath = FlatUIUtils.createPath(x + xOffset, y + yOffset, x + xOffset + ARROW_SIZE, y + yOffset + ARROW_SIZE, x + xOffset + ARROW_SIZE + ARROW_SIZE, y + yOffset);
+
 		} else {
+
 			balloonRect = new RoundRectangle2D.Float(x + ARROW_SIZE, y, w - ARROW_SIZE, h, cornerRadius, cornerRadius);
+
+			int yOffset = (h - (ARROW_SIZE + ARROW_SIZE)) / 2;
 			arrowPath = FlatUIUtils.createPath(x + ARROW_SIZE, y + yOffset, x, y + yOffset + ARROW_SIZE, x + ARROW_SIZE, y + yOffset + ARROW_SIZE + ARROW_SIZE);
+
 		}
 
 		Area area = new Area(balloonRect);
