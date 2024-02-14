@@ -22,13 +22,9 @@
  */
 package org.glasspath.common.swing;
 
-import java.util.prefs.Preferences;
-
 import org.glasspath.common.swing.undo.UndoManager;
 
 public interface ApplicationContext extends FrameContext {
-
-	public Preferences getPreferences();
 
 	public UndoManager getUndoManager();
 

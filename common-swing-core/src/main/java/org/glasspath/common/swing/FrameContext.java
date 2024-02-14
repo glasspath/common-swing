@@ -22,11 +22,15 @@
  */
 package org.glasspath.common.swing;
 
+import java.util.prefs.Preferences;
+
 import javax.swing.JFrame;
 
 public interface FrameContext {
 
 	public JFrame getFrame();
+
+	public Preferences getPreferences();
 
 	public boolean isContentChanged();
 
