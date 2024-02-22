@@ -46,9 +46,13 @@ public class Icons {
 	public static final ImageIcon null_16x16 = new ImageIcon(CLASS_LOADER.getResource("org/glasspath/common/icons/16x16/null_16x16.png"));
 
 	// SVG
-	public static final SvgIcon alert = new SvgIcon(getSvg("alert.svg"));
-	public static final SvgIcon alertMask = new OffsetSvgIcon(10, 0, 7, 7, getSvg("alert.svg"));
-	public static final SvgIcon alertLarge = new SvgIcon(22, 0, getSvg("alert.svg"));
+	public static final SvgIcon alertCircleBlue = new SvgIcon(getSvg("alert-circle.svg"));
+	public static final SvgIcon alertCircleOutline = new SvgIcon(getSvg("alert-circle-outline.svg"));
+	public static final SvgIcon alertCircleOutlineHidden = new SvgIcon(getSvg("alert-circle-outline.svg"));
+	public static final SvgIcon alertOrange = new SvgIcon(getSvg("alert.svg"));
+	public static final SvgIcon alertOrangeLarge = new SvgIcon(22, 0, getSvg("alert.svg"));
+	public static final SvgIcon alertOrangeMask = new OffsetSvgIcon(10, 0, 7, 7, getSvg("alert.svg"));
+	public static final SvgIcon alertRed = new SvgIcon(getSvg("alert.svg"));
 	public static final SvgIcon arrowUp = new SvgIcon(getSvg("arrow-up.svg"));
 	public static final SvgIcon arrowDown = new SvgIcon(getSvg("arrow-down.svg"));
 	public static final SvgIcon chevronDown = new SvgIcon(getSvg("chevron-down.svg"));
@@ -63,6 +67,9 @@ public class Icons {
 	public static final SvgIcon cogBlue = new SvgIcon(getSvg("cog.svg"));
 	public static final SvgIcon cogBlueMask = new OffsetSvgIcon(10, 0, 6, 6, getSvg("cog.svg"));
 	public static final SvgIcon cogOutline = new SvgIcon(getSvg("cog-outline.svg"));
+	public static final SvgIcon commentBlue = new SvgIcon(getSvg("comment.svg"));
+	public static final SvgIcon commentOutline = new SvgIcon(getSvg("comment-outline.svg"));
+	public static final SvgIcon commentOutlineHidden = new SvgIcon(getSvg("comment-outline.svg"));
 	public static final SvgIcon contentCopy = new SvgIcon(getSvg("content-copy.svg"));
 	public static final SvgIcon contentCopyXLarge = new SvgIcon(36, 0, getSvg("content-copy.svg"));
 	public static final SvgIcon contentSave = new SvgIcon(getSvg("content-save.svg"));
@@ -96,14 +103,19 @@ public class Icons {
 	public static final SvgIcon undo = new SvgIcon(getSvg("undo.svg"));
 
 	static {
-		alert.setColorFilter(SvgIcon.ORANGE);
-		alertMask.setColorFilter(SvgIcon.ORANGE);
-		alertLarge.setColorFilter(SvgIcon.ORANGE);
+		alertCircleBlue.setColorFilter(SvgIcon.BLUE);
+		alertCircleOutlineHidden.setColorFilter(SvgIcon.HIDDEN);
+		alertOrange.setColorFilter(SvgIcon.ORANGE);
+		alertOrangeLarge.setColorFilter(SvgIcon.ORANGE);
+		alertOrangeMask.setColorFilter(SvgIcon.ORANGE);
+		alertRed.setColorFilter(SvgIcon.RED);
 		chevronLeftBlue.setColorFilter(SvgIcon.BLUE);
 		chevronRightBlue.setColorFilter(SvgIcon.BLUE);
 		closeRed.setColorFilter(SvgIcon.RED);
 		cogBlue.setColorFilter(SvgIcon.BLUE);
 		cogBlueMask.setColorFilter(SvgIcon.BLUE);
+		commentBlue.setColorFilter(SvgIcon.BLUE);
+		commentOutlineHidden.setColorFilter(SvgIcon.HIDDEN);
 		fileMultipleOutline.setColorFilter(SvgIcon.WHITE);
 		folderBlue.setColorFilter(SvgIcon.BLUE);
 		folderOutlineBlue.setColorFilter(SvgIcon.BLUE);
