@@ -24,6 +24,7 @@ package org.glasspath.common.swing.popup;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -48,9 +49,10 @@ import com.formdev.flatlaf.ui.FlatUIUtils;
 
 public class Balloon {
 
-	public static final int LEFT = 0;
-	public static final int RIGHT = 1;
+	public static final int TOP = 0;
+	public static final int LEFT = 1;
 	public static final int BOTTOM = 2;
+	public static final int RIGHT = 3;
 
 	public static final int SHADOW_PADDING = 6;
 	public static final int SHADOW_PADDING_TOP = 3;
@@ -127,15 +129,17 @@ public class Balloon {
 
 	}
 
-	public void paintBalloon(JComponent c, Graphics2D g2d, int x, int y, int w, int h, boolean right) {
+	public void paintBalloon(Component c, Graphics2D g2d, int x, int y, int w, int h, boolean right) {
 		paintBalloon(c, g2d, x, y, w, h, right ? RIGHT : LEFT);
 	}
 
-	public void paintBalloon(JComponent c, Graphics2D g2d, int x, int y, int w, int h, int orientation) {
+	public void paintBalloon(Component c, Graphics2D g2d, int x, int y, int w, int h, int orientation) {
 
 		if (shadow != null) {
 			if (orientation == RIGHT) {
 				shadow.paintBorder(c, g2d, x - SHADOW_PADDING, y - SHADOW_PADDING_TOP, w + SHADOW_PADDING + SHADOW_PADDING - ARROW_SIZE, h + SHADOW_PADDING_TOP + SHADOW_PADDING);
+			} else if (orientation == TOP) {
+				shadow.paintBorder(c, g2d, x - SHADOW_PADDING, y + ARROW_SIZE - SHADOW_PADDING_TOP, w + SHADOW_PADDING + SHADOW_PADDING - ARROW_SIZE, h + SHADOW_PADDING_TOP + SHADOW_PADDING - ARROW_SIZE);
 			} else if (orientation == BOTTOM) {
 				shadow.paintBorder(c, g2d, x - SHADOW_PADDING, y - SHADOW_PADDING_TOP, w + SHADOW_PADDING + SHADOW_PADDING - ARROW_SIZE, h + SHADOW_PADDING_TOP + SHADOW_PADDING - ARROW_SIZE);
 			} else {
@@ -166,6 +170,13 @@ public class Balloon {
 			int xOffset = w - ARROW_SIZE;
 			int yOffset = (h - (ARROW_SIZE + ARROW_SIZE)) / 2;
 			arrowPath = FlatUIUtils.createPath(x + xOffset, y + yOffset, x + xOffset + ARROW_SIZE, y + yOffset + ARROW_SIZE, x + xOffset, y + yOffset + ARROW_SIZE + ARROW_SIZE);
+
+		} else if (orientation == TOP) {
+
+			balloonRect = new RoundRectangle2D.Float(x, y + ARROW_SIZE, w, h - ARROW_SIZE, cornerRadius, cornerRadius);
+
+			int xOffset = (w - (ARROW_SIZE + ARROW_SIZE)) / 2;
+			arrowPath = FlatUIUtils.createPath(x + xOffset, y + ARROW_SIZE, x + xOffset + ARROW_SIZE, y, x + xOffset + ARROW_SIZE + ARROW_SIZE, y + ARROW_SIZE);
 
 		} else if (orientation == BOTTOM) {
 
