@@ -25,6 +25,7 @@ package org.glasspath.common.swing.date;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -39,6 +40,7 @@ import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
@@ -181,6 +183,18 @@ public class DatePicker extends JXDatePicker {
 		getMonthView().clearFlaggedDates();
 	}
 
+	public void setMarkedDates(Map<Date, Color> markedDates) {
+		if (getMonthView() instanceof MonthView) {
+			((MonthView) getMonthView()).setMarkedDates(markedDates);
+		}
+	}
+
+	public void clearMarkedDates() {
+		if (getMonthView() instanceof MonthView) {
+			((MonthView) getMonthView()).setMarkedDates(null);
+		}
+	}
+
 	public boolean isPopupVisible() {
 		if (getUI() instanceof BasicDatePickerUI) {
 			return ((BasicDatePickerUI) getUI()).isPopupVisible();
@@ -243,31 +257,7 @@ public class DatePicker extends JXDatePicker {
 
 	public static JXMonthView createMonthView() {
 
-		JXMonthView monthView = new JXMonthView() {
-
-			@Override
-			public void updateUI() {
-				setUI(new MonthViewUI());
-				invalidate();
-			}
-
-			@Override
-			public String getDayOfTheWeek(int dayOfWeek) {
-
-				String s = super.getDayOfTheWeek(dayOfWeek);
-				if (s != null) {
-					if (s.length() > 1) {
-						s = s.substring(0, 1).toUpperCase() + s.substring(1, 2).toLowerCase();
-					} else if (s.length() > 0) {
-						s = s.substring(0, 1).toUpperCase();
-					}
-				}
-
-				return s;
-
-			}
-		};
-
+		MonthView monthView = new MonthView();
 		configureMonthView(monthView);
 
 		return monthView;
@@ -306,7 +296,47 @@ public class DatePicker extends JXDatePicker {
 
 	}
 
-	protected static class MonthViewUI extends FlatMonthViewUI {
+	public static class MonthView extends JXMonthView {
+
+		private Map<Date, Color> markedDates = null;
+
+		public MonthView() {
+
+		}
+
+		public Map<Date, Color> getMarkedDates() {
+			return markedDates;
+		}
+
+		public void setMarkedDates(Map<Date, Color> markedDates) {
+			this.markedDates = markedDates;
+		}
+
+		@Override
+		public void updateUI() {
+			setUI(new MonthViewUI());
+			invalidate();
+		}
+
+		@Override
+		public String getDayOfTheWeek(int dayOfWeek) {
+
+			String s = super.getDayOfTheWeek(dayOfWeek);
+			if (s != null) {
+				if (s.length() > 1) {
+					s = s.substring(0, 1).toUpperCase() + s.substring(1, 2).toLowerCase();
+				} else if (s.length() > 0) {
+					s = s.substring(0, 1).toUpperCase();
+				}
+			}
+
+			return s;
+
+		}
+
+	}
+
+	public static class MonthViewUI extends FlatMonthViewUI {
 
 		@Override
 		protected CalendarRenderingHandler createRenderingHandler() {
@@ -356,11 +386,48 @@ public class DatePicker extends JXDatePicker {
 
 					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
 					if (comp instanceof JLabel) {
+
 						dayLabel.setText(((JLabel) comp).getText());
 						dayLabel.setFont(((JLabel) comp).getFont());
+
 					}
 
 					return dayLabel;
+
+				} else if (dayState == CalendarState.IN_MONTH) {
+
+					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
+					if (comp instanceof JLabel) {
+
+						if (monthView instanceof MonthView) {
+
+							Map<Date, Color> markedDates = ((MonthView) monthView).getMarkedDates();
+							if (markedDates != null) {
+
+								Color color = markedDates.get(calendar.getTime());
+								if (color != null) {
+
+									comp.setFont(comp.getFont().deriveFont(Font.BOLD));
+									comp.setForeground(color);
+
+								}
+
+							}
+
+						}
+
+					}
+
+					return comp;
+
+				} else if (dayState == CalendarState.LEADING || dayState == CalendarState.TRAILING) {
+
+					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
+					if (comp instanceof JLabel) {
+						comp.setForeground(Theme.isDark() ? ColorUtils.GRAY_60 : ColorUtils.GRAY_235);
+					}
+
+					return comp;
 
 				} else {
 					return handler.prepareRenderingComponent(monthView, calendar, dayState);
