@@ -24,14 +24,14 @@ package org.glasspath.common.swing.table;
 
 import org.glasspath.common.date.DateUtils;
 import org.glasspath.common.format.FormatUtils;
-import org.glasspath.common.swing.date.DatePicker;
+import org.glasspath.common.swing.date.DatePicker.MonthView;
 import org.jdesktop.swingx.table.DatePickerCellEditor;
 
 public class DateCellEditor extends DatePickerCellEditor {
 
 	public DateCellEditor() {
 
-		datePicker.setMonthView(DatePicker.createMonthView());
+		datePicker.setMonthView(new MonthView());
 		datePicker.setTimeZone(DateUtils.DEFAULT_TIME_ZONE);
 		setFormats(FormatUtils.DATE_FORMAT_DAY_MONTH_YEAR);
 		setClickCountToStart(2);

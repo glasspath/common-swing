@@ -35,6 +35,7 @@ import javax.swing.event.DocumentListener;
 
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.date.DatePicker;
+import org.glasspath.common.swing.date.DatePicker.MonthView;
 import org.glasspath.common.swing.theme.Theme;
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -56,7 +57,7 @@ public class RemoteCellDatePicker extends JXDatePicker {
 			setBackground(ColorUtils.DARK_43);
 		}
 
-		setMonthView(DatePicker.createMonthView());
+		setMonthView(new MonthView());
 
 		getEditor().getDocument().addDocumentListener(new DocumentListener() {
 

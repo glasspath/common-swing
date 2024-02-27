@@ -76,7 +76,7 @@ public class DatePicker extends JXDatePicker {
 			setBackground(ColorUtils.DARK_43);
 		}
 
-		setMonthView(createMonthView());
+		setMonthView(new MonthView());
 
 		addActionListener(new ActionListener() {
 
@@ -255,27 +255,6 @@ public class DatePicker extends JXDatePicker {
 
 	}
 
-	public static JXMonthView createMonthView() {
-
-		MonthView monthView = new MonthView();
-		configureMonthView(monthView);
-
-		return monthView;
-
-	}
-
-	public static void configureMonthView(JXMonthView monthView) {
-
-		monthView.setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
-		monthView.setSelectionMode(DateSelectionModel.SelectionMode.SINGLE_SELECTION);
-		monthView.setShowingLeadingDays(true);
-		monthView.setShowingTrailingDays(true);
-		monthView.setTodayBackground(new Color(84, 136, 217, 150));
-		monthView.setMonthStringBackground(new Color(150, 150, 150, 20));
-		monthView.setTraversable(true);
-
-	}
-
 	public static void configureLinkPanel(JXDatePicker datePicker) {
 
 		// TODO: For some reason setting the time-zone causes issues with the link-panel background
@@ -298,10 +277,36 @@ public class DatePicker extends JXDatePicker {
 
 	public static class MonthView extends JXMonthView {
 
+		private Color leadingDaysForeground = null;
+		private Color trailingDaysForeground = null;
 		private Map<Date, Color> markedDates = null;
 
 		public MonthView() {
 
+			setBorder(BorderFactory.createEmptyBorder(8, 10, 10, 10));
+			setSelectionMode(DateSelectionModel.SelectionMode.SINGLE_SELECTION);
+			setShowingLeadingDays(true);
+			setShowingTrailingDays(true);
+			setTodayBackground(new Color(84, 136, 217, 150));
+			setMonthStringBackground(new Color(150, 150, 150, 20));
+			setTraversable(true);
+
+		}
+
+		public Color getLeadingDaysForeground() {
+			return leadingDaysForeground;
+		}
+
+		public void setLeadingDaysForeground(Color leadingDaysForeground) {
+			this.leadingDaysForeground = leadingDaysForeground;
+		}
+
+		public Color getTrailingDaysForeground() {
+			return trailingDaysForeground;
+		}
+
+		public void setTrailingDaysForeground(Color trailingDaysForeground) {
+			this.trailingDaysForeground = trailingDaysForeground;
 		}
 
 		public Map<Date, Color> getMarkedDates() {
@@ -381,57 +386,63 @@ public class DatePicker extends JXDatePicker {
 			}
 
 			@Override
-			public JComponent prepareRenderingComponent(JXMonthView monthView, Calendar calendar, CalendarState dayState) {
-				if (dayState == CalendarState.DAY_OF_WEEK) {
+			public JComponent prepareRenderingComponent(JXMonthView jxMonthView, Calendar calendar, CalendarState dayState) {
 
-					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
-					if (comp instanceof JLabel) {
+				if (jxMonthView instanceof MonthView) {
+					
+					MonthView monthView = (MonthView) jxMonthView;
+					JComponent component = handler.prepareRenderingComponent(monthView, calendar, dayState);
 
-						dayLabel.setText(((JLabel) comp).getText());
-						dayLabel.setFont(((JLabel) comp).getFont());
+					if (dayState == CalendarState.DAY_OF_WEEK) {
 
-					}
+						if (component instanceof JLabel) {
+							dayLabel.setText(((JLabel) component).getText());
+							dayLabel.setFont(((JLabel) component).getFont());
+						}
 
-					return dayLabel;
+						return dayLabel;
 
-				} else if (dayState == CalendarState.IN_MONTH) {
+					} else if (dayState == CalendarState.IN_MONTH) {
 
-					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
-					if (comp instanceof JLabel) {
+						Map<Date, Color> markedDates = ((MonthView) monthView).getMarkedDates();
+						if (markedDates != null) {
 
-						if (monthView instanceof MonthView) {
+							Color color = markedDates.get(calendar.getTime());
+							if (color != null) {
 
-							Map<Date, Color> markedDates = ((MonthView) monthView).getMarkedDates();
-							if (markedDates != null) {
-
-								Color color = markedDates.get(calendar.getTime());
-								if (color != null) {
-
-									comp.setFont(comp.getFont().deriveFont(Font.BOLD));
-									comp.setForeground(color);
-
-								}
+								component.setFont(component.getFont().deriveFont(Font.BOLD));
+								component.setForeground(color);
 
 							}
 
 						}
 
+						return component;
+
+					} else if (dayState == CalendarState.LEADING) {
+
+						if (monthView.getLeadingDaysForeground() != null) {
+							component.setForeground(monthView.getLeadingDaysForeground());
+						}
+
+						return component;
+
+					} else if (dayState == CalendarState.TRAILING) {
+
+						if (monthView.getTrailingDaysForeground() != null) {
+							component.setForeground(monthView.getTrailingDaysForeground());
+						}
+
+						return component;
+
+					} else {
+						return component;
 					}
-
-					return comp;
-
-				} else if (dayState == CalendarState.LEADING || dayState == CalendarState.TRAILING) {
-
-					JComponent comp = handler.prepareRenderingComponent(monthView, calendar, dayState);
-					if (comp instanceof JLabel) {
-						comp.setForeground(Theme.isDark() ? ColorUtils.GRAY_60 : ColorUtils.GRAY_235);
-					}
-
-					return comp;
 
 				} else {
-					return handler.prepareRenderingComponent(monthView, calendar, dayState);
+					return handler.prepareRenderingComponent(jxMonthView, calendar, dayState);
 				}
+
 			}
 
 		}
