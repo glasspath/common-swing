@@ -88,6 +88,8 @@ public class Icons {
 	public static final SvgIcon loupe = new SvgIcon(getSvg("loupe.svg"));
 	public static final SvgIcon magnify = new SvgIcon(getSvg("magnify.svg"));
 	public static final SvgIcon menu = new SvgIcon(getSvg("menu.svg"));
+	public static final SvgIcon menuBottom = new SvgIcon(getSvg("menu-bottom.svg"));
+	public static final SvgIcon menuMiddle = new SvgIcon(getSvg("menu-middle.svg"));
 	public static final SvgIcon minusBoxMultipleOutline = new SvgIcon(16, 1, getSvg("minus-box-multiple-outline.svg"));
 	public static final SvgIcon playOutline = new SvgIcon(getSvg("play-outline.svg"));
 	public static final SvgIcon playOutlineGreen = new SvgIcon(getSvg("play-outline.svg"));
