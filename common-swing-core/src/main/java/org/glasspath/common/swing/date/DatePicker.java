@@ -40,7 +40,6 @@ import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
@@ -183,7 +182,7 @@ public class DatePicker extends JXDatePicker {
 		getMonthView().clearFlaggedDates();
 	}
 
-	public void setMarkedDates(Map<Date, Color> markedDates) {
+	public void setMarkedDates(DateMap markedDates) {
 		if (getMonthView() instanceof MonthView) {
 			((MonthView) getMonthView()).setMarkedDates(markedDates);
 		}
@@ -192,6 +191,12 @@ public class DatePicker extends JXDatePicker {
 	public void clearMarkedDates() {
 		if (getMonthView() instanceof MonthView) {
 			((MonthView) getMonthView()).setMarkedDates(null);
+		}
+	}
+
+	public void setMarkedDateRenderer(MarkedDateRenderer markedDateRenderer) {
+		if (getMonthView() instanceof MonthView) {
+			((MonthView) getMonthView()).setMarkedDateRenderer(markedDateRenderer);
 		}
 	}
 
@@ -279,7 +284,17 @@ public class DatePicker extends JXDatePicker {
 
 		private Color leadingDaysForeground = null;
 		private Color trailingDaysForeground = null;
-		private Map<Date, Color> markedDates = null;
+		private DateMap markedDates = null;
+		private MarkedDateRenderer markedDateRenderer = new MarkedDateRenderer() {
+
+			@Override
+			public void render(JComponent component, Object value) {
+				if (value instanceof Color) {
+					component.setFont(component.getFont().deriveFont(Font.BOLD));
+					component.setForeground((Color) value);
+				}
+			}
+		};
 
 		public MonthView() {
 
@@ -290,6 +305,7 @@ public class DatePicker extends JXDatePicker {
 			setTodayBackground(new Color(84, 136, 217, 150));
 			setMonthStringBackground(new Color(150, 150, 150, 20));
 			setTraversable(true);
+			setFirstDayOfWeek(Calendar.MONDAY);
 
 		}
 
@@ -309,12 +325,20 @@ public class DatePicker extends JXDatePicker {
 			this.trailingDaysForeground = trailingDaysForeground;
 		}
 
-		public Map<Date, Color> getMarkedDates() {
+		public DateMap getMarkedDates() {
 			return markedDates;
 		}
 
-		public void setMarkedDates(Map<Date, Color> markedDates) {
+		public void setMarkedDates(DateMap markedDates) {
 			this.markedDates = markedDates;
+		}
+
+		public MarkedDateRenderer getMarkedDateRenderer() {
+			return markedDateRenderer;
+		}
+
+		public void setMarkedDateRenderer(MarkedDateRenderer markedDateRenderer) {
+			this.markedDateRenderer = markedDateRenderer;
 		}
 
 		@Override
@@ -389,7 +413,7 @@ public class DatePicker extends JXDatePicker {
 			public JComponent prepareRenderingComponent(JXMonthView jxMonthView, Calendar calendar, CalendarState dayState) {
 
 				if (jxMonthView instanceof MonthView) {
-					
+
 					MonthView monthView = (MonthView) jxMonthView;
 					JComponent component = handler.prepareRenderingComponent(monthView, calendar, dayState);
 
@@ -404,15 +428,13 @@ public class DatePicker extends JXDatePicker {
 
 					} else if (dayState == CalendarState.IN_MONTH) {
 
-						Map<Date, Color> markedDates = ((MonthView) monthView).getMarkedDates();
-						if (markedDates != null) {
+						DateMap markedDates = ((MonthView) monthView).getMarkedDates();
+						MarkedDateRenderer renderer = ((MonthView) monthView).getMarkedDateRenderer();
+						if (markedDates != null && renderer != null) {
 
-							Color color = markedDates.get(calendar.getTime());
-							if (color != null) {
-
-								component.setFont(component.getFont().deriveFont(Font.BOLD));
-								component.setForeground(color);
-
+							Object value = markedDates.get(calendar.getTime());
+							if (value != null) {
+								renderer.render(component, value);
 							}
 
 						}
@@ -446,6 +468,18 @@ public class DatePicker extends JXDatePicker {
 			}
 
 		}
+
+	}
+
+	public static interface DateMap {
+
+		public Object get(Date date);
+
+	}
+
+	public static interface MarkedDateRenderer {
+
+		public void render(JComponent component, Object value);
 
 	}
 
