@@ -426,7 +426,7 @@ public class DatePicker extends JXDatePicker {
 
 						return dayLabel;
 
-					} else if (dayState == CalendarState.IN_MONTH) {
+					} else if (dayState == CalendarState.TODAY || dayState == CalendarState.IN_MONTH) {
 
 						DateMap markedDates = ((MonthView) monthView).getMarkedDates();
 						MarkedDateRenderer renderer = ((MonthView) monthView).getMarkedDateRenderer();
