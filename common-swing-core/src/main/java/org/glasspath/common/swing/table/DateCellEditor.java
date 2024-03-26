@@ -32,7 +32,7 @@ public class DateCellEditor extends DatePickerCellEditor {
 	public DateCellEditor() {
 
 		datePicker.setMonthView(new MonthView());
-		datePicker.setTimeZone(DateUtils.DEFAULT_TIME_ZONE);
+		datePicker.setTimeZone(DateUtils.GMT_TIME_ZONE);
 		setFormats(FormatUtils.DATE_FORMAT_DAY_MONTH_YEAR);
 		setClickCountToStart(2);
 
