@@ -23,17 +23,26 @@
 package org.glasspath.common.swing;
 
 import java.awt.Desktop;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import org.glasspath.common.Common;
+import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.resources.CommonResources;
 
@@ -102,6 +111,56 @@ public class DesktopUtils {
 
 	}
 
+	public static void select(String path, JFrame frame) {
+		if (path != null && path.length() > 0) {
+			select(new File(path), frame);
+		}
+	}
+
+	public static void select(File file, JFrame frame) {
+		select(file, frame, "File could not be opened", "The file could not be opened..");
+	}
+
+	public static void select(File file, JFrame frame, String failedTitle, String failedMessage) {
+
+		if (OsUtils.PLATFORM_WINDOWS) {
+
+			if (Desktop.isDesktopSupported() && file != null) {
+
+				// TODO: Should we really do this in a new thread?
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+
+						try {
+							Runtime.getRuntime().exec("explorer.exe /select," + file.getAbsolutePath());
+						} catch (Exception e) {
+
+							Common.LOGGER.error("Exception while launching file explorer for file: " + file.getAbsolutePath(), e); //$NON-NLS-1$
+
+							SwingUtilities.invokeLater(new Runnable() {
+
+								@Override
+								public void run() {
+									DialogUtils.showWarningMessage(frame, failedTitle, failedMessage);
+								}
+							});
+
+						}
+
+					}
+				}).start();
+
+			}
+
+		} else if (file != null) {
+			// TODO!
+			open(file.getParentFile(), frame, failedTitle, failedMessage);
+		}
+
+	}
+
 	public static void browse(String url) {
 		if (Desktop.isDesktopSupported() && url != null) {
 			try {
@@ -163,11 +222,37 @@ public class DesktopUtils {
 
 	}
 
-	/*
-	public static String getMyDocumentsPath() {
-		// TODO: This is really slow, for now this method is avoided
-		return new JFileChooser().getFileSystemView().getDefaultDirectory().getAbsolutePath();
+	public static void copyFileToClipboard(File file) {
+
+		List<File> files = new ArrayList<>();
+		files.add(file);
+
+		Transferable transferable = new Transferable() {
+
+			@Override
+			public DataFlavor[] getTransferDataFlavors() {
+				return new DataFlavor[] { DataFlavor.javaFileListFlavor };
+			}
+
+			@Override
+			public boolean isDataFlavorSupported(DataFlavor flavor) {
+				return DataFlavor.javaFileListFlavor.equals(flavor);
+			}
+
+			@Override
+			public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+				return files;
+			}
+		};
+
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferable, new ClipboardOwner() {
+
+			@Override
+			public void lostOwnership(Clipboard clipboard, Transferable transferable) {
+				// System.out.println("DesktopUtils lost ownership of system clipboard");
+			}
+		});
+
 	}
-	*/
 
 }
