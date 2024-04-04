@@ -34,6 +34,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import org.glasspath.common.swing.color.ColorUtils;
+import org.glasspath.common.swing.theme.Theme;
+
 import com.formdev.flatlaf.ui.FlatUIUtils;
 
 public class Console extends JPanel {
@@ -44,13 +47,15 @@ public class Console extends JPanel {
 	private int lineCount = 0;
 	private int maxNumberOfLines = 100;
 
-
 	public Console() {
 
 		setLayout(new BorderLayout());
 
 		consoleTextArea = new JTextArea();
 		consoleTextArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		if (Theme.isDark()) {
+			consoleTextArea.setBackground(ColorUtils.DARK_31);
+		}
 
 		Font font = UIManager.getFont("monospaced.font"); //$NON-NLS-1$
 		if (font != null) {
