@@ -59,8 +59,18 @@ public class FrameUtils {
 
 	private static boolean TEST_LARGE_FONT = false;
 
+	private static int defaultExtendedState = 0;
+
 	private FrameUtils() {
 
+	}
+
+	public static int getDefaultExtendedState() {
+		return defaultExtendedState;
+	}
+
+	public static void setDefaultExtendedState(int defaultExtendedState) {
+		FrameUtils.defaultExtendedState = defaultExtendedState;
 	}
 
 	public static void setSystemLookAndFeelProperties(String appTitle) {
@@ -197,8 +207,34 @@ public class FrameUtils {
 
 	}
 
+	public static int getMinimalScreenHeight() {
+
+		int height = Integer.MAX_VALUE;
+
+		GraphicsDevice[] graphicsDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		for (GraphicsDevice graphicsDevice : graphicsDevices) {
+
+			if (graphicsDevice.getDefaultConfiguration() != null) {
+
+				Rectangle bounds = graphicsDevice.getDefaultConfiguration().getBounds();
+				if (bounds != null && bounds.height < height) {
+					height = bounds.height;
+				}
+
+			}
+
+		}
+
+		return height < Integer.MAX_VALUE ? height : 0;
+
+	}
+
 	public static void loadFrameDimensions(JFrame frame, Preferences preferences) {
-		loadFrameDimensions(frame, preferences, 15, 15, 1250, 787, 0);
+		loadFrameDimensions(frame, preferences, defaultExtendedState);
+	}
+
+	public static void loadFrameDimensions(JFrame frame, Preferences preferences, int extendedState) {
+		loadFrameDimensions(frame, preferences, 15, 15, 1250, 787, extendedState);
 	}
 
 	public static void loadFrameDimensions(JFrame frame, Preferences preferences, int x, int y, int width, int height, int extendedState) {
