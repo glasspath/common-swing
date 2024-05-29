@@ -34,6 +34,7 @@ public class ColorUtils {
 	public static final Color DARK_BLUE = new Color(31, 96, 196);
 	public static final Color PURPLE = new Color(184, 119, 217);
 	public static final Color GREEN = new Color(151, 191, 105);
+	public static final Color DARK_GREEN = new Color(55, 135, 45);
 	public static final Color RED = new Color(242, 73, 92);
 	public static final Color ORANGE = new Color(237, 162, 0);
 	public static final Color YELLOW = new Color(250, 222, 42);
