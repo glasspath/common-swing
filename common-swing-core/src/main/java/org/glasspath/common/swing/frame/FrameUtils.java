@@ -146,7 +146,7 @@ public class FrameUtils {
 		// Linux and MacOS seem to use heavy-weight by default, so lets enable it for windows too
 		UIManager.put("Popup.forceHeavyWeight", true);
 
-		Common.LOGGER.info("defaultFont: " + UIManager.getFont("defaultFont"));
+		// Common.LOGGER.info("defaultFont: " + UIManager.getFont("defaultFont"));
 
 	}
 
