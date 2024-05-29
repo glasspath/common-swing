@@ -91,6 +91,7 @@ public class Icons {
 	public static final SvgIcon menuBottom = new SvgIcon(getSvg("menu-bottom.svg"));
 	public static final SvgIcon menuMiddle = new SvgIcon(getSvg("menu-middle.svg"));
 	public static final SvgIcon minusBoxMultipleOutline = new SvgIcon(16, 1, getSvg("minus-box-multiple-outline.svg"));
+	public static final SvgIcon modifiedMask = new OffsetSvgIcon(10, 0, 7, 0, getSvg("pencil.svg"));
 	public static final SvgIcon playOutline = new SvgIcon(getSvg("play-outline.svg"));
 	public static final SvgIcon playOutlineGreen = new SvgIcon(getSvg("play-outline.svg"));
 	public static final SvgIcon plus = new SvgIcon(getSvg("plus.svg"));
@@ -122,6 +123,7 @@ public class Icons {
 		folderBlue.setColorFilter(SvgIcon.BLUE);
 		folderOutlineBlue.setColorFilter(SvgIcon.BLUE);
 		linkGreen.setColorFilter(SvgIcon.GREEN);
+		modifiedMask.setColorFilter(SvgIcon.CONTRAST);
 		playOutlineGreen.setColorFilter(SvgIcon.GREEN);
 		plus.setColorFilter(SvgIcon.GREEN);
 		redo.setColorFilter(SvgIcon.BLUE);
