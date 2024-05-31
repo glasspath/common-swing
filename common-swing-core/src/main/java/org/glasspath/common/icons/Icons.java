@@ -86,6 +86,7 @@ public class Icons {
 	public static final SvgIcon link = new SvgIcon(getSvg("link.svg"));
 	public static final SvgIcon linkGreen = new SvgIcon(getSvg("link.svg"));
 	public static final SvgIcon linkOff = new SvgIcon(getSvg("link-off.svg"));
+	public static final SvgIcon linkOffRed = new SvgIcon(getSvg("link-off.svg"));
 	public static final SvgIcon loupe = new SvgIcon(getSvg("loupe.svg"));
 	public static final SvgIcon magnify = new SvgIcon(getSvg("magnify.svg"));
 	public static final SvgIcon menu = new SvgIcon(getSvg("menu.svg"));
@@ -124,6 +125,7 @@ public class Icons {
 		folderBlue.setColorFilter(SvgIcon.BLUE);
 		folderOutlineBlue.setColorFilter(SvgIcon.BLUE);
 		linkGreen.setColorFilter(SvgIcon.GREEN);
+		linkOffRed.setColorFilter(SvgIcon.RED);
 		modifiedMask.setColorFilter(SvgIcon.CONTRAST);
 		playOutlineGreen.setColorFilter(SvgIcon.GREEN);
 		plus.setColorFilter(SvgIcon.GREEN);
