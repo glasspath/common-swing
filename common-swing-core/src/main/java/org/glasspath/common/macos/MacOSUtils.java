@@ -83,18 +83,18 @@ public class MacOSUtils {
 			
 			String assemblyResolvePath = System.getProperty(GlasspathSystemProperties.NATIVE_LIBRARY_PATH);
 			if (assemblyResolvePath != null) {
-				libFile = new File(assemblyResolvePath, "libmacos-utils.dylib");
+				libFile = new File(assemblyResolvePath, "libmacos-utils.dylib"); //$NON-NLS-1$
 			}
 			
 			if (libFile == null || !libFile.exists()) {
-				libFile = new File("libmacos-utils.dylib");
+				libFile = new File("libmacos-utils.dylib"); //$NON-NLS-1$
 			}
 			
 			if (libFile != null && libFile.exists()) {
-				Common.LOGGER.info("Loading libmacos-utils.dylib from: " + libFile.getAbsolutePath());
+				Common.LOGGER.info("Loading libmacos-utils.dylib from: " + libFile.getAbsolutePath()); //$NON-NLS-1$
 				LIB_MACOS_UTILS = Native.load(libFile.getAbsolutePath(), LibMacOSUtils.class);
 			} else {
-				Common.LOGGER.error("Cannot load libmacos-utils.dylib from: " + libFile);
+				Common.LOGGER.error("Cannot load libmacos-utils.dylib from: " + libFile); //$NON-NLS-1$
 			}
 			
 		}
@@ -105,11 +105,11 @@ public class MacOSUtils {
 
 		JRootPane rootPane = window.getRootPane();
 
-		rootPane.putClientProperty("apple.awt.fullWindowContent", true);
-		rootPane.putClientProperty("apple.awt.transparentTitleBar", true);
+		rootPane.putClientProperty("apple.awt.fullWindowContent", true); //$NON-NLS-1$
+		rootPane.putClientProperty("apple.awt.transparentTitleBar", true); //$NON-NLS-1$
 
 		if (hideTitle) {
-			rootPane.putClientProperty("apple.awt.windowTitleVisible", false);
+			rootPane.putClientProperty("apple.awt.windowTitleVisible", false); //$NON-NLS-1$
 		}
 
 		// TODO: Add window listener and switch borders when going from/to full screen?
@@ -146,9 +146,9 @@ public class MacOSUtils {
 
 			if (FoundationLibrary.INSTANCE != null && LIB_MACOS_UTILS != null) {
 
-				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
-				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
-				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("enableWindowDecorations:titleBarHeight:backgroundColor:");
+				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils"); //$NON-NLS-1$
+				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:"); //$NON-NLS-1$
+				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("enableWindowDecorations:titleBarHeight:backgroundColor:"); //$NON-NLS-1$
 
 				if (FoundationLibrary.INSTANCE.objc_msgSend(classId, respondsToSelector, selector)) {
 					result = FoundationLibrary.INSTANCE.objc_msgSend(classId, selector, flags, titleBarHeight, backgroundColor != null ? backgroundColor.getRGB() : 0);
@@ -188,9 +188,9 @@ public class MacOSUtils {
 
 			if (FoundationLibrary.INSTANCE != null && LIB_MACOS_UTILS != null) {
 
-				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils");
-				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:");
-				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("requestWindowStyle:flags:titleBarHeight:backgroundColor:");
+				Pointer classId = FoundationLibrary.INSTANCE.objc_getClass("macos_utils"); //$NON-NLS-1$
+				Pointer respondsToSelector = FoundationLibrary.INSTANCE.sel_registerName("respondsToSelector:"); //$NON-NLS-1$
+				Pointer selector = FoundationLibrary.INSTANCE.sel_registerName("requestWindowStyle:flags:titleBarHeight:backgroundColor:"); //$NON-NLS-1$
 
 				if (FoundationLibrary.INSTANCE.objc_msgSend(classId, respondsToSelector, selector)) {
 
@@ -218,11 +218,11 @@ public class MacOSUtils {
 	private static synchronized long getWindowNumber(RootPaneContainer window) {
 
 		// On MacOS the "Window.documentFile" is stored in the representedURL field of the NSWindow
-		Object object = window.getRootPane().getClientProperty("Window.documentFile");
+		Object object = window.getRootPane().getClientProperty("Window.documentFile"); //$NON-NLS-1$
 		if (object instanceof File) {
 
 			String s = ((File) object).getAbsolutePath();
-			if (s.startsWith("/macos_utils/window/")) {
+			if (s.startsWith("/macos_utils/window/")) { //$NON-NLS-1$
 
 				try {
 					return Long.parseLong(s.substring(20));
@@ -236,7 +236,7 @@ public class MacOSUtils {
 
 			long windowNumber = ++lastWindowNumber;
 
-			window.getRootPane().putClientProperty("Window.documentFile", new File("/macos_utils/window/" + windowNumber));
+			window.getRootPane().putClientProperty("Window.documentFile", new File("/macos_utils/window/" + windowNumber)); //$NON-NLS-1$ //$NON-NLS-2$
 
 			return windowNumber;
 
@@ -253,7 +253,7 @@ public class MacOSUtils {
 
 	public interface FoundationLibrary extends Library {
 
-		FoundationLibrary INSTANCE = Native.load("Foundation", FoundationLibrary.class, Map.of(Library.OPTION_STRING_ENCODING, StandardCharsets.UTF_8.name()));
+		FoundationLibrary INSTANCE = Native.load("Foundation", FoundationLibrary.class, Map.of(Library.OPTION_STRING_ENCODING, StandardCharsets.UTF_8.name())); //$NON-NLS-1$
 
 		Pointer objc_getClass(String className);
 

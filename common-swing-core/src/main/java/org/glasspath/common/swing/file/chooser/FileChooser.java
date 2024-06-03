@@ -36,6 +36,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileView;
 
 import org.glasspath.common.Common;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class FileChooser extends JFileChooser {
 
@@ -84,7 +85,7 @@ public class FileChooser extends JFileChooser {
 	}
 
 	public static boolean showFileExistsDialog(Component parentComponent) {
-		return JOptionPane.showOptionDialog(parentComponent, "File already exists, replace file?", "Replace file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Yes", "No" }, "No") == JOptionPane.YES_OPTION;
+		return JOptionPane.showOptionDialog(parentComponent, "File already exists, replace file?", "Replace file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")) == JOptionPane.YES_OPTION; //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 
 	public static String browseForFile(String fileExtension, Icon fileIcon, boolean save, Frame frame, Preferences preferences, String preferencesKey) {
@@ -144,7 +145,7 @@ public class FileChooser extends JFileChooser {
 
 				@Override
 				public String getDescription() {
-					return "." + fileExtension + " files";
+					return "." + fileExtension + " files"; //$NON-NLS-1$
 				}
 			};
 
@@ -171,7 +172,7 @@ public class FileChooser extends JFileChooser {
 
 				@Override
 				public String getTypeDescription(File f) {
-					return "." + fileExtension + " files";
+					return "." + fileExtension + " files"; //$NON-NLS-1$
 				}
 
 				@Override

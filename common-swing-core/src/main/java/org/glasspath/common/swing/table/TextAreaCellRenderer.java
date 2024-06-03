@@ -42,15 +42,15 @@ public class TextAreaCellRenderer extends DefaultTableCellRenderer {
 
 			String s = (String) value;
 
-			int breakIndex = s.indexOf("\n");
+			int breakIndex = s.indexOf("\n"); //$NON-NLS-1$
 			if (breakIndex >= 0) {
-				s = s.substring(0, breakIndex) + "...";
+				s = s.substring(0, breakIndex) + "..."; //$NON-NLS-1$
 			}
 
 			label.setText(s);
 
 		} else {
-			label.setText("");
+			label.setText(""); //$NON-NLS-1$
 		}
 
 		return label;

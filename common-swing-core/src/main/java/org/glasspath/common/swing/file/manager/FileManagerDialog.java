@@ -65,6 +65,7 @@ import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 import org.glasspath.common.swing.dialog.DialogUtils;
 import org.glasspath.common.swing.file.FileNameDialog;
+import org.glasspath.common.swing.resources.CommonResources;
 import org.glasspath.common.swing.splitpane.InvisibleSplitPane;
 
 public abstract class FileManagerDialog extends DefaultDialog {
@@ -179,7 +180,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			}
 		});
 
-		copyButton = createToolBarButton("Copy", Icons.contentCopy);
+		copyButton = createToolBarButton(CommonResources.getString("Copy"), Icons.contentCopy); //$NON-NLS-1$
 		toolBarPanel.add(Box.createHorizontalStrut(3));
 		toolBarPanel.add(copyButton);
 		copyButton.addActionListener(new ActionListener() {
@@ -255,7 +256,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			}
 		});
 
-		deleteButton = createToolBarButton("Delete", Icons.closeRed);
+		deleteButton = createToolBarButton(CommonResources.getString("Delete"), Icons.closeRed); //$NON-NLS-1$
 		toolBarPanel.add(Box.createHorizontalStrut(3));
 		toolBarPanel.add(deleteButton);
 		deleteButton.addActionListener(new ActionListener() {
@@ -269,7 +270,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 					File selectedFile = getSelectedFile();
 					if (selectedFile != null) {
 
-						int chosenOption = JOptionPane.showOptionDialog(context.getFrame(), "Are you sure you want to delete the selected file?", "Delete file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { "Yes", "No" }, "No");
+						int chosenOption = JOptionPane.showOptionDialog(context.getFrame(), "Are you sure you want to delete the selected file?", "Delete file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						if (chosenOption == JOptionPane.YES_OPTION) {
 
 							boolean failed = false;
@@ -362,7 +363,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 		optionsPanel.add(optionsContentPanel, BorderLayout.CENTER);
 
 		getFooter().remove(getOkButton());
-		getCancelButton().setText("Close");
+		getCancelButton().setText(CommonResources.getString("Close")); //$NON-NLS-1$
 
 		updateToolBarButtons();
 

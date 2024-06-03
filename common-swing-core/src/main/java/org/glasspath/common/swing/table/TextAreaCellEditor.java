@@ -53,7 +53,7 @@ public class TextAreaCellEditor extends DefaultCellEditor {
 
 			@Override
 			public void setValue(Object value) {
-				textArea.setText((value != null) ? value.toString() : "");
+				textArea.setText((value != null) ? value.toString() : ""); //$NON-NLS-1$
 			}
 
 			@Override

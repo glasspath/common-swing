@@ -64,7 +64,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 		addItem(automaticEntry);
 
 		for (SystemOfUnits systemOfUnits : systemOfUnitsList) {
-			addItem(new Entry(systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol));
+			addItem(new Entry(systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol)); //$NON-NLS-1$
 		}
 
 		int index = getSystemOfUnitsIndex(provider.getPreferences().get(key, defaultValue));
@@ -110,7 +110,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 		if (systemOfUnits != null) {
 
 			if (showSystemOfUnitsDetails) {
-				automaticEntry.text = "Automatic (" + systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol + ")";
+				automaticEntry.text = "Automatic (" + systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol + ")"; //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
 				automaticEntry.text = "Automatic";
 			}

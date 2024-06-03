@@ -41,6 +41,7 @@ import javax.swing.WindowConstants;
 
 import org.glasspath.common.swing.DesktopUtils;
 import org.glasspath.common.swing.FrameContext;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class AboutDialog extends JDialog {
 
@@ -128,7 +129,7 @@ public class AboutDialog extends JDialog {
 
 			add(new JSeparator(), new GridBagConstraints(0, 0, 7, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-			JButton logFileButton = new JButton("Log");
+			JButton logFileButton = new JButton(CommonResources.getString("Log")); //$NON-NLS-1$
 			add(logFileButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			logFileButton.setEnabled(logFile != null && logFile.exists());
 			logFileButton.addActionListener(new ActionListener() {
@@ -141,7 +142,7 @@ public class AboutDialog extends JDialog {
 				}
 			});
 
-			JButton logBackupButton = new JButton("Backup of Log");
+			JButton logBackupButton = new JButton(CommonResources.getString("BackupOfLog")); //$NON-NLS-1$
 			add(logBackupButton, new GridBagConstraints(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			logBackupButton.setEnabled(logFileBackup != null && logFileBackup.exists());
 			logBackupButton.addActionListener(new ActionListener() {
@@ -154,7 +155,7 @@ public class AboutDialog extends JDialog {
 				}
 			});
 
-			JButton closeButton = new JButton("Close");
+			JButton closeButton = new JButton(CommonResources.getString("Close")); //$NON-NLS-1$
 			add(closeButton, new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			closeButton.addActionListener(new ActionListener() {
 

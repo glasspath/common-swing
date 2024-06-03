@@ -265,15 +265,15 @@ public class DatePicker extends JXDatePicker {
 		// TODO: For some reason setting the time-zone causes issues with the link-panel background
 		// the code below was copied from FlatDatePickerUI, for now we force the background..
 		JPanel linkPanel = datePicker.getLinkPanel();
-		if (linkPanel instanceof JXPanel && linkPanel.getClass().getName().equals("org.jdesktop.swingx.JXDatePicker$TodayPanel")) {
+		if (linkPanel instanceof JXPanel && linkPanel.getClass().getName().equals("org.jdesktop.swingx.JXDatePicker$TodayPanel")) { //$NON-NLS-1$
 
 			((JXPanel) linkPanel).setBackgroundPainter(null);
-			linkPanel.setBackground(UIManager.getColor("JXMonthView.background"));
+			linkPanel.setBackground(UIManager.getColor("JXMonthView.background")); //$NON-NLS-1$
 
 			if (linkPanel.getComponentCount() >= 1 && linkPanel.getComponent(0) instanceof JXHyperlink) {
 				JXHyperlink todayLink = (JXHyperlink) linkPanel.getComponent(0);
-				todayLink.setUnclickedColor(UIManager.getColor("Hyperlink.linkColor"));
-				todayLink.setClickedColor(UIManager.getColor("Hyperlink.visitedColor"));
+				todayLink.setUnclickedColor(UIManager.getColor("Hyperlink.linkColor")); //$NON-NLS-1$
+				todayLink.setClickedColor(UIManager.getColor("Hyperlink.visitedColor")); //$NON-NLS-1$
 			}
 
 		}

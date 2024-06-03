@@ -72,7 +72,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 		for (CurrencyCode currencyCode : currencyCodes) {
 			if (showSymbols) {
-				addItem(new Entry(currencyCode.code + ", " + currencyCode.symbol));
+				addItem(new Entry(currencyCode.code + ", " + currencyCode.symbol)); //$NON-NLS-1$
 			} else {
 				addItem(new Entry(currencyCode.code));
 			}
@@ -122,9 +122,9 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 			if (showCurrencyDetails) {
 				if (showSymbols) {
-					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ", " + automaticCurrencyCode.symbol + ")";
+					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ", " + automaticCurrencyCode.symbol + ")"; //$NON-NLS-2$ //$NON-NLS-3$
 				} else {
-					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ")";
+					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ")"; //$NON-NLS-2$
 				}
 			} else {
 				automaticEntry.text = "Automatic";
