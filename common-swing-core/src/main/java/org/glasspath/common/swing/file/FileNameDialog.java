@@ -42,6 +42,7 @@ import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.dialog.DefaultDialog;
 import org.glasspath.common.swing.dialog.DialogUtils;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class FileNameDialog extends DefaultDialog {
 
@@ -79,15 +80,15 @@ public class FileNameDialog extends DefaultDialog {
 		getContentPanel().setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
 
 		if (copy) {
-			setTitle("Copy file");
+			setTitle(CommonResources.getString("CopyFile")); //$NON-NLS-1$
 			setIconImage(Icons.contentCopy.getImage());
 			getHeader().setIcon(Icons.contentCopyXLarge);
-			getHeader().setTitle("Copy file");
+			getHeader().setTitle(CommonResources.getString("CopyFile")); //$NON-NLS-1$
 		} else {
-			setTitle("Rename file");
+			setTitle(CommonResources.getString("RenameFile")); //$NON-NLS-1$
 			setIconImage(Icons.renameBox.getImage());
 			getHeader().setIcon(Icons.renameBoxXLarge);
-			getHeader().setTitle("Rename file");
+			getHeader().setTitle(CommonResources.getString("RenameFile")); //$NON-NLS-1$
 		}
 
 		fileNameTextField = new JTextField();
@@ -249,9 +250,9 @@ public class FileNameDialog extends DefaultDialog {
 				// TODO: Renaming/copying multiple files can theoretically fail halfway, should we try to restore the original names?
 
 				if (copy) {
-					DialogUtils.showWarningMessage(context.getFrame(), "Copy failed", "The copy operation failed");
+					DialogUtils.showWarningMessage(context.getFrame(), CommonResources.getString("CopyFailed"), CommonResources.getString("TheCopyOperationFailed")); //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					DialogUtils.showWarningMessage(context.getFrame(), "Rename failed", "The rename operation failed");
+					DialogUtils.showWarningMessage(context.getFrame(), CommonResources.getString("RenameFailed"), CommonResources.getString("TheRenameOperationFailed")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 			}

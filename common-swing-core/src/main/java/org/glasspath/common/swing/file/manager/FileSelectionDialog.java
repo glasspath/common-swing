@@ -39,6 +39,7 @@ import javax.swing.event.ListSelectionEvent;
 import org.glasspath.common.io.file.FileList;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.dialog.DefaultDialog;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public abstract class FileSelectionDialog extends DefaultDialog {
 
@@ -57,9 +58,9 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 
 		this.fileList = fileList;
 
-		getHeader().setTitle(title != null ? title : "Select file");
+		getHeader().setTitle(title != null ? title : CommonResources.getString("SelectFile")); //$NON-NLS-1$
 		remove(getHeaderSeparator());
-		setTitle("Select file");
+		setTitle(CommonResources.getString("SelectFile")); //$NON-NLS-1$
 		setPreferredSize(DIALOG_SIZE_SQUARE);
 		setKeyListenerEnabled(false);
 
@@ -68,7 +69,7 @@ public abstract class FileSelectionDialog extends DefaultDialog {
 
 		if (defaultFileFilter != null && preferredFileFilter != null) {
 
-			showAllFilesCheckBox = new JCheckBox("Show all files");
+			showAllFilesCheckBox = new JCheckBox(CommonResources.getString("ShowAllFiles")); //$NON-NLS-1$
 			showAllFilesCheckBox.setBorder(BorderFactory.createEmptyBorder(0, 7, 2, 0));
 			getFooter().add(showAllFilesCheckBox, 0);
 			showAllFilesCheckBox.addActionListener(new ActionListener() {

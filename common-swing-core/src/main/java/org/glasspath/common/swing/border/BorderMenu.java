@@ -38,6 +38,7 @@ import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.color.ColorChooserDialog;
 import org.glasspath.common.swing.color.ColorChooserPanel;
 import org.glasspath.common.swing.color.ColorChooserPanel.ColorEvent;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class BorderMenu extends JMenu {
 
@@ -53,12 +54,12 @@ public class BorderMenu extends JMenu {
 	}
 
 	public BorderMenu(Action borderMenuTypeAction, Action borderMenuWidthAction, Action borderColorAction, boolean menuBarMenu) {
-		super("Border");
+		super(CommonResources.getString("Border")); //$NON-NLS-1$
 
 		this.borderMenuTypeAction = borderMenuTypeAction;
 		this.borderMenuWidthAction = borderMenuWidthAction;
 
-		JMenuItem topMenuItem = new JMenuItem("Top");
+		JMenuItem topMenuItem = new JMenuItem(CommonResources.getString("Top")); //$NON-NLS-1$
 		topMenuItem.setIcon(new BorderIcon(true, false, false, false, false, false));
 		add(topMenuItem);
 		topMenuItem.addActionListener(new ActionListener() {
@@ -69,7 +70,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem leftMenuItem = new JMenuItem("Left");
+		JMenuItem leftMenuItem = new JMenuItem(CommonResources.getString("Left")); //$NON-NLS-1$
 		leftMenuItem.setIcon(new BorderIcon(false, true, false, false, false, false));
 		add(leftMenuItem);
 		leftMenuItem.addActionListener(new ActionListener() {
@@ -80,7 +81,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem bottomMenuItem = new JMenuItem("Bottom");
+		JMenuItem bottomMenuItem = new JMenuItem(CommonResources.getString("Bottom")); //$NON-NLS-1$
 		bottomMenuItem.setIcon(new BorderIcon(false, false, true, false, false, false));
 		add(bottomMenuItem);
 		bottomMenuItem.addActionListener(new ActionListener() {
@@ -91,7 +92,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem rightMenuItem = new JMenuItem("Right");
+		JMenuItem rightMenuItem = new JMenuItem(CommonResources.getString("Right")); //$NON-NLS-1$
 		rightMenuItem.setIcon(new BorderIcon(false, false, false, true, false, false));
 		add(rightMenuItem);
 		rightMenuItem.addActionListener(new ActionListener() {
@@ -104,7 +105,7 @@ public class BorderMenu extends JMenu {
 
 		addSeparator();
 
-		JMenuItem verticalMenuItem = new JMenuItem("Vertical");
+		JMenuItem verticalMenuItem = new JMenuItem(CommonResources.getString("Vertical")); //$NON-NLS-1$
 		verticalMenuItem.setIcon(new BorderIcon(false, false, false, false, true, false));
 		add(verticalMenuItem);
 		verticalMenuItem.addActionListener(new ActionListener() {
@@ -115,7 +116,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem horizontalMenuItem = new JMenuItem("Horizontal");
+		JMenuItem horizontalMenuItem = new JMenuItem(CommonResources.getString("Horizontal")); //$NON-NLS-1$
 		horizontalMenuItem.setIcon(new BorderIcon(false, false, false, false, false, true));
 		add(horizontalMenuItem);
 		horizontalMenuItem.addActionListener(new ActionListener() {
@@ -128,7 +129,7 @@ public class BorderMenu extends JMenu {
 
 		addSeparator();
 
-		JMenuItem outsideMenuItem = new JMenuItem("Outside");
+		JMenuItem outsideMenuItem = new JMenuItem(CommonResources.getString("Outside")); //$NON-NLS-1$
 		outsideMenuItem.setIcon(new BorderIcon(true, true, true, true, false, false));
 		add(outsideMenuItem);
 		outsideMenuItem.addActionListener(new ActionListener() {
@@ -139,7 +140,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem allMenuItem = new JMenuItem("All");
+		JMenuItem allMenuItem = new JMenuItem(CommonResources.getString("All")); //$NON-NLS-1$
 		allMenuItem.setIcon(new BorderIcon(true, true, true, true, true, true));
 		add(allMenuItem);
 		allMenuItem.addActionListener(new ActionListener() {
@@ -150,7 +151,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem noneMenuItem = new JMenuItem("None");
+		JMenuItem noneMenuItem = new JMenuItem(CommonResources.getString("None")); //$NON-NLS-1$
 		noneMenuItem.setIcon(new BorderIcon(false, false, false, false, false, false));
 		add(noneMenuItem);
 		noneMenuItem.addActionListener(new ActionListener() {
@@ -163,7 +164,7 @@ public class BorderMenu extends JMenu {
 
 		addSeparator();
 
-		JMenu borderWidthMenu = new JMenu("Border width");
+		JMenu borderWidthMenu = new JMenu(CommonResources.getString("BorderWidth")); //$NON-NLS-1$
 		add(borderWidthMenu);
 
 		JMenuItem borderWidth1PxMenuItem = new JMenuItem("1px");
@@ -218,7 +219,7 @@ public class BorderMenu extends JMenu {
 
 		if (menuBarMenu && OsUtils.PLATFORM_MACOS) {
 
-			JMenuItem editColorMenuItem = new JMenuItem("Border color");
+			JMenuItem editColorMenuItem = new JMenuItem(CommonResources.getString("BorderColor")); //$NON-NLS-1$
 			editColorMenuItem.addActionListener(new ActionListener() {
 
 				@Override
@@ -226,7 +227,7 @@ public class BorderMenu extends JMenu {
 
 					JColorChooser colorChooser = new JColorChooser();
 
-					JDialog dialog = new ColorChooserDialog(getFrame(), "Border color", true, null, colorChooser, new ActionListener() {
+					JDialog dialog = new ColorChooserDialog(getFrame(), CommonResources.getString("BorderColor"), true, null, colorChooser, new ActionListener() { //$NON-NLS-1$
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -253,7 +254,7 @@ public class BorderMenu extends JMenu {
 
 		} else {
 
-			JMenu editColorMenu = new JMenu("Border color");
+			JMenu editColorMenu = new JMenu(CommonResources.getString("BorderColor")); //$NON-NLS-1$
 
 			ColorChooserPanel colorChooserPanel = new ColorChooserPanel(null) {
 

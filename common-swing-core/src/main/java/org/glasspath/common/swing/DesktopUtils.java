@@ -134,7 +134,7 @@ public class DesktopUtils {
 					public void run() {
 
 						try {
-							Runtime.getRuntime().exec("explorer.exe /select," + file.getAbsolutePath());
+							Runtime.getRuntime().exec("explorer.exe /select," + file.getAbsolutePath()); //$NON-NLS-1$
 						} catch (Exception e) {
 
 							Common.LOGGER.error("Exception while launching file explorer for file: " + file.getAbsolutePath(), e); //$NON-NLS-1$

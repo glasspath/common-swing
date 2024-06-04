@@ -85,7 +85,7 @@ public class FileChooser extends JFileChooser {
 	}
 
 	public static boolean showFileExistsDialog(Component parentComponent) {
-		return JOptionPane.showOptionDialog(parentComponent, "File already exists, replace file?", "Replace file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")) == JOptionPane.YES_OPTION; //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		return JOptionPane.showOptionDialog(parentComponent, CommonResources.getString("FileAlreadyExistsReplaceFile"), CommonResources.getString("ReplaceFile"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")) == JOptionPane.YES_OPTION; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 
 	public static String browseForFile(String fileExtension, Icon fileIcon, boolean save, Frame frame, Preferences preferences, String preferencesKey) {
@@ -121,7 +121,7 @@ public class FileChooser extends JFileChooser {
 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setSelectedFile(startDir);
-		fileChooser.setDialogTitle("Choose file");
+		fileChooser.setDialogTitle(CommonResources.getString("ChooseFile")); //$NON-NLS-1$
 		fileChooser.setExtension(fileExtension);
 
 		if (fileExtension != null) {
@@ -226,7 +226,7 @@ public class FileChooser extends JFileChooser {
 		File startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home"))); //$NON-NLS-1$
 
 		FileChooser fileChooser = new FileChooser(startDir);
-		fileChooser.setDialogTitle("Choose file"); // TODO: Translate
+		fileChooser.setDialogTitle(CommonResources.getString("ChooseFile")); // TODO: Translate //$NON-NLS-1$
 		// fileChooser.setExtension(fileExtension);
 
 		if (fileExtensions != null && fileExtensions.size() > 0) {
@@ -363,7 +363,7 @@ public class FileChooser extends JFileChooser {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setCurrentDirectory(startDir);
-		fileChooser.setDialogTitle("Choose directory");
+		fileChooser.setDialogTitle(CommonResources.getString("ChooseDirectory")); //$NON-NLS-1$
 
 		int chosenAction = fileChooser.showOpenDialog(frame);
 

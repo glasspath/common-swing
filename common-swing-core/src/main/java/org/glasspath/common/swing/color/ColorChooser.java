@@ -38,6 +38,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.glasspath.common.swing.button.ActionButtonPanel;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class ColorChooser extends ActionButtonPanel {
 
@@ -84,7 +85,7 @@ public class ColorChooser extends ActionButtonPanel {
 				JColorChooser colorChooser = new JColorChooser();
 				colorChooser.setColor(selectedColor);
 
-				JDialog dialog = new ColorChooserDialog(getFrame(), "Edit color", true, null, colorChooser, new ActionListener() {
+				JDialog dialog = new ColorChooserDialog(getFrame(), CommonResources.getString("EditColor"), true, null, colorChooser, new ActionListener() { //$NON-NLS-1$
 
 					@Override
 					public void actionPerformed(ActionEvent e) {

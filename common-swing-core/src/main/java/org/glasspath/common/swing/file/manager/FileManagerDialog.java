@@ -117,7 +117,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			}
 		});
 
-		addButton = createToolBarButton("Add", Icons.plus);
+		addButton = createToolBarButton(CommonResources.getString("Add"), Icons.plus); //$NON-NLS-1$
 		toolBarPanel.add(Box.createHorizontalStrut(3));
 		toolBarPanel.add(addButton);
 		addButton.addActionListener(new ActionListener() {
@@ -169,7 +169,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			}
 		});
 
-		editButton = createToolBarButton("Edit", Icons.squareEditOutline);
+		editButton = createToolBarButton(CommonResources.getString("Edit"), Icons.squareEditOutline); //$NON-NLS-1$
 		toolBarPanel.add(Box.createHorizontalStrut(3));
 		toolBarPanel.add(editButton);
 		editButton.addActionListener(new ActionListener() {
@@ -218,7 +218,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 			}
 		});
 
-		renameButton = createToolBarButton("Rename", Icons.renameBox);
+		renameButton = createToolBarButton(CommonResources.getString("Rename"), Icons.renameBox); //$NON-NLS-1$
 		toolBarPanel.add(Box.createHorizontalStrut(3));
 		toolBarPanel.add(renameButton);
 		renameButton.addActionListener(new ActionListener() {
@@ -270,7 +270,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 					File selectedFile = getSelectedFile();
 					if (selectedFile != null) {
 
-						int chosenOption = JOptionPane.showOptionDialog(context.getFrame(), "Are you sure you want to delete the selected file?", "Delete file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+						int chosenOption = JOptionPane.showOptionDialog(context.getFrame(), CommonResources.getString("AreYouSureYouWantToDeleteTheSelectedFile"), CommonResources.getString("DeleteFile"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] { CommonResources.getString("Yes"), CommonResources.getString("No") }, CommonResources.getString("No")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						if (chosenOption == JOptionPane.YES_OPTION) {
 
 							boolean failed = false;
@@ -297,7 +297,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 							}
 
 							if (failed) {
-								DialogUtils.showWarningMessage(context.getFrame(), "Deleting failed", "The delete operation failed");
+								DialogUtils.showWarningMessage(context.getFrame(), CommonResources.getString("DeletingFailed"), CommonResources.getString("TheDeleteOperationFailed")); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 
 							refresh();
@@ -615,7 +615,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 	protected static class OptionsPanelHeader extends JComponent {
 
-		private final JTable table = new JTable(new Object[][] { { "" } }, new String[] { "Options" }); //$NON-NLS-1$
+		private final JTable table = new JTable(new Object[][] { { "" } }, new String[] { CommonResources.getString("Options") }); //$NON-NLS-1$ //$NON-NLS-2$
 		private final JScrollPane tableScrollPane = new JScrollPane(table);
 		private final Dimension preferredSize = new Dimension(100, 25);
 
@@ -644,7 +644,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 				JLabel label = (JLabel) component;
 				label.setOpaque(true);
 
-				label.setText("Options");
+				label.setText(CommonResources.getString("Options")); //$NON-NLS-1$
 				label.setBounds(0, 0, getWidth() + 1, table.getTableHeader().getHeight());
 				label.paint(g);
 

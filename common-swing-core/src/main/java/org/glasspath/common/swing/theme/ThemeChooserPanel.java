@@ -41,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import org.glasspath.common.swing.graphics.NinePatch;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class ThemeChooserPanel extends JPanel {
 
@@ -58,11 +59,11 @@ public class ThemeChooserPanel extends JPanel {
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 
-		lightRadioButton = new JRadioButton("Light");
+		lightRadioButton = new JRadioButton(CommonResources.getString("Light")); //$NON-NLS-1$
 		buttonGroup.add(lightRadioButton);
 		add(lightRadioButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-		darkRadioButton = new JRadioButton("Dark");
+		darkRadioButton = new JRadioButton(CommonResources.getString("Dark")); //$NON-NLS-1$
 		buttonGroup.add(darkRadioButton);
 		add(darkRadioButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
@@ -79,7 +80,7 @@ public class ThemeChooserPanel extends JPanel {
 		lightRadioButton.addActionListener(actionListener);
 		darkRadioButton.addActionListener(actionListener);
 
-		JLabel themeLabel = new JLabel("Choose your theme");
+		JLabel themeLabel = new JLabel(CommonResources.getString("ChooseYourTheme")); //$NON-NLS-1$
 		themeLabel.setHorizontalAlignment(JLabel.CENTER);
 		add(themeLabel, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 

@@ -39,6 +39,7 @@ import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.preferences.UnitOfMeasurementPreferenceComboBox.Entry;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 
@@ -60,7 +61,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("Automatic");
+		automaticEntry = new Entry(CommonResources.getString("Automatic")); //$NON-NLS-1$
 		addItem(automaticEntry);
 
 		for (SystemOfUnits systemOfUnits : systemOfUnitsList) {
@@ -112,7 +113,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 			if (showSystemOfUnitsDetails) {
 				automaticEntry.text = "Automatic (" + systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol + ")"; //$NON-NLS-2$ //$NON-NLS-3$
 			} else {
-				automaticEntry.text = "Automatic";
+				automaticEntry.text = CommonResources.getString("Automatic"); //$NON-NLS-1$
 			}
 
 			invalidate();
@@ -120,7 +121,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 			repaint();
 
 		} else {
-			automaticEntry.text = "Automatic";
+			automaticEntry.text = CommonResources.getString("Automatic"); //$NON-NLS-1$
 		}
 
 	}

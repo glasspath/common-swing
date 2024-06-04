@@ -43,6 +43,8 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import org.glasspath.common.swing.resources.CommonResources;
+
 public class ColumnHandler {
 
 	private final JTable table;
@@ -343,7 +345,7 @@ public class ColumnHandler {
 
 		menu.addSeparator();
 
-		JMenuItem resetMenuItem = new JMenuItem("Reset");
+		JMenuItem resetMenuItem = new JMenuItem(CommonResources.getString("Reset")); //$NON-NLS-1$
 		menu.add(resetMenuItem);
 		resetMenuItem.addActionListener(new ActionListener() {
 

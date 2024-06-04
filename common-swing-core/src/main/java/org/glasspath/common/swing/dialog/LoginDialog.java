@@ -33,6 +33,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.glasspath.common.swing.FrameContext;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class LoginDialog extends DefaultDialog {
 
@@ -47,8 +48,8 @@ public class LoginDialog extends DefaultDialog {
 	public LoginDialog(FrameContext context, String username, String password, boolean usernameEditable) {
 		super(context);
 
-		setTitle("Login");
-		getHeader().setTitle("Login");
+		setTitle(CommonResources.getString("Login")); //$NON-NLS-1$
+		getHeader().setTitle(CommonResources.getString("Login")); //$NON-NLS-1$
 		setPreferredSize(DIALOG_SIZE_SMALL_WIDE);
 
 		GridBagLayout layout = new GridBagLayout();
@@ -58,16 +59,16 @@ public class LoginDialog extends DefaultDialog {
 		layout.columnWidths = new int[] { 7, 75, 8, 250, 7 };
 		getContentPanel().setLayout(layout);
 
-		usernameTextField = new JTextField(username == null ? "" : username);
+		usernameTextField = new JTextField(username == null ? "" : username); //$NON-NLS-1$
 		usernameTextField.setEditable(usernameEditable);
-		getContentPanel().add(new JLabel("Username"), new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		getContentPanel().add(new JLabel(CommonResources.getString("Username")), new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0)); //$NON-NLS-1$
 		getContentPanel().add(usernameTextField, new GridBagConstraints(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		passwordPasswordField = new JPasswordField(password == null ? "" : password);
-		getContentPanel().add(new JLabel("Password"), new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		passwordPasswordField = new JPasswordField(password == null ? "" : password); //$NON-NLS-1$
+		getContentPanel().add(new JLabel(CommonResources.getString("Password")), new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0)); //$NON-NLS-1$
 		getContentPanel().add(passwordPasswordField, new GridBagConstraints(3, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		getOkButton().setText("Login"); // TODO
+		getOkButton().setText(CommonResources.getString("Login")); // TODO //$NON-NLS-1$
 
 		addWindowListener(new WindowAdapter() {
 

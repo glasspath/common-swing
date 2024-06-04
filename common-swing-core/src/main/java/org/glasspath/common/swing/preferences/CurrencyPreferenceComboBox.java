@@ -39,6 +39,7 @@ import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.preferences.CurrencyPreferenceComboBox.Entry;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
@@ -67,7 +68,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 		setRenderer(new Renderer());
 
-		automaticEntry = new Entry("Automatic");
+		automaticEntry = new Entry(CommonResources.getString("Automatic")); //$NON-NLS-1$
 		addItem(automaticEntry);
 
 		for (CurrencyCode currencyCode : currencyCodes) {
@@ -127,7 +128,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ")"; //$NON-NLS-2$
 				}
 			} else {
-				automaticEntry.text = "Automatic";
+				automaticEntry.text = CommonResources.getString("Automatic"); //$NON-NLS-1$
 			}
 
 			invalidate();
@@ -135,7 +136,7 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 			repaint();
 
 		} else {
-			automaticEntry.text = "Automatic";
+			automaticEntry.text = CommonResources.getString("Automatic"); //$NON-NLS-1$
 		}
 
 	}

@@ -28,6 +28,7 @@ import javax.swing.BorderFactory;
 
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.dialog.DefaultDialog;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class PaddingDialog extends DefaultDialog {
 
@@ -37,7 +38,7 @@ public class PaddingDialog extends DefaultDialog {
 
 		super(context);
 
-		setTitle("Padding");
+		setTitle(CommonResources.getString("Padding")); //$NON-NLS-1$
 		setPreferredSize(DIALOG_SIZE_SMALL);
 
 		remove(getHeader());

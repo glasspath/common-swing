@@ -47,6 +47,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.glasspath.common.io.file.FileList;
 import org.glasspath.common.os.OsUtils;
+import org.glasspath.common.swing.resources.CommonResources;
 import org.glasspath.common.swing.table.Table;
 
 public abstract class FilesTablePanel extends JPanel {
@@ -183,9 +184,9 @@ public abstract class FilesTablePanel extends JPanel {
 		public String getColumnName(int column) {
 
 			if (column == NAME) {
-				return "Name";
+				return CommonResources.getString("Name"); //$NON-NLS-1$
 			} else if (column == TYPE) {
-				return "Type";
+				return CommonResources.getString("Type"); //$NON-NLS-1$
 			} else {
 				return super.getColumnName(column);
 			}
