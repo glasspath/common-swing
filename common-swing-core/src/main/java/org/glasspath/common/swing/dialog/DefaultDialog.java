@@ -62,6 +62,7 @@ public class DefaultDialog extends JDialog {
 	public static final Dimension DIALOG_SIZE_DEFAULT = new Dimension(790, 450);
 	public static final Dimension DIALOG_SIZE_SQUARE = new Dimension(600, 600);
 	public static final Dimension DIALOG_SIZE_MEDIUM = new Dimension(800, 600);
+	public static final Dimension DIALOG_SIZE_MEDIUM_WIDE = new Dimension(875, 600);
 	public static final Dimension DIALOG_SIZE_LARGE = new Dimension(1000, 700);
 	public static final Dimension DIALOG_SIZE_LARGE_REDUCED = new Dimension(950, 650);
 	public static final Dimension DIALOG_SIZE_LARGE_WIDE = new Dimension(1150, 550);

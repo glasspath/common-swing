@@ -167,7 +167,7 @@ public class BorderMenu extends JMenu {
 		JMenu borderWidthMenu = new JMenu(CommonResources.getString("BorderWidth")); //$NON-NLS-1$
 		add(borderWidthMenu);
 
-		JMenuItem borderWidth1PxMenuItem = new JMenuItem("1px");
+		JMenuItem borderWidth1PxMenuItem = new JMenuItem("1" + CommonResources.getString("px")); //$NON-NLS-1$ //$NON-NLS-2$
 		borderWidthMenu.add(borderWidth1PxMenuItem);
 		borderWidth1PxMenuItem.addActionListener(new ActionListener() {
 
@@ -177,7 +177,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem borderWidth2PxMenuItem = new JMenuItem("2px");
+		JMenuItem borderWidth2PxMenuItem = new JMenuItem("2" + CommonResources.getString("px")); //$NON-NLS-1$ //$NON-NLS-2$
 		borderWidthMenu.add(borderWidth2PxMenuItem);
 		borderWidth2PxMenuItem.addActionListener(new ActionListener() {
 
@@ -187,7 +187,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem borderWidth3PxMenuItem = new JMenuItem("3px");
+		JMenuItem borderWidth3PxMenuItem = new JMenuItem("3" + CommonResources.getString("px")); //$NON-NLS-1$ //$NON-NLS-2$
 		borderWidthMenu.add(borderWidth3PxMenuItem);
 		borderWidth3PxMenuItem.addActionListener(new ActionListener() {
 
@@ -197,7 +197,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem borderWidth4PxMenuItem = new JMenuItem("4px");
+		JMenuItem borderWidth4PxMenuItem = new JMenuItem("4" + CommonResources.getString("px")); //$NON-NLS-1$ //$NON-NLS-2$
 		borderWidthMenu.add(borderWidth4PxMenuItem);
 		borderWidth4PxMenuItem.addActionListener(new ActionListener() {
 
@@ -207,7 +207,7 @@ public class BorderMenu extends JMenu {
 			}
 		});
 
-		JMenuItem borderWidth5PxMenuItem = new JMenuItem("5px");
+		JMenuItem borderWidth5PxMenuItem = new JMenuItem("5" + CommonResources.getString("px")); //$NON-NLS-1$ //$NON-NLS-2$
 		borderWidthMenu.add(borderWidth5PxMenuItem);
 		borderWidth5PxMenuItem.addActionListener(new ActionListener() {
 

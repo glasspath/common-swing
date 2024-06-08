@@ -123,9 +123,9 @@ public class CurrencyPreferenceComboBox extends JComboBox<Entry> {
 
 			if (showCurrencyDetails) {
 				if (showSymbols) {
-					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ", " + automaticCurrencyCode.symbol + ")"; //$NON-NLS-2$ //$NON-NLS-3$
+					automaticEntry.text = CommonResources.getString("Automatic") + " (" + automaticCurrencyCode.code + ", " + automaticCurrencyCode.symbol + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				} else {
-					automaticEntry.text = "Automatic (" + automaticCurrencyCode.code + ")"; //$NON-NLS-2$
+					automaticEntry.text = CommonResources.getString("Automatic") + " (" + automaticCurrencyCode.code + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			} else {
 				automaticEntry.text = CommonResources.getString("Automatic"); //$NON-NLS-1$

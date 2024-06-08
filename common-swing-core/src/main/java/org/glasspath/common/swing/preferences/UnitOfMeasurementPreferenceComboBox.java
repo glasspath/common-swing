@@ -111,7 +111,7 @@ public class UnitOfMeasurementPreferenceComboBox extends JComboBox<Entry> {
 		if (systemOfUnits != null) {
 
 			if (showSystemOfUnitsDetails) {
-				automaticEntry.text = "Automatic (" + systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol + ")"; //$NON-NLS-2$ //$NON-NLS-3$
+				automaticEntry.text = CommonResources.getString("Automatic") + " (" + systemOfUnits.distanceDisplayName + ", " + systemOfUnits.distanceSymbol + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			} else {
 				automaticEntry.text = CommonResources.getString("Automatic"); //$NON-NLS-1$
 			}

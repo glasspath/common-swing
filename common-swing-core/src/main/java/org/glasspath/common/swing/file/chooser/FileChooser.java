@@ -111,12 +111,12 @@ public class FileChooser extends JFileChooser {
 			if (suggestedFileName != null && suggestedFileName.length() > 0) {
 				startDir = new File(System.getProperty("user.home") + "/" + suggestedFileName); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				startDir = new File(System.getProperty("user.home") + "/untitled"); //$NON-NLS-1$
+				startDir = new File(System.getProperty("user.home") + "/" + "untitled"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else if (suggestedFileName != null && suggestedFileName.length() > 0) {
 			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + suggestedFileName); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/untitled"); //$NON-NLS-1$
+			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + "untitled"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		FileChooser fileChooser = new FileChooser();
@@ -145,7 +145,7 @@ public class FileChooser extends JFileChooser {
 
 				@Override
 				public String getDescription() {
-					return "." + fileExtension + " files"; //$NON-NLS-1$
+					return "." + fileExtension + " " + CommonResources.getString("files"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			};
 
@@ -172,7 +172,7 @@ public class FileChooser extends JFileChooser {
 
 				@Override
 				public String getTypeDescription(File f) {
-					return "." + fileExtension + " files"; //$NON-NLS-1$
+					return "." + fileExtension + " " + CommonResources.getString("files"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 
 				@Override
@@ -334,7 +334,7 @@ public class FileChooser extends JFileChooser {
 			description = description.substring(0, description.length() - 2);
 		}
 
-		return description + " files";
+		return description + " " + CommonResources.getString("files"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 

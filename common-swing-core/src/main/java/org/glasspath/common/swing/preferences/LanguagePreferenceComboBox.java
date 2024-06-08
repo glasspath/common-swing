@@ -39,6 +39,7 @@ import org.glasspath.common.os.preferences.PreferencesProvider;
 import org.glasspath.common.os.preferences.PreferencesProvider.PreferencesProviderListener;
 import org.glasspath.common.swing.color.ColorUtils;
 import org.glasspath.common.swing.preferences.LanguagePreferenceComboBox.Entry;
+import org.glasspath.common.swing.resources.CommonResources;
 
 public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 
@@ -67,7 +68,7 @@ public class LanguagePreferenceComboBox extends JComboBox<Entry> {
 		addItem(systemFormatEntry);
 
 		Locale systemDisplayLocale = LocaleUtils.getSystemDisplayLocale();
-		systemDisplayEntry = new Entry("System (" + systemDisplayLocale.getDisplayLanguage(systemDisplayLocale) + ", " + systemDisplayLocale.getDisplayCountry(systemDisplayLocale) + ")"); //$NON-NLS-2$ //$NON-NLS-3$
+		systemDisplayEntry = new Entry(CommonResources.getString("System") + " (" + systemDisplayLocale.getDisplayLanguage(systemDisplayLocale) + ", " + systemDisplayLocale.getDisplayCountry(systemDisplayLocale) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		addItem(systemDisplayEntry);
 
 		for (LanguageTag languageTag : languageTags) {
