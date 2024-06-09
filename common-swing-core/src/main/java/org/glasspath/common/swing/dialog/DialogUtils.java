@@ -55,20 +55,24 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
+import org.glasspath.common.swing.resources.CommonResources;
 import org.jdesktop.swingx.JXBusyLabel;
 
 public class DialogUtils {
+
+	// TODO?
+	public static final String TAB = "    "; //$NON-NLS-1$
 
 	private DialogUtils() {
 
 	}
 
 	public static void showInformationMessage(JFrame frame, String title, String message) {
-		JOptionPane.showOptionDialog(frame, message, title, JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] { "     Ok     " }, "     Ok     ");
+		JOptionPane.showOptionDialog(frame, message, title, JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[] { TAB + CommonResources.getString("Ok") + TAB }, TAB + CommonResources.getString("Ok") + TAB); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static void showWarningMessage(JFrame frame, String title, String message) {
-		JOptionPane.showOptionDialog(frame, message, title, JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] { "     Ok     " }, "     Ok     ");
+		JOptionPane.showOptionDialog(frame, message, title, JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] { TAB + CommonResources.getString("Ok") + TAB }, TAB + CommonResources.getString("Ok") + TAB); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static void showWarningMessage(JFrame frame, String title, String message, Throwable throwable) {
@@ -80,7 +84,7 @@ public class DialogUtils {
 		titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		panel.add(titleLabel, BorderLayout.NORTH);
 
-		JLabel detailsLabel = new JLabel("<html><body><u>Details</u></body></html>");
+		JLabel detailsLabel = new JLabel("<html><body><u>" + CommonResources.getString("Details") + "</u></body></html>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		detailsLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
 		detailsLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panel.add(detailsLabel, BorderLayout.CENTER);
@@ -109,7 +113,7 @@ public class DialogUtils {
 			}
 		});
 
-		JOptionPane.showOptionDialog(frame, panel, title, JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] { "     Ok     " }, "     Ok     ");
+		JOptionPane.showOptionDialog(frame, panel, title, JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[] { TAB + CommonResources.getString("Ok") + TAB }, TAB + CommonResources.getString("Ok") + TAB); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
@@ -137,7 +141,7 @@ public class DialogUtils {
 		label.setText(message);
 		label.setBusy(true);
 
-		return showOptionDialog(frame, label, title, JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[] { "     Close     " }, "     Close     ", modal);
+		return showOptionDialog(frame, label, title, JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[] { TAB + CommonResources.getString("Close") + TAB }, TAB + CommonResources.getString("Close") + TAB, modal); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 

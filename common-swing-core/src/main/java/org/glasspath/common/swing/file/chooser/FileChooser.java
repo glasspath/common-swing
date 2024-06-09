@@ -111,12 +111,12 @@ public class FileChooser extends JFileChooser {
 			if (suggestedFileName != null && suggestedFileName.length() > 0) {
 				startDir = new File(System.getProperty("user.home") + "/" + suggestedFileName); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				startDir = new File(System.getProperty("user.home") + "/" + "untitled"); //$NON-NLS-1$ //$NON-NLS-2$
+				startDir = new File(System.getProperty("user.home") + "/" + "untitled"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} else if (suggestedFileName != null && suggestedFileName.length() > 0) {
 			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + suggestedFileName); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + "untitled"); //$NON-NLS-1$ //$NON-NLS-2$
+			startDir = new File(preferences.get(preferencesKey, System.getProperty("user.home")) + "/" + "untitled"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		FileChooser fileChooser = new FileChooser();
