@@ -37,8 +37,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.print.Printable;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -782,11 +780,6 @@ public class Table extends JTable implements Filterable {
 		});
 		menu.add(clearSelectionItem);
 
-	}
-
-	@Override
-	public Printable getPrintable(PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
-		return new TablePrintable(this, printMode, headerFormat, footerFormat);
 	}
 
 	public class TableRowTransferHandler extends TransferHandler {

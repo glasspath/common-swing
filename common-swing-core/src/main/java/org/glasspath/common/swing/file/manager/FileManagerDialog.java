@@ -87,7 +87,7 @@ public abstract class FileManagerDialog extends DefaultDialog {
 
 		remove(getHeader());
 		remove(getHeaderSeparator());
-		setTitle("File Manager");
+		setTitle(CommonResources.getString("FileManager")); //$NON-NLS-1$
 		setPreferredSize(DIALOG_SIZE_LARGE_WIDE_TALL);
 		setKeyListenerEnabled(false);
 

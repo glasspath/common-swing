@@ -75,7 +75,7 @@ public class DesktopUtils {
 	}
 
 	public static void open(File file, JFrame frame) {
-		open(file, frame, "File could not be opened", "The file could not be opened..");
+		open(file, frame, CommonResources.getString("FileCannotBeOpened"), CommonResources.getString("TheFileCannotBeOpened")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static void open(File file, JFrame frame, String failedTitle, String failedMessage) {
@@ -118,7 +118,7 @@ public class DesktopUtils {
 	}
 
 	public static void select(File file, JFrame frame) {
-		select(file, frame, "File could not be opened", "The file could not be opened..");
+		select(file, frame, CommonResources.getString("FileCannotBeOpened"), CommonResources.getString("TheFileCannotBeOpened")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static void select(File file, JFrame frame, String failedTitle, String failedMessage) {
