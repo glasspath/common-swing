@@ -26,7 +26,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 
-import org.glasspath.common.os.OsUtils;
 import org.glasspath.common.swing.FrameContext;
 import org.glasspath.common.swing.color.ColorUtils;
 
@@ -40,18 +39,7 @@ public abstract class AbstractTools<T extends FrameContext> {
 
 		this.context = context;
 
-		menu = new JMenu(text) {
-
-			@Override
-			public void repaint() {
-				// TODO: Quick hack for removing black line artifacts on top border of frame (FlatLaf issue?)
-				if (OsUtils.PLATFORM_WINDOWS) {
-					context.getFrame().getLayeredPane().repaint();
-				} else {
-					super.repaint();
-				}
-			}
-		};
+		menu = new JMenu(text);
 
 		toolBar = new JToolBar(text) {
 

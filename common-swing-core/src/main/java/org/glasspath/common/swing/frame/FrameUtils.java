@@ -111,6 +111,10 @@ public class FrameUtils {
 
 		if (OsUtils.PLATFORM_WINDOWS) {
 
+			// System.setProperty(FlatSystemProperties.USE_WINDOW_DECORATIONS, "false");
+			// System.setProperty(FlatSystemProperties.USE_NATIVE_LIBRARY, "false");
+			// UIManager.put("TitlePane.unifiedBackground", false);
+			// UIManager.put("FlatLaf.debug.titlebar.showRectangles", true);
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			JDialog.setDefaultLookAndFeelDecorated(true);
 
