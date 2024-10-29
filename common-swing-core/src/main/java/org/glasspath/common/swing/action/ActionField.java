@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.plaf.ComponentUI;
@@ -14,6 +15,7 @@ public class ActionField extends JComponent {
 
 	protected final JComponent field;
 	protected final AbstractAction action;
+	protected Icon icon = null;
 
 	protected final List<ActionListener> actionListeners = new ArrayList<>();
 
@@ -50,6 +52,14 @@ public class ActionField extends JComponent {
 
 	public AbstractAction getAction() {
 		return action;
+	}
+
+	public Icon getIcon() {
+		return icon;
+	}
+
+	public void setIcon(Icon icon) {
+		this.icon = icon;
 	}
 
 	// TODO?

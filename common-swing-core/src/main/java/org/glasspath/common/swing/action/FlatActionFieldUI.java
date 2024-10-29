@@ -119,17 +119,28 @@ public class FlatActionFieldUI extends ComponentUI {
 			@Override
 			protected void paintArrow(Graphics2D g) {
 
-				double x = getWidth() / 2;
-				double y = (int) (getHeight() * 0.7);
+				if (actionField.icon != null) {
 
-				Rectangle2D rect = new Rectangle2D.Double(x - 5, y, 2, 2);
-				g.fill(rect);
+					int x = ((getWidth() - actionField.icon.getIconWidth()) / 2) + 1;
+					int y = ((getHeight() - actionField.icon.getIconHeight()) / 2) + 1;
 
-				rect.setRect(x - 1, y, 2, 2);
-				g.fill(rect);
+					actionField.icon.paintIcon(button, g, x, y);
 
-				rect.setRect(x + 3, y, 2, 2);
-				g.fill(rect);
+				} else {
+
+					double x = getWidth() / 2;
+					double y = (int) (getHeight() * 0.7);
+
+					Rectangle2D rect = new Rectangle2D.Double(x - 5, y, 2, 2);
+					g.fill(rect);
+
+					rect.setRect(x - 1, y, 2, 2);
+					g.fill(rect);
+
+					rect.setRect(x + 3, y, 2, 2);
+					g.fill(rect);
+
+				}
 
 			}
 		};
