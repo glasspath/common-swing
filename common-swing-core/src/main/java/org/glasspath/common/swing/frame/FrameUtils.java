@@ -336,7 +336,8 @@ public class FrameUtils {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						frame.setVisible(false);
+						// frame.setVisible(false);
+						System.exit(0);
 					}
 				});
 
