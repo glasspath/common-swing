@@ -44,6 +44,7 @@ import org.glasspath.common.swing.theme.Theme;
 public class StatusBarPanel extends JPanel {
 
 	public static final int HEIGHT = 20;
+	public static final int DEFAULT_LEFT_MARGIN = 5;
 
 	public static Color BG_COLOR;
 	public static Color LINE_TOP_COLOR;
@@ -58,8 +59,8 @@ public class StatusBarPanel extends JPanel {
 				SEPARATOR_LIGHT_COLOR = ColorUtils.GRAY_75;
 			} else {
 				BG_COLOR = new Color(0, 0, 0, 20);
-				LINE_TOP_COLOR = ColorUtils.GRAY_175;
-				SEPARATOR_DARK_COLOR = ColorUtils.GRAY_175;
+				LINE_TOP_COLOR = ColorUtils.GRAY_192;
+				SEPARATOR_DARK_COLOR = ColorUtils.GRAY_192;
 				SEPARATOR_LIGHT_COLOR = Color.white;
 			}
 		});
@@ -67,6 +68,7 @@ public class StatusBarPanel extends JPanel {
 
 	private final JPanel statusBar;
 	private final Dimension preferredSize = new Dimension(100, HEIGHT);
+	private int leftMargin = DEFAULT_LEFT_MARGIN;
 
 	public StatusBarPanel() {
 
@@ -125,7 +127,7 @@ public class StatusBarPanel extends JPanel {
 
 						x++;
 						g.setColor(SEPARATOR_LIGHT_COLOR);
-						g.drawLine(x, 0, x, h);
+						// g.drawLine(x, 0, x, h); // TODO
 
 					}
 
@@ -173,7 +175,7 @@ public class StatusBarPanel extends JPanel {
 			@Override
 			public void layoutContainer(Container parent) {
 
-				x = 5;
+				x = leftMargin;
 
 				for (int i = 0; i < parent.getComponentCount(); i++) {
 
@@ -200,6 +202,14 @@ public class StatusBarPanel extends JPanel {
 		});
 		add(statusBar, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
+	}
+
+	public int getLeftMargin() {
+		return leftMargin;
+	}
+
+	public void setLeftMargin(int leftMargin) {
+		this.leftMargin = leftMargin;
 	}
 
 	public void addComponentToRight(JComponent component, int margin) {
